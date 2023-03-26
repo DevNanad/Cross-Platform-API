@@ -1,7 +1,7 @@
 import express from 'express'
 import morgan from 'morgan'
 import { protect } from './modules/auth'
-import router from './router'
+import router from './routers/router'
 import userRouter from './routers/userRoute'
 const app = express()
 
