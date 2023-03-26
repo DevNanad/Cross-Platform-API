@@ -1,9 +1,8 @@
 import express from 'express'
 import morgan from 'morgan'
-import { createUser, loginUser } from './handlers/user'
 import { protect } from './modules/auth'
 import router from './router'
-import { body, validationResult } from "express-validator";
+import userRouter from './routers/userRoute'
 const app = express()
 
 
@@ -17,7 +16,6 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api', protect, router)
-app.post('/user', createUser)
-app.post('/login', loginUser)
+app.use('/', userRouter)
 
 export default app

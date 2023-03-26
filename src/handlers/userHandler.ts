@@ -2,7 +2,9 @@ import prisma from '../db'
 import { comparePasswords, createJWT, hashPassword } from '../modules/auth'
 
 
-export const createUser = async (req, res) => {
+//REGISTER Handler
+export const register = async (req, res) => {
+
     const user = await prisma.user.create({
         data: {
             student_id: req.body.student_id,
@@ -14,7 +16,10 @@ export const createUser = async (req, res) => {
     res.json({token})
 }
 
-export const loginUser = async (req, res) => {
+
+
+//LOGIN Handler
+export const login = async (req, res) => {
     const user = await prisma.user.findUnique({
         where: {
             student_id: req.body.student_id,
