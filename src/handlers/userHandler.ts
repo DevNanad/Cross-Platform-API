@@ -8,7 +8,9 @@ export const register = async (req, res) => {
     const user = await prisma.user.create({
         data: {
             student_id: req.body.student_id,
-            password: await hashPassword(req.body.password)
+            password: await hashPassword(req.body.password),
+            pin_number: req.body.pin_number,
+            mobile_number: req.body.mobile_number
         }
     })
 
