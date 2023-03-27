@@ -14,5 +14,10 @@ model User {
   id         String   @id @default(uuid())
   student_id Int      @unique
   password   String
+  fullname String? 
+  profile_picture String?
+  mobile_number String
+  pin_number String
   created_at DateTime @default(now())
+  updatedAt   DateTime  @updatedAt
 }
