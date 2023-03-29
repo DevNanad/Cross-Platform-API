@@ -27,20 +27,20 @@ model User {
 
 //Election have many Organizations
 model Election {
-  id                String           @id @default(uuid())
+  id                String          @id @default(uuid())
   title             String
   startDate         DateTime
   endDate           DateTime
   organizations     Organization[]
   electionhistory   Electionhistory? @relation(fields: [electionhistoryId], references: [id])
   electionhistoryId String?
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
 }
 
 //Organization have many Ballots
 model Organization {
-  id         String    @id @default(uuid())
+  id         String   @id @default(uuid())
   org_name   String
   logo_url   String
   startDate  DateTime
@@ -49,8 +49,8 @@ model Organization {
   electionId String?
   ballots    Ballot[]
   votes      Vote[]
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 //Candidate have many Votes
@@ -60,7 +60,7 @@ model Candidate {
   platform  String
   party     String
   imageUrl  String?
-  seat      Seat?    @relation(fields: [seatId], references: [id])
+  seat      Seat?     @relation(fields: [seatId], references: [id])
   seatId    String?
   votes     Vote[]
   createdAt DateTime @default(now())
@@ -72,7 +72,7 @@ model Seat {
   id         String      @id @default(uuid())
   position   String
   candidates Candidate[]
-  ballot     Ballot?     @relation(fields: [ballotId], references: [id])
+  ballot     Ballot?      @relation(fields: [ballotId], references: [id])
   ballotId   String?
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
@@ -80,25 +80,25 @@ model Seat {
 
 //Ballot will have many Seats
 model Ballot {
-  id             String        @id @default(uuid())
+  id             String       @id @default(uuid())
   seats          Seat[]
   organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String?
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }
 
 //Vote is tracked to the voters id
 model Vote {
-  id             String        @id @default(uuid())
+  id             String       @id @default(uuid())
   organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String?
   candidate      Candidate?    @relation(fields: [candidateId], references: [id])
   candidateId    String?
   voter          User?         @relation(fields: [voterId], references: [id])
   voterId        String?
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 
   @@unique([organizationId, voterId, candidateId])
 }
@@ -106,7 +106,7 @@ model Vote {
 model Electionhistory {
   id        String     @id @default(uuid())
   elections Election[]
-  voter     User?      @relation(fields: [voterId], references: [id])
+  voter     User?       @relation(fields: [voterId], references: [id])
   voterId   String?
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
