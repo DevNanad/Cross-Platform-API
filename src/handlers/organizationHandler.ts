@@ -22,3 +22,18 @@ export const createOrg = async (req, res) => {
         res.status(400).json({error})
     }
 }
+
+
+export const createSeat = async (req, res) => {
+    try {
+        const seat = await prisma.seat.create({
+            data: {
+                position: req.body.position,
+            }
+        })
+        res.json(seat)
+    } catch (error) {
+        console.error(error.message)
+        res.status(400).json({error: error.message})
+    }
+}
