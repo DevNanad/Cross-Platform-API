@@ -9,6 +9,11 @@ export const createOrg = async (req, res) => {
                 logo_url: req.body.logo_url,
                 startDate: new Date(req.body.start_date),
                 endDate: new Date(req.body.end_date),
+                ballots: {
+                    create: [
+                        {tags: 'ballots'}
+                    ]
+                  },
             }
         })
         res.json(org)
