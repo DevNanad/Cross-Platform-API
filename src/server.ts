@@ -3,6 +3,7 @@ import morgan from 'morgan'
 import { protect } from './modules/auth'
 import router from './routers/router'
 import userRouter from './routers/userRoute'
+import electionRouter from './routers/electionRoute'
 import mobileverifyRoute from './routers/mobileverifyRoute'
 const app = express()
 
@@ -17,6 +18,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api', protect, router)
+app.use('/election', protect, electionRouter)
 app.use('/', userRouter)
 app.use('/otp', mobileverifyRoute)
 
