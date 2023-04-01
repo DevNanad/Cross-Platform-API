@@ -18,6 +18,26 @@ export const createElection = async (req, res) => {
     }
 }
 
+//GET SINGLE
+export const getAnElection = async (req, res) => {
+    try {
+        const findElection = await prisma.election.findUnique({
+            where: {
+                id: req.params.id
+            }
+        })
+
+        //check if the election exist
+        if(!findElection) throw new Error("Election not Found");
+
+        //return json message
+        res.json(findElection)
+    } catch (error) {
+        console.error(error)
+        res.status(400).json({error: error.message})
+    }
+}
+
 //GET ALL
 export const getAllElection = async (req, res) => {
     try {
@@ -31,6 +51,7 @@ export const getAllElection = async (req, res) => {
         res.status(400).json({error:error.message})
     }
 }
+
 
 //DELETE SINGLE
 export const deleteAnElection = async (req, res) => {
