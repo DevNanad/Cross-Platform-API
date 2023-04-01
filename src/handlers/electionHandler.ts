@@ -18,6 +18,21 @@ export const createElection = async (req, res) => {
     }
 }
 
+
+export const getAllElection = async (req, res) => {
+    try {
+        const allElections = await prisma.election.findMany()
+
+        allElections
+
+        res.json(allElections)
+    } catch (error) {
+        console.error(error)
+        res.status(400).json({error:error.message})
+    }
+}
+
+
 //connect an organization to election
 export const connectOrg = async (req, res) => {
 
