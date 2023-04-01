@@ -1,7 +1,7 @@
 import prisma from '../db'
 
 
-
+//CREATE
 export const createElection = async (req, res) => {
     try {
         const election = await prisma.election.create({
@@ -18,7 +18,7 @@ export const createElection = async (req, res) => {
     }
 }
 
-
+//GET ALL
 export const getAllElection = async (req, res) => {
     try {
         const allElections = await prisma.election.findMany()
@@ -32,6 +32,7 @@ export const getAllElection = async (req, res) => {
     }
 }
 
+//DELETE SINGLE
 export const deleteAnElection = async (req, res) => {
     try {
         const findElection = await prisma.election.findUnique({
@@ -48,7 +49,7 @@ export const deleteAnElection = async (req, res) => {
 
         //invoke delete election
         deletedElection
-        
+
         //return json message
         res.json({message: "Election Deleted"})
     } catch (error) {
@@ -57,8 +58,24 @@ export const deleteAnElection = async (req, res) => {
     }
 }
 
+//DELETE ALL
+export const deleteAllElection = async (req, res) => {
+    try {
+        const deletedElections = await prisma.election.deleteMany({})
 
-//connect an organization to election
+        //invoke delete all elections
+        deletedElections
+
+        //return json message
+        res.json({message: "All Election Deleted"})
+    } catch (error) {
+        console.error(error)
+        res.status(400).json({error:error.message})
+    }
+}
+
+
+//CONNECT ORG TO ELECTION
 export const connectOrg = async (req, res) => {
 
     try {
