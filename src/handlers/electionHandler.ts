@@ -32,6 +32,31 @@ export const getAllElection = async (req, res) => {
     }
 }
 
+export const deleteAnElection = async (req, res) => {
+    try {
+        const findElection = await prisma.election.findUnique({
+            where: {
+                id: req.params.id
+            }
+        })
+        //check if the election exist
+        if(!findElection) throw new Error("Election not Found");
+        
+        const deletedElection = await prisma.election.delete({
+            where: {id: req.params.id}
+        })
+
+        //invoke delete election
+        deletedElection
+        
+        //return json message
+        res.json({message: "Election Deleted"})
+    } catch (error) {
+        console.error(error)
+        res.status(400).json({error:error.message})
+    }
+}
+
 
 //connect an organization to election
 export const connectOrg = async (req, res) => {
