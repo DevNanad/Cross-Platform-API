@@ -45,3 +45,44 @@ export const login = async (req, res) => {
     const token = createJWT(user)
     res.json(token)
 }
+
+
+export const deleteVoter = async (req, res) => {
+    try {
+
+        //search the database if voter exist
+        const findVoter = await prisma.user.findUnique({
+            where: {
+                id: req.params.id
+            }
+        })
+
+        //throw an error if not
+        if(!findVoter) throw new Error("Student Voter does not exist");
+        
+
+        //delete actual student voter
+        const deleteVoter = await prisma.user.delete({
+            where: {
+                id: req.params.id
+            }
+        })
+
+        //delete the election history related to student voter
+        const deleteElectionHistory = await prisma.electionhistory.deleteMany({
+            where: {
+                voterId: req.params.id
+            }
+        })
+
+        //invoke delete user
+        deleteVoter
+        //invoke delete elechistory
+        deleteElectionHistory
+        //return response
+        res.json({message: "Student Voter deleted Successfully"})
+    } catch (error) {
+        console.error(error)
+        res.status(400).json({error: error.message})
+    }
+}
