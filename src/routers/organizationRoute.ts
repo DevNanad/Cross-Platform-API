@@ -1,22 +1,31 @@
-import {Router} from 'express'
-import { createOrg, deleteAllOrg, deleteAnOrg, getAllOrg, getAnOrg } from '../handlers/organizationHandler'
+import { Router } from "express";
+import {
+  createOrg,
+  deleteAllOrg,
+  deleteAnOrg,
+  getAllOrg,
+  getAnOrg,
+  updateAnOrg,
+} from "../handlers/organizationHandler";
 
-const router = Router()
+const router = Router();
 
 //create an organization
-router.post('/create', createOrg)
+router.post("/create", createOrg);
 
 //get all organizations
-router.get('/', getAllOrg)
+router.get("/", getAllOrg);
 
 //get single organization
-router.get('/:id', getAnOrg)
+router.get("/:id", getAnOrg);
 
 //delete all organizations
-router.delete('/delete', deleteAllOrg)
+router.delete("/delete", deleteAllOrg);
 
 //delete single organization
-router.delete('/delete/:id', deleteAnOrg)
+router.delete("/delete/:id", deleteAnOrg);
 
+//update single organization
+router.patch("/update/:id", updateAnOrg);
 
-export default router
+export default router;
