@@ -55,3 +55,19 @@ export const getAnOrg = async (req, res) => {
         res.status(400).json({error: error.message})
     }
 }
+
+//DELETE ALL
+export const deleteAllOrg = async (req, res) => {
+    try {
+        const deletedOrganizations = await prisma.organization.deleteMany({})
+
+        //invoke delete all organizations
+        deletedOrganizations
+
+        //return json message
+        res.json({message: "All Organizations Deleted"})
+    } catch (error) {
+        console.error(error)
+        res.status(400).json({error:error.message})
+    }
+}

@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { createOrg, getAllOrg, getAnOrg } from '../handlers/organizationHandler'
+import { createOrg, deleteAllOrg, getAllOrg, getAnOrg } from '../handlers/organizationHandler'
 
 const router = Router()
 
@@ -11,6 +11,9 @@ router.get('/', getAllOrg)
 
 //get single organization
 router.get('/:id', getAnOrg)
+
+//delete all organizations
+router.delete('/delete', deleteAllOrg)
 
 
 export default router
