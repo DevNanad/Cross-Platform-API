@@ -35,3 +35,23 @@ export const getAllOrg = async (req, res) => {
         res.status(400).json({error:error.message})
     }
 }
+
+//GET SINGLE
+export const getAnOrg = async (req, res) => {
+    try {
+        const findOrganization = await prisma.organization.findUnique({
+            where: {
+                id: req.params.id
+            }
+        })
+
+        //check if the organization exist
+        if(!findOrganization) throw new Error("Organization not Found");
+
+        //return json message
+        res.json(findOrganization)
+    } catch (error) {
+        console.error(error)
+        res.status(400).json({error: error.message})
+    }
+}

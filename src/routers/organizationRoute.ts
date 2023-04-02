@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { createOrg, getAllOrg } from '../handlers/organizationHandler'
+import { createOrg, getAllOrg, getAnOrg } from '../handlers/organizationHandler'
 
 const router = Router()
 
@@ -8,6 +8,9 @@ router.post('/create', createOrg)
 
 //get all organizations
 router.get('/', getAllOrg)
+
+//get single organization
+router.get('/:id', getAnOrg)
 
 
 export default router
