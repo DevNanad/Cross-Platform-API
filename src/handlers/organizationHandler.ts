@@ -71,3 +71,29 @@ export const deleteAllOrg = async (req, res) => {
         res.status(400).json({error:error.message})
     }
 }
+
+//DELETE SINGLE
+export const deleteAnOrg = async (req, res) => {
+    try {
+        const findOrganization = await prisma.organization.findUnique({
+            where: {
+                id: req.params.id
+            }
+        })
+        //check if the organization exist
+        if(!findOrganization) throw new Error("Organization not Found");
+        
+        const deletedOrganization = await prisma.organization.delete({
+            where: {id: req.params.id}
+        })
+
+        //invoke delete organization
+        deletedOrganization
+
+        //return json message
+        res.json({message: "Organization Deleted"})
+    } catch (error) {
+        console.error(error)
+        res.status(400).json({error:error.message})
+    }
+}
