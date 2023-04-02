@@ -23,3 +23,15 @@ export const createOrg = async (req, res) => {
         res.status(400).json({error})
     }
 }
+
+//GET ALL 
+export const getAllOrg = async (req, res) => {
+    try {
+        const allOrganizations = await prisma.organization.findMany()
+
+        res.json(allOrganizations)
+    } catch (error) {
+        console.error(error)
+        res.status(400).json({error:error.message})
+    }
+}
