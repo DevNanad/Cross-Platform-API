@@ -77,6 +77,43 @@ export const deleteACandidate = async (req, res) => {
     }
 }  
 
+//UPDATE SINGLE
+export const updateACandidate = async (req, res) => {
+    try {
+      const findCandidate = await prisma.candidate.findUnique({
+        where: {
+          id: req.params.id,
+        },
+      });
+      //check if the candidate exist
+      if (!findCandidate) throw new Error("Candidate not Found");
+  
+      const updatedCandidate = await prisma.candidate.update({
+        where: {
+          id: req.params.id,
+        },
+        data: {
+          fullname: req.body.fullname,
+          platform: req.body.platform,
+          party: req.body.party,
+          imageUrl: req.body.imageUrl
+        },
+      });
+  
+      //invoke update candidate
+      updatedCandidate
+  
+      //return json message
+      res.json({ message: "Candidate Updated" });
+    } catch (error) {
+      console.error(error);
+      res.status(400).json({ error: error.message });
+    }
+  };
+
+
+
+
 //CONNECT CANDIDATE TO SEAT
 export const candidateToSeat = async (req, res) => {
     try {
