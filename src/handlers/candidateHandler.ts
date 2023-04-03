@@ -19,6 +19,26 @@ export const createCandidate = async (req, res) => {
     }
 }
 
+//GET SINGLE
+export const getACandidate = async (req, res) => {
+    try {
+        const findCandidate = await prisma.candidate.findUnique({
+            where: {
+                id: req.params.id
+            }
+        })
+
+        //check if the candidate exist
+        if(!findCandidate) throw new Error("Candidate not Found");
+
+        //return json message
+        res.json(findCandidate)
+    } catch (error) {
+        console.error(error)
+        res.status(400).json({error: error.message})
+    }
+}
+
 //GET ALL
 export const getAllCandidate = async (req, res) => {
     try {
