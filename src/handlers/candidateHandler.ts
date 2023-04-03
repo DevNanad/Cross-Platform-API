@@ -51,7 +51,33 @@ export const getAllCandidate = async (req, res) => {
     }
   };
 
+//DELETE SINGLE
+export const deleteACandidate = async (req, res) => {
+    try {
+        const findCandidate = await prisma.candidate.findUnique({
+            where: {
+                id: req.params.id
+            }
+        })
+        //check if the candidate exist
+        if(!findCandidate) throw new Error("Candidate not Found");
+        
+        const deletedCandidate = await prisma.candidate.delete({
+            where: {id: req.params.id}
+        })
 
+        //invoke delete candidate
+        deletedCandidate
+
+        //return json message
+        res.json({message: "Candidate Deleted"})
+    } catch (error) {
+        console.error(error)
+        res.status(400).json({error:error.message})
+    }
+}  
+
+//CONNECT CANDIDATE TO SEAT
 export const candidateToSeat = async (req, res) => {
     try {
 
