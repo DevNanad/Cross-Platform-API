@@ -1,7 +1,7 @@
 import prisma from '../db'
 
 
-
+//CREATE
 export const createCandidate = async (req, res) => {
     try {
         const candidate = await prisma.candidate.create({
@@ -18,6 +18,19 @@ export const createCandidate = async (req, res) => {
         res.status(400).json({error})
     }
 }
+
+//GET ALL
+export const getAllCandidate = async (req, res) => {
+    try {
+      const allCandidates = await prisma.candidate.findMany();
+  
+      res.json(allCandidates);
+    } catch (error) {
+      console.error(error);
+      res.status(400).json({ error: error.message });
+    }
+  };
+
 
 export const candidateToSeat = async (req, res) => {
     try {
