@@ -5,6 +5,7 @@ import router from './routers/router'
 import userRouter from './routers/userRoute'
 import electionRouter from './routers/electionRoute'
 import organizationRouter from './routers/organizationRoute'
+import seatRouter from './routers/seatRoute'
 import candidateRouter from './routers/candidateRoute'
 import mobileverifyRoute from './routers/mobileverifyRoute'
 const app = express()
@@ -29,8 +30,12 @@ app.use('/election', protect, electionRouter)
 //organization schema route
 app.use('/organization', protect, organizationRouter)
 
+//seat schema route
+app.use('/seat', protect, seatRouter)
+
 //candidate schema route
 app.use('/candidate', protect, candidateRouter)
+
 
 //user schema route
 app.use('/', userRouter)

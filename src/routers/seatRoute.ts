@@ -2,11 +2,12 @@ import {Router} from 'express'
 import { validateRequestSchema } from '../modules/validate-request-schema'
 import { connectseatSchema } from '../validators/connectseatSchema'
 import { createSeat, getAllSeat, seatToballot } from '../handlers/seatHandler'
+import { seatSchema } from '../validators/seatSchema'
 
 const router = Router()
 
 //create single seat
-router.post('/create', createSeat)
+router.post('/create', seatSchema, validateRequestSchema, createSeat)
 
 //get all seats
 router.get('/', getAllSeat)
