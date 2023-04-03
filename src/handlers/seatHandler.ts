@@ -17,6 +17,18 @@ export const createSeat = async (req, res) => {
     }
 }
 
+//GET ALL
+export const getAllSeat = async (req, res) => {
+    try {
+        const allSeat = await prisma.seat.findMany({})
+
+        res.json(allSeat)
+    } catch (error) {
+        console.error(error.message)
+        res.status(400).json({error: error.message})
+    }
+}
+
 
 //CONNECT SEAT TO BALLOT
 export const seatToballot = async (req, res) => {
