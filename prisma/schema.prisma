@@ -1,5 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
@@ -13,7 +11,7 @@ datasource db {
 //Voters
 model User {
   id              String            @id @default(uuid())
-  student_id      Int               @unique
+  student_id      String               @unique
   password        String
   fullname        String?
   profile_picture String?
@@ -81,7 +79,6 @@ model Seat {
 //Ballot will have many Seats
 model Ballot {
   id             String        @id @default(uuid())
-  tags           String?
   seats          Seat[]
   organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String?
@@ -96,7 +93,7 @@ model Vote {
   organizationId String?
   candidate      Candidate?    @relation(fields: [candidateId], references: [id])
   candidateId    String?
-  voter          User?         @relation(fields: [voterId], references: [id])
+  voter          User?         @relation(fields: [voterId], references: [student_id])
   voterId        String?
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
