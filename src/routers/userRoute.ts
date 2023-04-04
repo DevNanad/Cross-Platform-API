@@ -14,6 +14,6 @@ router.post('/register', registerSchema, validateRequestSchema, register )
 router.post('/login', loginSchema, validateRequestSchema, login )
 
 //Delete user route
-router.delete('/delete/:id', protect, deleteVoter)
+router.delete('/delete-account/:id', protect, deleteVoter)
 
 export default router

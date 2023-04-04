@@ -29,7 +29,7 @@ export const getAllOrg = async (req, res) => {
     res.json(allOrganizations);
   } catch (error) {
     console.error(error);
-    res.status(400).json({ error: error.message });
+    res.status(404).json({ error: error.message });
   }
 };
 
@@ -49,7 +49,7 @@ export const getAnOrg = async (req, res) => {
     res.json(findOrganization);
   } catch (error) {
     console.error(error);
-    res.status(400).json({ error: error.message });
+    res.status(404).json({ error: error.message });
   }
 };
 
@@ -65,7 +65,7 @@ export const deleteAllOrg = async (req, res) => {
     res.json({ message: "All Organizations Deleted" });
   } catch (error) {
     console.error(error);
-    res.status(400).json({ error: error.message });
+    res.status(404).json({ error: error.message });
   }
 };
 
@@ -91,7 +91,7 @@ export const deleteAnOrg = async (req, res) => {
     res.json({ message: "Organization Deleted" });
   } catch (error) {
     console.error(error);
-    res.status(400).json({ error: error.message });
+    res.status(404).json({ error: error.message });
   }
 };
 
@@ -119,12 +119,12 @@ export const updateAnOrg = async (req, res) => {
     });
 
     //invoke update organization
-    updatedOrganization;
+    updatedOrganization
 
     //return json message
     res.json({ message: "Organization Updated" });
   } catch (error) {
     console.error(error);
-    res.status(400).json({ error: error.message });
+    res.status(404).json({ error: error.message });
   }
 };

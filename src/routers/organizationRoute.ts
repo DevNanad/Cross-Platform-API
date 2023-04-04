@@ -11,7 +11,7 @@ import {
 const router = Router();
 
 //create an organization
-router.post("/create", createOrg);
+router.post("/", createOrg);
 
 //get all organizations
 router.get("/", getAllOrg);
@@ -20,12 +20,12 @@ router.get("/", getAllOrg);
 router.get("/:id", getAnOrg);
 
 //delete all organizations
-router.delete("/delete", deleteAllOrg);
+router.delete("/", deleteAllOrg);
 
 //delete single organization
-router.delete("/delete/:id", deleteAnOrg);
+router.delete("/:id", deleteAnOrg);
 
 //update single organization
-router.patch("/update/:id", updateAnOrg);
+router.patch("/:id", updateAnOrg);
 
 export default router;

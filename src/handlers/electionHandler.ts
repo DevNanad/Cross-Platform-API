@@ -34,7 +34,7 @@ export const getAnElection = async (req, res) => {
         res.json(findElection)
     } catch (error) {
         console.error(error)
-        res.status(400).json({error: error.message})
+        res.status(404).json({error: error.message})
     }
 }
 
@@ -48,7 +48,7 @@ export const getAllElection = async (req, res) => {
         res.json(allElections)
     } catch (error) {
         console.error(error)
-        res.status(400).json({error:error.message})
+        res.status(404).json({error:error.message})
     }
 }
 
@@ -75,7 +75,7 @@ export const deleteAnElection = async (req, res) => {
         res.json({message: "Election Deleted"})
     } catch (error) {
         console.error(error)
-        res.status(400).json({error:error.message})
+        res.status(404).json({error:error.message})
     }
 }
 
@@ -91,14 +91,13 @@ export const deleteAllElection = async (req, res) => {
         res.json({message: "All Election Deleted"})
     } catch (error) {
         console.error(error)
-        res.status(400).json({error:error.message})
+        res.status(404).json({error:error.message})
     }
 }
 
 
 //CONNECT ORG TO ELECTION
 export const connectOrg = async (req, res) => {
-
     try {
 
         //check if the passed election id exists in the database
@@ -136,6 +135,6 @@ export const connectOrg = async (req, res) => {
         res.json(connectOrgToElection)
     } catch (error) {
         console.error(error.message)
-        res.status(400).json({error: error.message})       
+        res.status(404).json({error: error.message})       
     }
 }

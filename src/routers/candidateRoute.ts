@@ -7,7 +7,7 @@ import { connectcandidateSchema } from '../validators/connectcandidateSchema'
 const router = Router()
 
 //create a candidate
-router.post('/create', candidateSchema, validateRequestSchema, createCandidate)
+router.post('/', candidateSchema, validateRequestSchema, createCandidate)
 
 //get all candidates
 router.get('/', getAllCandidate)
@@ -16,10 +16,12 @@ router.get('/', getAllCandidate)
 router.get('/:id', getACandidate)
 
 //delete single candidate
-router.delete('/delete/:id', deleteACandidate)
+router.delete('/:id', deleteACandidate)
 
 //update single candidate
-router.patch('/update/:id', candidateSchema, validateRequestSchema, updateACandidate)
+router.patch('/:id', candidateSchema, validateRequestSchema, updateACandidate)
 
-router.patch('/connectcandidate',connectcandidateSchema, validateRequestSchema, candidateToSeat)
+//connect to seat
+router.patch('/candidate-seat',connectcandidateSchema, validateRequestSchema, candidateToSeat)
+
 export default router

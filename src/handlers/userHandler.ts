@@ -4,18 +4,22 @@ import { comparePasswords, createJWT, hashPassword } from '../modules/auth'
 
 //REGISTER Handler
 export const register = async (req, res) => {
-
-    const user = await prisma.user.create({
-        data: {
-            student_id: req.body.student_id,
-            password: await hashPassword(req.body.password),
-            pin_number: req.body.pin_number,
-            mobile_number: req.body.mobile_number
-        }
-    })
-
-    const token = createJWT(user)
-    res.json({token})
+    try {
+        const user = await prisma.user.create({
+            data: {
+                student_id: req.body.student_id,
+                password: await hashPassword(req.body.password),
+                pin_number: req.body.pin_number,
+                mobile_number: req.body.mobile_number
+            }
+        })
+    
+        const token = createJWT(user)
+        res.json({token})
+    } catch (error) {
+        console.error(error)
+        res.status(400).json({error: error})
+    }
 }
 
 
@@ -83,6 +87,6 @@ export const deleteVoter = async (req, res) => {
         res.json({message: "Student Voter deleted Successfully"})
     } catch (error) {
         console.error(error)
-        res.status(400).json({error: error.message})
+        res.status(404).json({error: error.message})
     }
 }

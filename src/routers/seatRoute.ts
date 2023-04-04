@@ -7,7 +7,7 @@ import { seatSchema } from '../validators/seatSchema'
 const router = Router()
 
 //create single seat
-router.post('/create', seatSchema, validateRequestSchema, createSeat)
+router.post('/', seatSchema, validateRequestSchema, createSeat)
 
 //get all seats
 router.get('/', getAllSeat)
@@ -16,6 +16,6 @@ router.get('/', getAllSeat)
 router.delete('/:id', deleteASeat)
 
 //connect seat to ballot
-router.patch('/connectseat', connectseatSchema, validateRequestSchema, seatToballot)
+router.patch('/seat-ballot', connectseatSchema, validateRequestSchema, seatToballot)
 
 export default router

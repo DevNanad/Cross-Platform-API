@@ -25,7 +25,7 @@ export const getAllSeat = async (req, res) => {
         res.json(allSeat)
     } catch (error) {
         console.error(error.message)
-        res.status(400).json({error: error.message})
+        res.status(404).json({error: error.message})
     }
 }
 
@@ -97,6 +97,6 @@ export const seatToballot = async (req, res) => {
         res.json(connectSeatToBallot)
     } catch (error) {
         console.error(error.message)
-        res.status(400).json({error: error.message})       
+        res.status(404).json({error: error.message})       
     }
 }

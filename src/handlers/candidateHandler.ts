@@ -35,7 +35,7 @@ export const getACandidate = async (req, res) => {
         res.json(findCandidate)
     } catch (error) {
         console.error(error)
-        res.status(400).json({error: error.message})
+        res.status(404).json({error: error.message})
     }
 }
 
@@ -47,7 +47,7 @@ export const getAllCandidate = async (req, res) => {
       res.json(allCandidates);
     } catch (error) {
       console.error(error);
-      res.status(400).json({ error: error.message });
+      res.status(404).json({ error: error.message });
     }
   };
 
@@ -73,7 +73,7 @@ export const deleteACandidate = async (req, res) => {
         res.json({message: "Candidate Deleted"})
     } catch (error) {
         console.error(error)
-        res.status(400).json({error:error.message})
+        res.status(404).json({error:error.message})
     }
 }  
 
@@ -107,7 +107,7 @@ export const updateACandidate = async (req, res) => {
       res.json({ message: "Candidate Updated" });
     } catch (error) {
       console.error(error);
-      res.status(400).json({ error: error.message });
+      res.status(404).json({ error: error.message });
     }
   };
 
@@ -153,6 +153,6 @@ export const candidateToSeat = async (req, res) => {
         res.json(connectCandidateToSeat)
     } catch (error) {
         console.error(error.message)
-        res.status(400).json({error: error.message})       
+        res.status(404).json({error: error.message})       
     }
 }
