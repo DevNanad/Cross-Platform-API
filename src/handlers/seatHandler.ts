@@ -30,6 +30,34 @@ export const getAllSeat = async (req, res) => {
 }
 
 
+//DELETE SINGLE
+export const deleteASeat = async (req, res) => {
+    try {
+        const findSeat = await prisma.seat.findUnique({
+            where: {
+                id: req.params.id
+            }
+        })
+        //check if the seat exist
+        if(!findSeat) throw new Error("Seat not Found");
+        
+        const deletedSeat = await prisma.seat.delete({
+            where: {id: req.params.id}
+        })
+
+        //invoke delete seat
+        deletedSeat
+
+        //return json message
+        res.json({message: "Seat Deleted"})
+    } catch (error) {
+        console.error(error)
+        res.status(404).json({error:error.message})
+    }
+}  
+
+
+
 //CONNECT SEAT TO BALLOT
 export const seatToballot = async (req, res) => {
     try {

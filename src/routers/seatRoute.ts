@@ -1,7 +1,7 @@
 import {Router} from 'express'
 import { validateRequestSchema } from '../modules/validate-request-schema'
 import { connectseatSchema } from '../validators/connectseatSchema'
-import { createSeat, getAllSeat, seatToballot } from '../handlers/seatHandler'
+import { createSeat, deleteASeat, getAllSeat, seatToballot } from '../handlers/seatHandler'
 import { seatSchema } from '../validators/seatSchema'
 
 const router = Router()
@@ -11,6 +11,9 @@ router.post('/create', seatSchema, validateRequestSchema, createSeat)
 
 //get all seats
 router.get('/', getAllSeat)
+
+//delete a seat
+router.delete('/:id', deleteASeat)
 
 //connect seat to ballot
 router.patch('/connectseat', connectseatSchema, validateRequestSchema, seatToballot)
