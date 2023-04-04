@@ -90,3 +90,85 @@ export const deleteVoter = async (req, res) => {
         res.status(404).json({error: error.message})
     }
 }
+
+//CAST VOTE 
+export const castVoteConnections = async (req, res) => {
+    try {
+        //check if the passed organization id exists in the database
+        const organizationExists = await prisma.organization.findUnique({
+            where: {
+                id: req.body.organization_id
+            }
+          })
+        
+        if(!organizationExists) throw new Error("Organization not found");
+        
+        //check if the passed candidate id exists in the database
+        const candidateExists = await prisma.candidate.findUnique({
+            where: {
+                id: req.body.candidate_id
+            }
+          })
+        
+        if(!candidateExists) throw new Error("Candidate not found");
+        
+        //check if the passed user id exists in the database
+        const userExists = await prisma.user.findUnique({
+            where: {
+                student_id: req.body.student_id
+            }
+          })
+        
+        if(!userExists) throw new Error("Student Voter not found");
+
+
+        const voteToUser = await prisma.user.update({
+            where:{
+                id: req.body.user_id
+            },
+            data: {
+                votes: {
+                    connect: {
+                        id: req.body.vote_id
+                    }
+                }
+            }
+        })
+
+        const voteToOrganization = await prisma.organization.update({
+            where:{
+                id: req.body.org_id
+            },
+            data: {
+                votes: {
+                    connect: {
+                        id: req.body.vote_id
+                    }
+                }
+            }
+        })
+
+        const voteToCandidate = await prisma.candidate.update({
+            where:{
+                id: req.body.candidate_id
+            },
+            data: {
+                votes: {
+                    connect: {
+                        id: req.body.vote_id
+                    }
+                }
+            }
+        })
+
+        //invoke vote connections
+        voteToUser
+        voteToCandidate
+        voteToOrganization
+        
+        res.json({message: "Voted Successfully"})
+    } catch (error) {
+        console.error(error.message)
+        res.status(404).json({error: error.message})  
+    }
+}

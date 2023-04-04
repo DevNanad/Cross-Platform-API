@@ -4,6 +4,7 @@ import { validateRequestSchema } from '../modules/validate-request-schema';
 import { loginSchema } from '../validators/loginSchema';
 import { registerSchema } from '../validators/registerSchema';
 import { protect } from '../modules/auth';
+import { castVoteConnections } from '../handlers/userHandler';
 
 const router = Router()
 
@@ -15,5 +16,8 @@ router.post('/login', loginSchema, validateRequestSchema, login )
 
 //Delete user route
 router.delete('/delete-account/:id', protect, deleteVoter)
+
+//cast vote connections
+router.patch('/cast-connections', protect, castVoteConnections)
 
 export default router
