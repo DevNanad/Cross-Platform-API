@@ -52,6 +52,59 @@ export const getAllElection = async (req, res) => {
     }
 }
 
+//GET ALL UPCOMING ELECTION
+export const getUpcomingElection = async (req, res) => {
+    try {
+        const upcoming = await prisma.election.findMany({
+            where: {
+                status: 'upcoming'
+            }
+        })
+
+        if(upcoming.length === 0) res.json({error: "No Upcoming Election"})
+
+        res.json(upcoming)
+    } catch (error) {
+        console.error(error)
+        res.status(404).json({error: "No Upcoming Election"})
+    }
+}
+
+//GET ALL ONGOING ELECTION
+export const getOngoingElection = async (req, res) => {
+    try {
+        const ongoing = await prisma.election.findMany({
+            where: {
+                status: 'ongoing'
+            }
+        })
+
+        if(ongoing.length === 0) res.json({error: "No Ongoing Election"})
+
+        res.json(ongoing)
+    } catch (error) {
+        console.error(error)
+        res.status(404).json({error: "No Ongoing Election"})
+    }
+}
+
+//GET ALL ENDED ELECTION
+export const getEndedElection = async (req, res) => {
+    try {
+        const ended = await prisma.election.findMany({
+            where: {
+                status: 'ended'
+            }
+        })
+
+        if(ended.length === 0) res.json({error: "No Ended Election"})
+
+        res.json(ended)
+    } catch (error) {
+        console.error(error)
+        res.status(404).json({error: "No Ended Election"})
+    }
+}
 
 //DELETE SINGLE
 export const deleteAnElection = async (req, res) => {
