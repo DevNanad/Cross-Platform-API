@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,7 +10,7 @@ datasource db {
 //Voters
 model User {
   id              String            @id @default(uuid())
-  student_id      String               @unique
+  student_id      String            @unique
   password        String
   fullname        String?
   profile_picture String?
@@ -29,6 +28,7 @@ model Election {
   title             String
   startDate         DateTime
   endDate           DateTime
+  status            Status           @default(upcoming)
   organizations     Organization[]
   electionhistory   Electionhistory? @relation(fields: [electionhistoryId], references: [id])
   electionhistoryId String?
@@ -36,11 +36,18 @@ model Election {
   updatedAt         DateTime         @updatedAt
 }
 
+//Status for Election
+enum Status {
+  upcoming
+  ongoing
+  ended
+}
+
 //Organization have many Ballots
 model Organization {
   id         String    @id @default(uuid())
   org_name   String
-  logo_url   String
+  logo_url   String?
   startDate  DateTime
   endDate    DateTime
   election   Election? @relation(fields: [electionId], references: [id])

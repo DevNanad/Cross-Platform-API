@@ -10,7 +10,7 @@ export const createOrg = async (req, res) => {
         startDate: new Date(req.body.start_date),
         endDate: new Date(req.body.end_date),
         ballots: {
-          create: [{ tags: "ballots" }],
+          create: [{}],
         },
       },
     });
