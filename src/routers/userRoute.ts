@@ -18,6 +18,6 @@ router.post('/login', loginSchema, validateRequestSchema, login )
 router.delete('/delete-account/:id', protect, deleteVoter)
 
 //cast vote connections
-router.patch('/cast-connections', protect, castVoteConnections)
+router.post('/cast-connection', protect, castVoteConnections)
 
 export default router

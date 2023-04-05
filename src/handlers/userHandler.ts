@@ -91,7 +91,7 @@ export const deleteVoter = async (req, res) => {
     }
 }
 
-//CAST VOTE 
+//CAST VOTE CONNECTIONS
 export const castVoteConnections = async (req, res) => {
     try {
         //check if the passed organization id exists in the database
@@ -122,49 +122,22 @@ export const castVoteConnections = async (req, res) => {
         if(!userExists) throw new Error("Student Voter not found");
 
 
-        const voteToUser = await prisma.user.update({
-            where:{
-                id: req.body.user_id
-            },
+        const castVoteConnectCreate = await prisma.vote.create({
             data: {
-                votes: {
-                    connect: {
-                        id: req.body.vote_id
-                    }
-                }
+              organization: {
+                connect: { id: req.body.organization_id }
+              },
+              candidate: {
+                connect: { id: req.body.candidate_id }
+              },
+              voter: {
+                connect: { student_id: req.body.student_id }
+              }
             }
-        })
-
-        const voteToOrganization = await prisma.organization.update({
-            where:{
-                id: req.body.org_id
-            },
-            data: {
-                votes: {
-                    connect: {
-                        id: req.body.vote_id
-                    }
-                }
-            }
-        })
-
-        const voteToCandidate = await prisma.candidate.update({
-            where:{
-                id: req.body.candidate_id
-            },
-            data: {
-                votes: {
-                    connect: {
-                        id: req.body.vote_id
-                    }
-                }
-            }
-        })
+          })
 
         //invoke vote connections
-        voteToUser
-        voteToCandidate
-        voteToOrganization
+        castVoteConnectCreate
         
         res.json({message: "Voted Successfully"})
     } catch (error) {
