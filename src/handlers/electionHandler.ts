@@ -106,6 +106,101 @@ export const getEndedElection = async (req, res) => {
     }
 }
 
+//UPDATE TO UPCOMING
+export const toUpcoming = async (req, res) => {
+    try {
+        const findElection = await prisma.election.findUnique({
+            where: {
+              id: req.params.id,
+            },
+          });
+          //check if the election exist
+          if (!findElection) throw new Error("Election not Found");
+
+
+        const toUp = await prisma.election.update({
+            where: {
+                id: req.params.id
+            },
+            data: {
+                status: "upcoming"
+            }
+        })
+
+        //invoke upcoming request
+        toUp
+
+        res.json({message: "Updated to Upcoming!"})
+    } catch (error) {
+        console.error(error)
+        res.status(404).json({error: "No Upcoming Election"})
+    }
+}
+
+
+//UPDATE TO ONGOING
+export const toOngoing = async (req, res) => {
+    try {
+        const findElection = await prisma.election.findUnique({
+            where: {
+              id: req.params.id,
+            },
+          });
+          //check if the election exist
+          if (!findElection) throw new Error("Election not Found");
+
+
+        const toOn = await prisma.election.update({
+            where: {
+                id: req.params.id
+            },
+            data: {
+                status: "ongoing"
+            }
+        })
+
+        //invoke ongoing request
+        toOn
+
+        res.json({message: "Updated to Ongoing!"})
+    } catch (error) {
+        console.error(error)
+        res.status(404).json({error: "No Ongoing Election"})
+    }
+}
+
+
+//UPDATE TO ENDED
+export const toEnded = async (req, res) => {
+    try {
+        const findElection = await prisma.election.findUnique({
+            where: {
+              id: req.params.id,
+            },
+          });
+          //check if the election exist
+          if (!findElection) throw new Error("Election not Found");
+
+
+        const toEn = await prisma.election.update({
+            where: {
+                id: req.params.id
+            },
+            data: {
+                status: "ended"
+            }
+        })
+
+        //invoke ended request
+        toEn
+
+        res.json({message: "Updated to Ended!"})
+    } catch (error) {
+        console.error(error)
+        res.status(404).json({error: "No Ended Election"})
+    }
+}
+
 //DELETE SINGLE
 export const deleteAnElection = async (req, res) => {
     try {

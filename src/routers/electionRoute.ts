@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { createElection, connectOrg, getAllElection, deleteAnElection, deleteAllElection, getAnElection, getUpcomingElection, getOngoingElection, getEndedElection } from '../handlers/electionHandler'
+import { createElection, connectOrg, getAllElection, deleteAnElection, deleteAllElection, getAnElection, getUpcomingElection, getOngoingElection, getEndedElection, toUpcoming, toOngoing, toEnded } from '../handlers/electionHandler'
 import { validateRequestSchema } from '../modules/validate-request-schema'
 import { connectorgSchema } from '../validators/connectorgSchema'
 import { electionSchema } from '../validators/electionSchema'
@@ -32,5 +32,14 @@ router.get('/status/ongoing', getOngoingElection)
 
 //ended election
 router.get('/status/ended', getEndedElection)
+
+//update to upcoming
+router.patch('/status/to-upcoming/:id', toUpcoming)
+
+//update to ongoing
+router.patch('/status/to-ongoing/:id', toOngoing)
+
+//update to ended
+router.patch('/status/to-ended/:id', toEnded)
 
 export default router
