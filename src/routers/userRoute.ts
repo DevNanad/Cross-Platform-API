@@ -5,6 +5,7 @@ import { loginSchema } from '../validators/loginSchema';
 import { registerSchema } from '../validators/registerSchema';
 import { protect } from '../modules/auth';
 import { castVoteConnections } from '../handlers/userHandler';
+import { castConnectionSchema } from '../validators/castConnectionSchema';
 
 const router = Router()
 
@@ -18,6 +19,6 @@ router.post('/login', loginSchema, validateRequestSchema, login )
 router.delete('/delete-account/:id', protect, deleteVoter)
 
 //cast vote connections
-router.post('/cast-connection', protect, castVoteConnections)
+router.post('/cast-connection', castConnectionSchema, validateRequestSchema, protect, castVoteConnections)
 
 export default router
