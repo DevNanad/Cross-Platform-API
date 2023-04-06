@@ -103,15 +103,7 @@ export const castVoteConnections = async (req, res) => {
         
         if(!organizationExists) throw new Error("Organization not found");
         
-        //check if the passed candidate id exists in the database
-        const candidateExists = await prisma.candidate.findUnique({
-            where: {
-                id: req.body.candidate_id
-            }
-          })
-        
-        if(!candidateExists) throw new Error("Candidate not found");
-        
+
         //check if the passed user id exists in the database
         const userExists = await prisma.user.findUnique({
             where: {
@@ -122,26 +114,79 @@ export const castVoteConnections = async (req, res) => {
         if(!userExists) throw new Error("Student Voter not found");
 
 
-        const castVoteConnectCreate = await prisma.vote.create({
-            data: {
-              organization: {
-                connect: { id: req.body.organization_id }
-              },
-              candidate: {
-                connect: { id: req.body.candidate_id }
-              },
-              voter: {
-                connect: { student_id: req.body.student_id }
-              }
-            }
-          })
+        const candidateIds = req.body.candidate_ids;
+
+        //check if candidates exist
+        const candidates = await prisma.candidate.findMany({
+        where: {
+            id: { in: candidateIds }
+        }
+        });
+
+        if (candidates.length !== candidateIds.length) {
+        // Some candidate IDs do not exist
+        throw new Error("One or more candidate do not exist in the database");
+        }
+        
+        
+        const castVoteConnectCreate = await Promise.all(
+            candidateIds.map((candidateId) =>
+              prisma.vote.create({
+                data: {
+                    organization: {
+                      connect: { id: req.body.organization_id }
+                    },
+                    candidate: {
+                      connect: { id: candidateId }
+                    },
+                    voter: {
+                      connect: { student_id: req.body.student_id }
+                    }
+                }
+              })
+            )
+        )
+
+        
 
         //invoke vote connections
         castVoteConnectCreate
+        //invoke increment votes of every candidates
         
-        res.json({message: "Voted Successfully"})
+        
+        res.json({message: "Vote Connected Successfully"})
     } catch (error) {
         console.error(error.message)
         res.status(404).json({error: error.message})  
     }
 }
+
+//CAST VOTE
+export const castVote = async (req, res) => {
+    try {
+      const { candidate_ids } = req.body
+  
+      const updateCandidatesCount = await Promise.all(
+        candidate_ids.map((candidateId) =>
+          prisma.candidate.update({
+            where: {
+              id: candidateId,
+            },
+            data: {
+              count: {
+                increment: 1,
+              },
+            },
+          })
+        )
+      )
+  
+      //invoke update count
+      updateCandidatesCount
+
+      res.json({message: "Vote Submitted"})
+    } catch (error) {
+      console.error(error.message)
+      res.status(404).json({ error: error.message })
+    }
+  }

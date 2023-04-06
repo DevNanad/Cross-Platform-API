@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { deleteVoter, login, register } from '../handlers/userHandler';
+import { castVote, deleteVoter, login, register } from '../handlers/userHandler';
 import { validateRequestSchema } from '../modules/validate-request-schema';
 import { loginSchema } from '../validators/loginSchema';
 import { registerSchema } from '../validators/registerSchema';
@@ -19,6 +19,9 @@ router.post('/login', loginSchema, validateRequestSchema, login )
 router.delete('/delete-account/:id', protect, deleteVoter)
 
 //cast vote connections
-router.post('/cast-connection', castConnectionSchema, validateRequestSchema, protect, castVoteConnections)
+router.post('/cast-connection', castConnectionSchema, validateRequestSchema, protect, castVoteConnections, castVote)
+
+//cast vote
+router.patch('/cast-vote', castVote)
 
 export default router
