@@ -68,6 +68,7 @@ model Candidate {
   seat      Seat?    @relation(fields: [seatId], references: [id])
   seatId    String?
   votes     Vote[]
+  count     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
