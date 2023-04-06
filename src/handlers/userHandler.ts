@@ -147,8 +147,7 @@ export const castVoteConnections = async (req, res) => {
             )
         )
 
-        
-
+    
         //invoke vote connections
         castVoteConnectCreate
         //invoke increment votes of every candidates
@@ -157,7 +156,14 @@ export const castVoteConnections = async (req, res) => {
         res.json({message: "Vote Connected Successfully"})
     } catch (error) {
         console.error(error.message)
-        res.status(404).json({error: error.message})  
+
+        if (error.code === 'P2002') {
+            // handle unique constraint error
+            res.status(400).json({error: `Error: ${error.meta.target} must be unique`})
+          } else {
+            // handle other types of errors
+            res.status(404).json({error: `Error: ${error.message}`});
+          } 
     }
 }
 
