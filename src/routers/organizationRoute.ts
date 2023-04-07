@@ -28,6 +28,6 @@ router.delete("/", deleteAllOrg);
 router.delete("/:id", deleteAnOrg);
 
 //update single organization
-router.patch("/:id", updateAnOrg);
+router.patch("/:id", organizationSchema, validateRequestSchema, updateAnOrg);
 
 export default router;
