@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { castVote, deleteVoter, login, register } from '../handlers/userHandler';
+import { castVote, checkVotersVote, deleteVoter, login, register } from '../handlers/userHandler';
 import { validateRequestSchema } from '../modules/validate-request-schema';
 import { loginSchema } from '../validators/loginSchema';
 import { registerSchema } from '../validators/registerSchema';
@@ -23,5 +23,8 @@ router.post('/cast-connection', castConnectionSchema, validateRequestSchema, pro
 
 //cast vote
 router.patch('/cast-vote', castVote)
+
+//get all voter voted candidates
+router.get('/check-voters-vote', checkVotersVote)
 
 export default router

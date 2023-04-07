@@ -196,3 +196,30 @@ export const castVote = async (req, res) => {
       res.status(404).json({ error: error.message })
     }
   }
+
+//GET USER VOTED CANDIDATES BASE ON STUDENT VOTER ID
+export const checkVotersVote = async (req, res) => {
+  try {
+
+    //check if the passed student voter id exists in the database
+    const userExists = await prisma.user.findUnique({
+        where: {
+            student_id: req.body.student_id
+        }
+      })
+    
+    if(!userExists) throw new Error("Student Voter not found");
+
+
+
+    const all = await prisma.vote.findMany({
+      where: { voterId: req.body.student_id},
+      include: { candidate: true}
+    })
+    
+    res.json(all)
+  } catch (error) {
+    console.error(error.message)
+    res.status(404).json({ error: error.message })
+  }
+}
