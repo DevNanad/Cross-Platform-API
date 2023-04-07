@@ -6,6 +6,7 @@ import { registerSchema } from '../validators/registerSchema';
 import { protect } from '../modules/auth';
 import { castVoteConnections } from '../handlers/userHandler';
 import { castConnectionSchema } from '../validators/castConnectionSchema';
+import { checkVoterIdSchema } from '../validators/checkVoterIdSchema';
 
 const router = Router()
 
@@ -25,6 +26,6 @@ router.post('/cast-connection', castConnectionSchema, validateRequestSchema, pro
 router.patch('/cast-vote', castVote)
 
 //get all voter voted candidates
-router.get('/check-voters-vote', checkVotersVote)
+router.get('/check-voters-vote', checkVoterIdSchema, validateRequestSchema, checkVotersVote)
 
 export default router
