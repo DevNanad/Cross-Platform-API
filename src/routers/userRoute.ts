@@ -7,6 +7,7 @@ import { protect } from '../modules/auth';
 import { castVoteConnections } from '../handlers/userHandler';
 import { castConnectionSchema } from '../validators/castConnectionSchema';
 import { checkVoterIdSchema } from '../validators/checkVoterIdSchema';
+import { changeStudentIdSchema } from '../validators/changeStudentIdSchema';
 
 const router = Router()
 
@@ -29,6 +30,6 @@ router.patch('/cast-vote', castVote)
 router.get('/check-voters-vote', checkVoterIdSchema, validateRequestSchema, checkVotersVote)
 
 //change student id
-router.patch('/change-student-id', changeStudentID)
+router.patch('/change-student-id', changeStudentIdSchema, validateRequestSchema, changeStudentID)
 
 export default router
