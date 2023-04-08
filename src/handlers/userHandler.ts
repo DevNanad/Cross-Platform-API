@@ -118,6 +118,36 @@ export const changeFullname = async (req, res) => {
 }
 
 
+//UPDATE PROFILE (PICTURE)
+export const changePicture = async (req, res) => {
+  try {
+    //check if the passed user id exists in the database
+    const userExists = await prisma.user.findUnique({
+      where: {
+          student_id: req.body.student_id
+      }
+    })
+    
+    if(!userExists) throw new Error("Voter not found");
+
+    const picture = await prisma.user.update({
+      where: { student_id: req.body.student_id},
+      data:{
+        profile_picture: req.body.new_profile_picture
+      }
+    })
+
+    //invoke picture update
+    picture
+
+    res.json({message: "Profile Picture Updated!"})
+  } catch (error) {
+    console.error(error)
+    res.status(400).json({error: error.message})   
+  }
+}
+
+
 //DELETE VOTER
 export const deleteVoter = async (req, res) => {
     try {
