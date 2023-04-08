@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { castVote, changeStudentID, checkVotersVote, deleteVoter, login, register } from '../handlers/userHandler';
+import { castVote, changeFullname, changeStudentID, checkVotersVote, deleteVoter, login, register } from '../handlers/userHandler';
 import { validateRequestSchema } from '../modules/validate-request-schema';
 import { loginSchema } from '../validators/loginSchema';
 import { registerSchema } from '../validators/registerSchema';
@@ -31,5 +31,8 @@ router.get('/check-voters-vote', checkVoterIdSchema, validateRequestSchema, chec
 
 //change student id
 router.patch('/change-student-id', changeStudentIdSchema, validateRequestSchema, changeStudentID)
+
+//change student fullname
+router.patch('/change-student-fullname', changeFullname)
 
 export default router

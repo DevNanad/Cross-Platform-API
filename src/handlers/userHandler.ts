@@ -50,7 +50,7 @@ export const login = async (req, res) => {
     res.json(token)
 }
 
-//UPDATE PROFILE
+//UPDATE PROFILE (STUDENT ID)
 export const changeStudentID = async (req, res) => {
   try {
     //check if the passed user id exists in the database
@@ -83,6 +83,34 @@ export const changeStudentID = async (req, res) => {
     studentid
 
     res.json({message: "Student ID Updated!"})
+  } catch (error) {
+    console.error(error)
+    res.status(400).json({error: error.message})   
+  }
+}
+//UPDATE PROFILE (FULLNAME)
+export const changeFullname = async (req, res) => {
+  try {
+    //check if the passed user id exists in the database
+    const userExists = await prisma.user.findUnique({
+      where: {
+          student_id: req.body.student_id
+      }
+    })
+    
+    if(!userExists) throw new Error("Voter not found");
+
+    const fullname = await prisma.user.update({
+      where: { student_id: req.body.student_id},
+      data:{
+        fullname: req.body.new_fullname
+      }
+    })
+
+    //invoke fullname update
+    fullname
+
+    res.json({message: "Fullname Updated!"})
   } catch (error) {
     console.error(error)
     res.status(400).json({error: error.message})   
