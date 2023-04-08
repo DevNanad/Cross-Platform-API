@@ -9,6 +9,7 @@ import { castConnectionSchema } from '../validators/castConnectionSchema';
 import { checkVoterIdSchema } from '../validators/checkVoterIdSchema';
 import { changeStudentIdSchema } from '../validators/changeStudentIdSchema';
 import { changeStudentFullnameSchema } from '../validators/changeStudentFullnameSchema';
+import { changeStudentPictureSchema } from '../validators/changeStudentPictureSchema';
 
 const router = Router()
 
@@ -37,6 +38,6 @@ router.patch('/change-student-id', changeStudentIdSchema, validateRequestSchema,
 router.patch('/change-student-fullname', changeStudentFullnameSchema, validateRequestSchema, changeFullname)
 
 //change student fullname
-router.patch('/change-student-picture', changePicture)
+router.patch('/change-student-picture', changeStudentPictureSchema, validateRequestSchema, changePicture)
 
 export default router
