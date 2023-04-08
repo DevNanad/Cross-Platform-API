@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { castVote, checkVotersVote, deleteVoter, login, register } from '../handlers/userHandler';
+import { castVote, changeStudentID, checkVotersVote, deleteVoter, login, register } from '../handlers/userHandler';
 import { validateRequestSchema } from '../modules/validate-request-schema';
 import { loginSchema } from '../validators/loginSchema';
 import { registerSchema } from '../validators/registerSchema';
@@ -27,5 +27,8 @@ router.patch('/cast-vote', castVote)
 
 //get all voter voted candidates
 router.get('/check-voters-vote', checkVoterIdSchema, validateRequestSchema, checkVotersVote)
+
+//change student id
+router.patch('/change-student-id', changeStudentID)
 
 export default router

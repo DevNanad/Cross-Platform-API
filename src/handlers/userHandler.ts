@@ -50,7 +50,47 @@ export const login = async (req, res) => {
     res.json(token)
 }
 
+//UPDATE PROFILE
+export const changeStudentID = async (req, res) => {
+  try {
+    //check if the passed user id exists in the database
+    const userExists = await prisma.user.findUnique({
+      where: {
+          student_id: req.body.student_id
+      }
+    })
+    
+    if(!userExists) throw new Error("Student Voter not found");
 
+    //check if the passed new user id already exists in the database
+    const userAlreadyExists = await prisma.user.findUnique({
+      where: {
+          student_id: req.body.new_student_id
+      }
+    })
+    
+    if(userAlreadyExists) throw new Error("Student ID Already Taken");
+
+
+    const studentid = await prisma.user.update({
+      where: { student_id: req.body.student_id},
+      data:{
+        student_id: req.body.new_student_id
+      }
+    })
+
+    //invoke student update
+    studentid
+
+    res.json({message: "Student ID Updated!"})
+  } catch (error) {
+    console.error(error)
+    res.status(400).json({error: error.message})   
+  }
+}
+
+
+//DELETE VOTER
 export const deleteVoter = async (req, res) => {
     try {
 
