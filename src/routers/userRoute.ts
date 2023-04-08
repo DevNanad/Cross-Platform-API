@@ -8,6 +8,7 @@ import { castVoteConnections } from '../handlers/userHandler';
 import { castConnectionSchema } from '../validators/castConnectionSchema';
 import { checkVoterIdSchema } from '../validators/checkVoterIdSchema';
 import { changeStudentIdSchema } from '../validators/changeStudentIdSchema';
+import { changeStudentFullnameSchema } from '../validators/changeStudentFullnameSchema';
 
 const router = Router()
 
@@ -33,6 +34,6 @@ router.get('/check-voters-vote', checkVoterIdSchema, validateRequestSchema, chec
 router.patch('/change-student-id', changeStudentIdSchema, validateRequestSchema, changeStudentID)
 
 //change student fullname
-router.patch('/change-student-fullname', changeFullname)
+router.patch('/change-student-fullname', changeStudentFullnameSchema, validateRequestSchema, changeFullname)
 
 export default router
