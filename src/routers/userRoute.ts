@@ -11,6 +11,7 @@ import { changeStudentIdSchema } from '../validators/changeStudentIdSchema';
 import { changeStudentFullnameSchema } from '../validators/changeStudentFullnameSchema';
 import { changeStudentPictureSchema } from '../validators/changeStudentPictureSchema';
 import { changeStudentMobileSchema } from '../validators/checkStudentMobileSchema';
+import { confirmStudentMobileSchema } from '../validators/confirmStudentMobileSchema';
 
 const router = Router()
 
@@ -45,6 +46,6 @@ router.patch('/change-student-picture', protect,changeStudentPictureSchema, vali
 router.get('/check-mobile-number', protect, changeStudentMobileSchema, validateRequestSchema, checkMobileNumber)
 
 //change student mobile (confirm mobile number otp)
-router.post('/confirm-mobile-number', protect, confirmMobileNumber)
+router.post('/confirm-mobile-number', protect, confirmStudentMobileSchema, validateRequestSchema, confirmMobileNumber)
 
 export default router
