@@ -10,6 +10,7 @@ import { checkVoterIdSchema } from '../validators/checkVoterIdSchema';
 import { changeStudentIdSchema } from '../validators/changeStudentIdSchema';
 import { changeStudentFullnameSchema } from '../validators/changeStudentFullnameSchema';
 import { changeStudentPictureSchema } from '../validators/changeStudentPictureSchema';
+import { changeStudentMobileSchema } from '../validators/checkStudentMobileSchema';
 
 const router = Router()
 
@@ -41,6 +42,6 @@ router.patch('/change-student-fullname', protect, changeStudentFullnameSchema, v
 router.patch('/change-student-picture', protect,changeStudentPictureSchema, validateRequestSchema, changePicture)
 
 //change student mobile (check mobile number and send otp if false)
-router.get('/check-mobile-number', protect, checkMobileNumber)
+router.get('/check-mobile-number', protect, changeStudentMobileSchema, validateRequestSchema, checkMobileNumber)
 
 export default router

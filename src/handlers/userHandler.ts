@@ -178,7 +178,6 @@ export const checkMobileNumber = async (req, res) => {
                 .create({to: req.body.new_mobile_number, channel: 'sms'})
                 .then(verification => {
                     console.log(verification.status)
-                    res.json({status:verification})
                 });
         res.json({message: "Mobile Number is Available"})
       } catch (error) {
