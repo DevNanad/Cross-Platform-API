@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { castVote, changeFullname, changePicture, changeStudentID, checkVotersVote, deleteVoter, login, register } from '../handlers/userHandler';
+import { castVote, changeFullname, changePicture, changeStudentID, checkMobileNumber, checkVotersVote, deleteVoter, login, register } from '../handlers/userHandler';
 import { validateRequestSchema } from '../modules/validate-request-schema';
 import { loginSchema } from '../validators/loginSchema';
 import { registerSchema } from '../validators/registerSchema';
@@ -23,21 +23,24 @@ router.post('/login', loginSchema, validateRequestSchema, login )
 router.delete('/delete-account/:id', protect, deleteVoter)
 
 //cast vote connections
-router.post('/cast-connection', castConnectionSchema, validateRequestSchema, protect, castVoteConnections, castVote)
+router.post('/cast-connection', protect, castConnectionSchema, validateRequestSchema, protect, castVoteConnections, castVote)
 
 //cast vote
-router.patch('/cast-vote', castVote)
+router.patch('/cast-vote', protect, castVote)
 
 //get all voter voted candidates
-router.get('/check-voters-vote', checkVoterIdSchema, validateRequestSchema, checkVotersVote)
+router.get('/check-voters-vote', protect, checkVoterIdSchema, validateRequestSchema, checkVotersVote)
 
 //change student id
-router.patch('/change-student-id', changeStudentIdSchema, validateRequestSchema, changeStudentID)
+router.patch('/change-student-id', protect, changeStudentIdSchema, validateRequestSchema, changeStudentID)
 
 //change student fullname
-router.patch('/change-student-fullname', changeStudentFullnameSchema, validateRequestSchema, changeFullname)
+router.patch('/change-student-fullname', protect, changeStudentFullnameSchema, validateRequestSchema, changeFullname)
 
 //change student fullname
-router.patch('/change-student-picture', changeStudentPictureSchema, validateRequestSchema, changePicture)
+router.patch('/change-student-picture', protect,changeStudentPictureSchema, validateRequestSchema, changePicture)
+
+//change student mobile (check mobile number and send otp if false)
+router.get('/check-mobile-number', protect, checkMobileNumber)
 
 export default router

@@ -1,5 +1,8 @@
 import prisma from '../db'
 import { comparePasswords, createJWT, hashPassword } from '../modules/auth'
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const client = require('twilio')(accountSid, authToken);
 
 
 //REGISTER Handler
@@ -141,6 +144,49 @@ export const changePicture = async (req, res) => {
     picture
 
     res.json({message: "Profile Picture Updated!"})
+  } catch (error) {
+    console.error(error)
+    res.status(400).json({error: error.message})   
+  }
+}
+
+//UPDATE PROFILE (CHECK MOBILE NUMBER)
+export const checkMobileNumber = async (req, res) => {
+  try {
+    //check if the passed user id exists in the database
+    const userExists = await prisma.user.findUnique({
+      where: {
+          student_id: req.body.student_id
+      }
+    })
+    
+    if(!userExists) throw new Error("Voter not found");
+
+    const findNumber = await prisma.user.findUnique({
+      where: { mobile_number: req.body.new_mobile_number }
+    })
+
+    //check if mobile number is already taken
+    if(findNumber){
+      //send error message
+      throw new Error("Mobile Number is Taken")
+    }else{
+      //send otp
+      try {
+        client.verify.v2.services(process.env.TWILIO_OTP_SERVICE)
+                .verifications
+                .create({to: req.body.new_mobile_number, channel: 'sms'})
+                .then(verification => {
+                    console.log(verification.status)
+                    res.json({status:verification})
+                });
+        res.json({message: "Mobile Number is Available"})
+      } catch (error) {
+          console.error(error);
+          res.status(400).json({error:error})
+      }
+    }
+
   } catch (error) {
     console.error(error)
     res.status(400).json({error: error.message})   
