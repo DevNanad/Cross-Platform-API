@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { castVote, changeFullname, changePicture, changeStudentID, checkMobileNumber, checkVotersVote, deleteVoter, login, register } from '../handlers/userHandler';
+import { castVote, changeFullname, changePicture, changeStudentID, checkMobileNumber, checkVotersVote, confirmMobileNumber, deleteVoter, login, register } from '../handlers/userHandler';
 import { validateRequestSchema } from '../modules/validate-request-schema';
 import { loginSchema } from '../validators/loginSchema';
 import { registerSchema } from '../validators/registerSchema';
@@ -43,5 +43,8 @@ router.patch('/change-student-picture', protect,changeStudentPictureSchema, vali
 
 //change student mobile (check mobile number and send otp if false)
 router.get('/check-mobile-number', protect, changeStudentMobileSchema, validateRequestSchema, checkMobileNumber)
+
+//change student mobile (confirm mobile number otp)
+router.post('/confirm-mobile-number', protect, confirmMobileNumber)
 
 export default router

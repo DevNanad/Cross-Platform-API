@@ -192,6 +192,57 @@ export const checkMobileNumber = async (req, res) => {
   }
 }
 
+//UPDATE PROFILE (CONFIRM MOBILE NUMBER)
+export const confirmMobileNumber = async (req, res) => {
+  try {
+    //check if the passed user id exists in the database
+    const userExists = await prisma.user.findUnique({
+      where: {
+          student_id: req.body.student_id
+      }
+    })
+    
+    if(!userExists) throw new Error("Voter not found");
+
+    //verify otp
+    const otp = await client.verify.v2.services(process.env.TWILIO_OTP_SERVICE)
+    .verificationChecks
+    .create({to: req.body.new_mobile_number, code: req.body.new_otp_code})
+    .then(verification_check =>{
+
+        console.log(verification_check.status)
+
+        //check if the verification status is approved
+        if(verification_check.status === 'approved'){
+          //if yes then alert the user
+          console.log("Mobile Number Verified")
+        }else{
+          //if not then throw an error
+          throw new Error("Invalid OTP CODE")
+        }
+    });
+
+
+    const updateMobileNumber =  await prisma.user.update({
+      where: {
+        student_id: req.body.student_id
+      },
+      data:{
+        mobile_number: req.body.new_mobile_number
+      }
+    })
+
+    //invoke mobile update
+    updateMobileNumber
+
+    res.json({message: "Mobile Number Updated"})
+      
+  } catch (error) {
+    console.error(error)
+    res.status(400).json({error: error.message})   
+  }
+}
+
 
 //DELETE VOTER
 export const deleteVoter = async (req, res) => {
