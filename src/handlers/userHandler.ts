@@ -244,6 +244,36 @@ export const confirmMobileNumber = async (req, res) => {
 }
 
 
+//UPDATE PROFILE (PIN NUMBER)
+export const changePin = async (req, res) => {
+  try {
+    //check if the passed user id exists in the database
+    const userExists = await prisma.user.findUnique({
+      where: {
+          student_id: req.body.student_id
+      }
+    })
+    
+    if(!userExists) throw new Error("Voter not found");
+
+    const pin = await prisma.user.update({
+      where: { student_id: req.body.student_id},
+      data:{
+        pin_number: req.body.new_pin_number
+      }
+    })
+
+    //invoke PIN update
+    pin
+
+    res.json({message: "PIN Number Updated!"})
+  } catch (error) {
+    console.error(error)
+    res.status(400).json({error: error.message})   
+  }
+}
+
+
 //DELETE VOTER
 export const deleteVoter = async (req, res) => {
     try {
