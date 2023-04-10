@@ -12,6 +12,7 @@ import { changeStudentFullnameSchema } from '../validators/changeStudentFullname
 import { changeStudentPictureSchema } from '../validators/changeStudentPictureSchema';
 import { changeStudentMobileSchema } from '../validators/checkStudentMobileSchema';
 import { confirmStudentMobileSchema } from '../validators/confirmStudentMobileSchema';
+import { changStudentPinSchema } from '../validators/changeStudentPinSchema';
 
 const router = Router()
 
@@ -49,6 +50,6 @@ router.get('/check-mobile-number', protect, changeStudentMobileSchema, validateR
 router.post('/confirm-mobile-number', protect, confirmStudentMobileSchema, validateRequestSchema, confirmMobileNumber)
 
 //change student pin number
-router.patch('/change-student-pin-number', protect, changePin)
+router.patch('/change-student-pin-number', protect, changStudentPinSchema, validateRequestSchema, changePin)
 
 export default router
