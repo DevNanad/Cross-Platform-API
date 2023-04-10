@@ -43,17 +43,19 @@ export const sendOtp = async (req, res) => {
 }
 
 //VERIFY OTP
-export const verifyOtp = (req, res) => {
+export const verifyOtp = async (req, res) => {
     try {
-        client.verify.v2.services(process.env.TWILIO_OTP_SERVICE)
-                .verificationChecks
-                .create({to: req.body.mobile_number, code: req.body.otp_code})
-                .then(verification_check =>{
-                    console.log(verification_check.status)
-                    res.json({check_status:verification_check})
-                });
+      const verification_check = await client.verify
+        .v2.services(process.env.TWILIO_OTP_SERVICE)
+        .verificationChecks.create({
+          to: req.body.mobile_number,
+          code: req.body.otp_code,
+        });
+  
+      console.log(verification_check.status);
+      res.json({ check_status: verification_check });
     } catch (error) {
-        console.error(error);
-        res.status(401).json({error:error})
+      console.error(error);
+      res.status(401).json({ error: error.message });
     }
 }
