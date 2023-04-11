@@ -14,6 +14,7 @@ import { changeStudentMobileSchema } from '../validators/checkStudentMobileSchem
 import { confirmStudentMobileSchema } from '../validators/confirmStudentMobileSchema';
 import { changStudentPinSchema } from '../validators/changeStudentPinSchema';
 import { changeStudentPasswordSchema } from '../validators/changeStudentPasswordSchema';
+import { adminLoginRegisterSchema } from '../validators/adminLoginRegisterSchema';
 
 const router = Router()
 
@@ -60,9 +61,9 @@ router.patch('/change-student-password', protect, changeStudentPasswordSchema, v
 //ADMIN
 
 //login
-router.post('/admin/login', adminLogin)
+router.post('/admin/login', adminLoginRegisterSchema, validateRequestSchema, adminLogin)
 
 //register
-router.post('/admin/register', adminRegister)
+router.post('/admin/register', adminLoginRegisterSchema, validateRequestSchema, adminRegister)
 
 export default router
