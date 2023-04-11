@@ -21,6 +21,22 @@ export const createJWT = (user) => {
 };
 
 
+// Middleware function to check if the user is an administrator
+const isAdmin = (req, res, next) => {
+    const token = req.headers.authorization?.split(' ')[1];
+  
+    // Verify the JWT token
+    jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
+      if (err || !decodedToken.isAdmin) {
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+      req.user = decodedToken;
+      next();
+    });
+  };
+  
+
+
 
 //Protect incoming requests
 export const protect = (req, res, next) => {
