@@ -31,7 +31,7 @@ export const createJWTAdmin = (admin) => {
 
 
 // Middleware function to check if the user is an administrator
-const isAdmin = (req, res, next) => {
+export const isAdmin = (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1];
   
     // Verify the JWT token

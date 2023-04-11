@@ -3,25 +3,26 @@ import { candidateToSeat, createCandidate, deleteACandidate, getACandidate, getA
 import { candidateSchema } from '../validators/candidateSchema'
 import { validateRequestSchema } from '../modules/validate-request-schema'
 import { connectcandidateSchema } from '../validators/connectcandidateSchema'
+import { isAdmin } from '../modules/auth'
 
 const router = Router()
 
 //create a candidate
-router.post('/', candidateSchema, validateRequestSchema, createCandidate)
+router.post('/', isAdmin, candidateSchema, validateRequestSchema, createCandidate)
 
 //get all candidates
-router.get('/', getAllCandidate)
+router.get('/', isAdmin, getAllCandidate)
 
 //get single candidate
-router.get('/:id', getACandidate)
+router.get('/:id', isAdmin, getACandidate)
 
 //delete single candidate
-router.delete('/:id', deleteACandidate)
+router.delete('/:id', isAdmin, deleteACandidate)
 
 //update single candidate
-router.patch('/:id', candidateSchema, validateRequestSchema, updateACandidate)
+router.patch('/:id', isAdmin, candidateSchema, validateRequestSchema, updateACandidate)
 
 //connect to seat
-router.patch('/candidate-seat',connectcandidateSchema, validateRequestSchema, candidateToSeat)
+router.patch('/candidate-seat', isAdmin,connectcandidateSchema, validateRequestSchema, candidateToSeat)
 
 export default router
