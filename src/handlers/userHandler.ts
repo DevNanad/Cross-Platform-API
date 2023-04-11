@@ -1,5 +1,5 @@
 import prisma from '../db'
-import { comparePasswords, createJWT, hashPassword } from '../modules/auth'
+import { comparePasswords, createJWT, createJWTAdmin, hashPassword } from '../modules/auth'
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
@@ -474,5 +474,49 @@ export const checkVotersVote = async (req, res) => {
   } catch (error) {
     console.error(error.message)
     res.status(404).json({ error: error.message })
+  }
+}
+
+//ADMIN
+
+//LOGIN
+export const adminLogin = async (req, res) => {
+  try {
+    // Check if the username and password are correct
+    const admin = await prisma.admin.findUnique({
+      where: { username: req.body.username },
+    });
+    if (!admin || !(await comparePasswords(req.body.password, admin.password))) {
+      return res.status(401).json({ error: 'Incorrect username or password' });
+    }
+
+    // Generate a JWT token with isAdmin set to true
+    const token = createJWTAdmin(admin)
+
+    res.json({ token });
+
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ error: error.message });
+  }
+}
+
+//REGISTER
+export const adminRegister = async (req, res) => {
+  try {
+      const admin = await prisma.admin.create({
+          data: {
+              username: req.body.username,
+              password: await hashPassword(req.body.password)
+          }
+      })
+  
+      const token = createJWTAdmin(admin)
+
+      res.json({token})
+
+  } catch (error) {
+      console.error(error)
+      res.status(400).json({error: error.message})
   }
 }

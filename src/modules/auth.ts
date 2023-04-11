@@ -20,6 +20,15 @@ export const createJWT = (user) => {
   return token
 };
 
+//Create JWT token of the admin
+export const createJWTAdmin = (admin) => {
+  const token = jwt.sign({ adminId: admin.id, isAdmin: true }, process.env.JWT_SECRET, {
+    expiresIn: '5h',
+  });
+
+  return token
+}
+
 
 // Middleware function to check if the user is an administrator
 const isAdmin = (req, res, next) => {
