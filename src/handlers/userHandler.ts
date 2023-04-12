@@ -531,3 +531,31 @@ export const adminRegister = async (req, res) => {
       res.status(400).json({error: error.message})
   }
 }
+
+//UPDATE USERNAME
+export const updateAdminUsername = async (req, res) => {
+  try {
+
+    //check if the passed student voter id exists in the database
+    const adminExists = await prisma.admin.findUnique({
+      where: {
+          id: req.body.id
+      }
+    })
+    
+    if(!adminExists) throw new Error("Admin not found");
+
+
+    //update admin username
+    const adminUsername = await prisma.admin.update({
+      where:{ id: req.body.id },
+      data: { username: req.body.username }
+    })
+
+    res.json({message: "Admin Username Updated"})
+
+  } catch (error) {
+    console.error(error)
+    res.status(400).json({error: error.message})
+  }
+}
