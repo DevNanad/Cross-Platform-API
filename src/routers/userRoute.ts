@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { adminLogin, adminRegister, castVote, changeFullname, changePassword, changePicture, changePin, changeStudentID, checkMobileNumber, checkVotersVote, confirmMobileNumber, deleteVoter, login, register, updateAdminUsername } from '../handlers/userHandler';
+import { adminLogin, adminRegister, castVote, changeFullname, changePassword, changePicture, changePin, changeStudentID, checkMobileNumber, checkVotersVote, confirmMobileNumber, deleteVoter, login, register, updateAdminPassword, updateAdminUsername } from '../handlers/userHandler';
 import { validateRequestSchema } from '../modules/validate-request-schema';
 import { loginSchema } from '../validators/loginSchema';
 import { registerSchema } from '../validators/registerSchema';
@@ -68,5 +68,8 @@ router.post('/admin/register', adminLoginRegisterSchema, validateRequestSchema, 
 
 //update username
 router.patch('/admin/username', updateAdminUsername)
+
+//update password
+router.patch('/admin/password', updateAdminPassword)
 
 export default router
