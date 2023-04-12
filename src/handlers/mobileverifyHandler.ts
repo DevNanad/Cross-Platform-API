@@ -45,6 +45,15 @@ export const sendOtp = async (req, res) => {
 //VERIFY OTP
 export const verifyOtp = async (req, res) => {
     try {
+      // Check if mobile number is valid (should be Philippine number)
+      const lookup = await client.lookups
+      .v2.phoneNumbers(req.body.mobile_number)
+      .fetch();
+      const countryCode = lookup.countryCode;
+      if (countryCode !== "PH") {
+      throw new Error("Invalid phone number. Please provide a valid Philippine phone number.");
+      }
+  
       const verification_check = await client.verify
         .v2.services(process.env.TWILIO_OTP_SERVICE)
         .verificationChecks.create({
