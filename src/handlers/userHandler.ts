@@ -150,47 +150,51 @@ export const changePicture = async (req, res) => {
   }
 }
 
-//UPDATE PROFILE (CHECK MOBILE NUMBER)
+// UPDATE PROFILE (CHECK MOBILE NUMBER)
 export const checkMobileNumber = async (req, res) => {
   try {
-    //check if the passed user id exists in the database
-    const userExists = await prisma.user.findUnique({
+    // Check if the passed user id exists in the database
+    const user = await prisma.user.findUnique({
       where: {
-          student_id: req.body.student_id
-      }
-    })
-    
-    if(!userExists) throw new Error("Voter not found");
+        student_id: req.body.student_id,
+      },
+    });
 
-    const findNumber = await prisma.user.findUnique({
-      where: { mobile_number: req.body.new_mobile_number }
-    })
-
-    //check if mobile number is already taken
-    if(findNumber){
-      //send error message
-      throw new Error("Mobile Number is Taken")
-    }else{
-      //send otp
-      try {
-        client.verify.v2.services(process.env.TWILIO_OTP_SERVICE)
-                .verifications
-                .create({to: req.body.new_mobile_number, channel: 'sms'})
-                .then(verification => {
-                    console.log(verification.status)
-                });
-        res.json({message: "Mobile Number is Available"})
-      } catch (error) {
-          console.error(error);
-          res.status(400).json({error:error})
-      }
+    if (!user) {
+      throw new Error("User not found");
     }
 
+    // Check if mobile number is valid (should be Philippine number)
+    const lookup = await client.lookups
+    .v2.phoneNumbers(req.body.new_mobile_number)
+    .fetch();
+    const countryCode = lookup.countryCode;
+    if (countryCode !== "PH") {
+    throw new Error("Invalid phone number. Please provide a valid Philippine phone number.");
+    }
+
+    // Check if mobile number is already taken
+    const existingUser = await prisma.user.findUnique({
+      where: { mobile_number: req.body.new_mobile_number },
+    });
+
+    if (existingUser) {
+      throw new Error("Mobile number is Taken");
+    } else {
+      // Send OTP
+      const verification = await client.verify.services(
+        process.env.TWILIO_OTP_SERVICE
+      ).verifications.create({ to: req.body.new_mobile_number, channel: "sms" });
+
+      console.log(verification.status);
+
+      res.json({ message: "Mobile number is Available" });
+    }
   } catch (error) {
-    console.error(error)
-    res.status(400).json({error: error.message})   
+    console.error(error);
+    res.status(400).json({ error: error.message });
   }
-}
+};
 
 //UPDATE PROFILE (CONFIRM MOBILE NUMBER)
 export const confirmMobileNumber = async (req, res) => {
