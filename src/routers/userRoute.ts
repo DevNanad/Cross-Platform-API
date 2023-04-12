@@ -3,7 +3,7 @@ import { adminLogin, adminRegister, castVote, changeFullname, changePassword, ch
 import { validateRequestSchema } from '../modules/validate-request-schema';
 import { loginSchema } from '../validators/loginSchema';
 import { registerSchema } from '../validators/registerSchema';
-import { protect } from '../modules/auth';
+import { isAdmin, protect } from '../modules/auth';
 import { castVoteConnections } from '../handlers/userHandler';
 import { castConnectionSchema } from '../validators/castConnectionSchema';
 import { checkVoterIdSchema } from '../validators/checkVoterIdSchema';
@@ -15,6 +15,8 @@ import { confirmStudentMobileSchema } from '../validators/confirmStudentMobileSc
 import { changStudentPinSchema } from '../validators/changeStudentPinSchema';
 import { changeStudentPasswordSchema } from '../validators/changeStudentPasswordSchema';
 import { adminLoginRegisterSchema } from '../validators/adminLoginRegisterSchema';
+import { adminUpdateUsernameSchema } from '../validators/adminUpdateUsernameSchema';
+import { adminUpdatePasswordSchema } from '../validators/adminUpdatePasswordSchema';
 
 const router = Router()
 
@@ -67,9 +69,9 @@ router.post('/admin/login', adminLoginRegisterSchema, validateRequestSchema, adm
 router.post('/admin/register', adminLoginRegisterSchema, validateRequestSchema, adminRegister)
 
 //update username
-router.patch('/admin/username', updateAdminUsername)
+router.patch('/admin/username', isAdmin, adminUpdateUsernameSchema, validateRequestSchema,updateAdminUsername)
 
 //update password
-router.patch('/admin/password', updateAdminPassword)
+router.patch('/admin/password', isAdmin, adminUpdatePasswordSchema, validateRequestSchema, updateAdminPassword)
 
 export default router
