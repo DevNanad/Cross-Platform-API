@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { adminLogin, adminRegister, castVote, changeFullname, changePassword, changePicture, changePin, changeStudentID, checkMobileNumber, checkVotersVote, confirmMobileNumber, deleteVoter, login, register, updateAdminPassword, updateAdminUsername } from '../handlers/userHandler';
+import { adminLogin, adminRegister, castVote, changeFullname, changePassword, changePicture, changePin, changeStudentID, checkMobileNumber, checkVotersVote, confirmMobileNumber, deleteVoter, forgotPasswordSendOTP, login, register, updateAdminPassword, updateAdminUsername } from '../handlers/userHandler';
 import { validateRequestSchema } from '../modules/validate-request-schema';
 import { loginSchema } from '../validators/loginSchema';
 import { registerSchema } from '../validators/registerSchema';
@@ -59,6 +59,8 @@ router.patch('/change-student-pin-number', protect, changStudentPinSchema, valid
 //chang student password
 router.patch('/change-student-password', protect, changeStudentPasswordSchema, validateRequestSchema, changePassword)
 
+//forgot password
+router.get('/forgot-password', forgotPasswordSendOTP)
 
 //ADMIN
 

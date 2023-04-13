@@ -314,6 +314,46 @@ export const changePassword = async (req, res) => {
 }
 
 
+//FORGOT PASSWORD
+export const forgotPasswordSendOTP = async (req, res) => {
+  try {
+
+      // Check if mobile number is valid (should be Philippine number)
+      const lookup = await client.lookups
+      .v2.phoneNumbers(req.body.mobile_number)
+      .fetch();
+      const countryCode = lookup.countryCode;
+      if (countryCode !== "PH") {
+      throw new Error("Invalid phone number. Please provide a valid Philippine phone number.");
+      }
+      // Check the database if the user number is taken
+      const findNumber = await prisma.user.findUnique({
+          where: { mobile_number: req.body.mobile_number },
+      });
+    
+      // Check if mobile number is already taken
+      if (!findNumber) {
+          // Send error message
+          throw new Error("No Student with that Number");
+      } else {
+      
+          // Send OTP
+          const verification = await client.verify
+          .v2.services(process.env.TWILIO_OTP_SERVICE)
+          .verifications.create({ to: req.body.mobile_number, channel: "sms" });
+          console.log(verification.status);
+      
+          // Send success message
+          res.json({ message: "OTP sent to mobile number." });
+      }
+  } catch (error) {
+  console.error(error);
+  res.status(400).json({ error: error.message });
+  }
+
+}
+
+
 //DELETE VOTER
 export const deleteVoter = async (req, res) => {
     try {
