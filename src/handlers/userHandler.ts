@@ -353,6 +353,27 @@ export const forgotPasswordSendOTP = async (req, res) => {
 
 }
 
+//FORGOT THE ACTUAL PASSWORD
+export const forgotPassword = async (req, res) => {
+  try {
+    
+    const password = await prisma.user.update({
+      where: { mobile_number: req.body.mobile_number},
+      data:{
+        password: await hashPassword(req.body.new_password)
+      }
+    })
+
+    //invoke password update
+    password
+
+    res.json({message: "Password Updated!"})
+  } catch (error) {
+    console.error(error)
+    res.status(400).json({error: error.message})   
+  }
+}
+
 
 //DELETE VOTER
 export const deleteVoter = async (req, res) => {
