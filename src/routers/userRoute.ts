@@ -18,6 +18,7 @@ import { adminLoginRegisterSchema } from '../validators/adminLoginRegisterSchema
 import { adminUpdateUsernameSchema } from '../validators/adminUpdateUsernameSchema';
 import { adminUpdatePasswordSchema } from '../validators/adminUpdatePasswordSchema';
 import { otpsendSchema } from '../validators/otpsendSchema';
+import { forgotPasswordSchema } from '../validators/forgotPasswordSchema';
 
 const router = Router()
 
@@ -61,10 +62,10 @@ router.patch('/change-student-pin-number', protect, changStudentPinSchema, valid
 router.patch('/change-student-password', protect, changeStudentPasswordSchema, validateRequestSchema, changePassword)
 
 //forgot password
-router.get('/forgot-password-send', otpsendSchema, validateRequestSchema,forgotPasswordSendOTP)
+router.get('/forgot-password-send', otpsendSchema, validateRequestSchema, forgotPasswordSendOTP)
 
 //forgot the actual password
-router.patch('/forgot-password', forgotPassword)
+router.patch('/forgot-password', forgotPasswordSchema, validateRequestSchema, forgotPassword)
 
 //ADMIN
 
