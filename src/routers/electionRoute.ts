@@ -7,40 +7,40 @@ import { isAdmin, protect } from '../modules/auth'
 
 const router = Router()
 
-//create an election
+//create an election ***
 router.post('/', isAdmin, electionSchema, validateRequestSchema, createElection)
 
-//connect org to election
+//connect org to election ***
 router.patch('/org-election', isAdmin,connectorgSchema,validateRequestSchema, connectOrg)
 
-//get single election
+//get single election ***
 router.get('/:id', isAdmin, getAnElection)
 
-//get all elections
+//get all elections ***
 router.get('/', isAdmin, getAllElection)
 
-//delete single election
+//delete single election ***
 router.delete('/:id', isAdmin, deleteAnElection)
 
-//delete all election
+//delete all election ***
 router.delete('/', isAdmin, deleteAllElection)
 
-//upcoming election
+//upcoming election ***
 router.get('/status/upcoming', isAdmin, getUpcomingElection)
 
-//ongoing election
+//ongoing election 
 router.get('/status/ongoing', protect, getOngoingElection)
 
 //ended election
 router.get('/status/ended', protect, getEndedElection)
 
-//update to upcoming
+//update to upcoming ***
 router.patch('/status/to-upcoming/:id', isAdmin, toUpcoming)
 
-//update to ongoing
+//update to ongoing ***
 router.patch('/status/to-ongoing/:id', isAdmin, toOngoing)
 
-//update to ended
+//update to ended ***
 router.patch('/status/to-ended/:id', isAdmin, toEnded)
 
 export default router

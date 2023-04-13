@@ -13,22 +13,22 @@ import { isAdmin } from "../modules/auth";
 
 const router = Router();
 
-//create an organization
+//create an organization ***
 router.post("/", isAdmin, organizationSchema, validateRequestSchema, createOrg);
 
-//get all organizations
+//get all organizations ***
 router.get("/", isAdmin, getAllOrg);
 
-//get single organization
+//get single organization ***
 router.get("/:id", isAdmin, getAnOrg);
 
-//delete all organizations
+//delete all organizations ***
 router.delete("/", isAdmin, deleteAllOrg);
 
-//delete single organization
+//delete single organization ***
 router.delete("/:id", isAdmin, deleteAnOrg);
 
-//update single organization
+//update single organization ***
 router.patch("/:id", isAdmin, organizationSchema, validateRequestSchema, updateAnOrg);
 
 export default router;

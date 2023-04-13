@@ -22,12 +22,21 @@ import { forgotPasswordSchema } from '../validators/forgotPasswordSchema';
 
 const router = Router()
 
+//NOT LOGGED IN
 //Register user route
 router.post('/register', registerSchema, validateRequestSchema, register )
 
 //Login user route
 router.post('/login', loginSchema, validateRequestSchema, login )
 
+//forgot password
+router.get('/forgot-password-send', otpsendSchema, validateRequestSchema, forgotPasswordSendOTP)
+
+//forgot the actual password
+router.patch('/forgot-password', forgotPasswordSchema, validateRequestSchema, forgotPassword)
+
+
+//LOGGED IN
 //Delete user route
 router.delete('/delete-account/:id', protect, deleteVoter)
 
@@ -61,24 +70,19 @@ router.patch('/change-student-pin-number', protect, changStudentPinSchema, valid
 //chang student password
 router.patch('/change-student-password', protect, changeStudentPasswordSchema, validateRequestSchema, changePassword)
 
-//forgot password
-router.get('/forgot-password-send', otpsendSchema, validateRequestSchema, forgotPasswordSendOTP)
-
-//forgot the actual password
-router.patch('/forgot-password', forgotPasswordSchema, validateRequestSchema, forgotPassword)
 
 //ADMIN
-
-//login
+//NOT LOGGED IN
 router.post('/admin/login', adminLoginRegisterSchema, validateRequestSchema, adminLogin)
 
 //register
 router.post('/admin/register', adminLoginRegisterSchema, validateRequestSchema, adminRegister)
 
-//update username
+//LOGGED IN
+//update username ***
 router.patch('/admin/username', isAdmin, adminUpdateUsernameSchema, validateRequestSchema,updateAdminUsername)
 
-//update password
+//update password ***
 router.patch('/admin/password', isAdmin, adminUpdatePasswordSchema, validateRequestSchema, updateAdminPassword)
 
 export default router

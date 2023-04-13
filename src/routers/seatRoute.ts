@@ -7,16 +7,16 @@ import { isAdmin } from '../modules/auth'
 
 const router = Router()
 
-//create single seat
+//create single seat ***
 router.post('/', isAdmin, seatSchema, validateRequestSchema, createSeat)
 
-//get all seats
+//get all seats ***
 router.get('/', isAdmin, getAllSeat)
 
-//delete a seat
+//delete a seat ***
 router.delete('/:id', isAdmin, deleteASeat)
 
-//connect seat to ballot
+//connect seat to ballot ***
 router.patch('/seat-ballot', isAdmin, connectseatSchema, validateRequestSchema, seatToballot)
 
 export default router
