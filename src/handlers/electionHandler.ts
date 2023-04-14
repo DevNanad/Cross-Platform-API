@@ -280,9 +280,50 @@ export const connectOrg = async (req, res) => {
                 }
             }
         })
-        res.json(connectOrgToElection)
+        res.json({ message: "Organization Connected to Election"})
     } catch (error) {
         console.error(error.message)
         res.status(404).json({error: error.message})       
+    }
+}
+
+//DISCONNECT ORG TO ELECTION
+export const disconnectOrg = async (req, res) => {
+    try {
+        // check if the passed election id exists in the database
+        const electionExists = await prisma.election.findUnique({
+            where: {
+                id: req.body.election_id
+            }
+        })
+
+        if (!electionExists) throw new Error("Election not found");
+
+        // check if the passed organization id exists in the database
+        const orgExists = await prisma.organization.findUnique({
+            where: {
+                id: req.body.org_id
+            }
+        })
+
+        if (!orgExists) throw new Error("Organization not found");
+
+        const disconnectOrgFromElection = await prisma.election.update({
+            where: {
+                id: req.body.election_id
+            },
+            data: {
+                organizations: {
+                    disconnect: {
+                        id: req.body.org_id
+                    }
+                }
+            }
+        })
+
+        res.json({ message: "Organization Disconnected from Election"})
+    } catch (error) {
+        console.error(error.message)
+        res.status(404).json({error: error.message})
     }
 }

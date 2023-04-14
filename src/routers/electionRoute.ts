@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { createElection, connectOrg, getAllElection, deleteAnElection, deleteAllElection, getAnElection, getUpcomingElection, getOngoingElection, getEndedElection, toUpcoming, toOngoing, toEnded } from '../handlers/electionHandler'
+import { createElection, connectOrg, getAllElection, deleteAnElection, deleteAllElection, getAnElection, getUpcomingElection, getOngoingElection, getEndedElection, toUpcoming, toOngoing, toEnded, disconnectOrg } from '../handlers/electionHandler'
 import { validateRequestSchema } from '../modules/validate-request-schema'
 import { connectorgSchema } from '../validators/connectorgSchema'
 import { electionSchema } from '../validators/electionSchema'
@@ -11,7 +11,10 @@ const router = Router()
 router.post('/', isAdmin, electionSchema, validateRequestSchema, createElection)
 
 //connect org to election ***
-router.patch('/org-election', isAdmin,connectorgSchema,validateRequestSchema, connectOrg)
+router.patch('/connect-org-election', isAdmin,connectorgSchema,validateRequestSchema, connectOrg)
+
+//disconnect org to election ***
+router.patch('/disconnect-org-election', isAdmin,connectorgSchema,validateRequestSchema, disconnectOrg)
 
 //get single election ***
 router.get('/:id', isAdmin, getAnElection)
