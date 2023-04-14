@@ -7,25 +7,25 @@ import { isAdmin } from '../modules/auth'
 
 const router = Router()
 
-//create a candidate ***
+//create a candidate ⭐
 router.post('/', isAdmin, candidateSchema, validateRequestSchema, createCandidate)
 
-//get all candidates ***
+//get all candidates ⭐
 router.get('/', isAdmin, getAllCandidate)
 
-//get single candidate ***
+//get single candidate ⭐
 router.get('/:id', isAdmin, getACandidate)
 
-//delete single candidate ***
+//delete single candidate ⭐
 router.delete('/:id', isAdmin, deleteACandidate)
 
-//update single candidate ***
+//update single candidate ⭐
 router.patch('/:id', isAdmin, candidateSchema, validateRequestSchema, updateACandidate)
 
-//connect candidate to seat ***
+//connect candidate to seat ⭐
 router.patch('/connect/candidate-seat', isAdmin,connectcandidateSchema, validateRequestSchema, candidateToSeat)
 
-//disconnect candidate from seat ***
+//disconnect candidate from seat ⭐
 router.patch('/disconnect/candidate-seat', isAdmin,connectcandidateSchema, validateRequestSchema, disconnectCandidateFromSeat)
 
 export default router

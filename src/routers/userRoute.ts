@@ -79,10 +79,10 @@ router.post('/admin/login', adminLoginRegisterSchema, validateRequestSchema, adm
 router.post('/admin/register', adminLoginRegisterSchema, validateRequestSchema, adminRegister)
 
 //LOGGED IN
-//update username ***
+//update username ⭐
 router.patch('/admin/username', isAdmin, adminUpdateUsernameSchema, validateRequestSchema,updateAdminUsername)
 
-//update password ***
+//update password ⭐
 router.patch('/admin/password', isAdmin, adminUpdatePasswordSchema, validateRequestSchema, updateAdminPassword)
 
 export default router

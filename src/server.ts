@@ -1,7 +1,6 @@
 import express from 'express'
 import morgan from 'morgan'
 import { protect } from './modules/auth'
-import router from './routers/router'
 import userRouter from './routers/userRoute'
 import electionRouter from './routers/electionRoute'
 import organizationRouter from './routers/organizationRoute'
@@ -15,14 +14,11 @@ app.use(morgan('dev'))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
+//Home page
 app.get('/', (req, res) => {
     res.status(200)
     res.json({message: "Welcome Home"})
 })
-
-
-
-app.use('/api', protect, router)
 
 //election schema route
 app.use('/election', protect, electionRouter)
@@ -35,7 +31,6 @@ app.use('/seat', protect, seatRouter)
 
 //candidate schema route
 app.use('/candidate', protect, candidateRouter)
-
 
 //user schema route
 app.use('/', userRouter)
