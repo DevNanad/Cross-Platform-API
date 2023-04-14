@@ -150,9 +150,52 @@ export const candidateToSeat = async (req, res) => {
                 }
             }
         })
-        res.json(connectCandidateToSeat)
+        res.json({ message: "Candidate Connected to Seat"})
     } catch (error) {
         console.error(error.message)
         res.status(404).json({error: error.message})       
     }
 }
+
+
+// DISCONNECT CANDIDATE FROM SEAT
+export const disconnectCandidateFromSeat = async (req, res) => {
+    try {
+      // Check if the passed seat id exists in the database
+      const seatExists = await prisma.seat.findUnique({
+        where: {
+          id: req.body.seat_id
+        }
+      });
+  
+      if (!seatExists) throw new Error("Seat not found");
+  
+      // Check if the passed candidate id exists in the database
+      const candidateExists = await prisma.candidate.findUnique({
+        where: {
+          id: req.body.candidate_id
+        }
+      });
+  
+      if (!candidateExists) throw new Error("Candidate not found");
+  
+      const disconnectCandidateFromSeat = await prisma.seat.update({
+        where: {
+          id: req.body.seat_id
+        },
+        data: {
+          candidates: {
+            disconnect: {
+              id: req.body.candidate_id
+            }
+          }
+        }
+      });
+      
+      res.json({ message: "Candidate Disconnected from Seat" });
+    } catch (error) {
+      console.error(error.message);
+      res.status(404).json({ error: error.message });
+    }
+  };
+  

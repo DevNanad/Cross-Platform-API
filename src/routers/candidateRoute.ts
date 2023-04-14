@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { candidateToSeat, createCandidate, deleteACandidate, getACandidate, getAllCandidate, updateACandidate } from '../handlers/candidateHandler'
+import { candidateToSeat, createCandidate, deleteACandidate, disconnectCandidateFromSeat, getACandidate, getAllCandidate, updateACandidate } from '../handlers/candidateHandler'
 import { candidateSchema } from '../validators/candidateSchema'
 import { validateRequestSchema } from '../modules/validate-request-schema'
 import { connectcandidateSchema } from '../validators/connectcandidateSchema'
@@ -22,7 +22,10 @@ router.delete('/:id', isAdmin, deleteACandidate)
 //update single candidate ***
 router.patch('/:id', isAdmin, candidateSchema, validateRequestSchema, updateACandidate)
 
-//connect to seat ***
-router.patch('/candidate-seat', isAdmin,connectcandidateSchema, validateRequestSchema, candidateToSeat)
+//connect candidate to seat ***
+router.patch('/connect/candidate-seat', isAdmin,connectcandidateSchema, validateRequestSchema, candidateToSeat)
+
+//disconnect candidate from seat ***
+router.patch('/disconnect/candidate-seat', isAdmin,connectcandidateSchema, validateRequestSchema, disconnectCandidateFromSeat)
 
 export default router
