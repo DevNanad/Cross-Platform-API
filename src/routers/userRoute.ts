@@ -19,6 +19,7 @@ import { adminUpdateUsernameSchema } from '../validators/adminUpdateUsernameSche
 import { adminUpdatePasswordSchema } from '../validators/adminUpdatePasswordSchema';
 import { otpsendSchema } from '../validators/otpsendSchema';
 import { forgotPasswordSchema } from '../validators/forgotPasswordSchema';
+import { forgotPinSchema } from '../validators/forgotPinSchema';
 
 const router = Router()
 
@@ -36,7 +37,7 @@ router.get('/forgot-password-send', otpsendSchema, validateRequestSchema, forgot
 router.patch('/forgot-password', forgotPasswordSchema, validateRequestSchema, forgotPassword)
 
 //forgot the actual pin code
-router.patch('/forgot-pin', forgotPin)
+router.patch('/forgot-pin', forgotPinSchema, validateRequestSchema, forgotPin)
 
 //LOGGED IN
 //Delete user route
