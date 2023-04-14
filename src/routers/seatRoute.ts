@@ -1,7 +1,7 @@
 import {Router} from 'express'
 import { validateRequestSchema } from '../modules/validate-request-schema'
 import { connectseatSchema } from '../validators/connectseatSchema'
-import { createSeat, deleteASeat, getAllSeat, seatToballot } from '../handlers/seatHandler'
+import { createSeat, deleteASeat, disconnectSeatFromBallot, getAllSeat, seatToballot } from '../handlers/seatHandler'
 import { seatSchema } from '../validators/seatSchema'
 import { isAdmin } from '../modules/auth'
 
@@ -17,6 +17,9 @@ router.get('/', isAdmin, getAllSeat)
 router.delete('/:id', isAdmin, deleteASeat)
 
 //connect seat to ballot ***
-router.patch('/seat-ballot', isAdmin, connectseatSchema, validateRequestSchema, seatToballot)
+router.patch('/connect-seat-ballot', isAdmin, connectseatSchema, validateRequestSchema, seatToballot)
+
+//disconnect seat from ballot ***
+router.patch('/disconnect-seat-ballot', isAdmin, connectseatSchema, validateRequestSchema, disconnectSeatFromBallot)
 
 export default router

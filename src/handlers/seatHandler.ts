@@ -94,9 +94,50 @@ export const seatToballot = async (req, res) => {
                 }
             }
         })
-        res.json(connectSeatToBallot)
+        res.json({ message: "Seat Connected to Ballot" })
     } catch (error) {
         console.error(error.message)
         res.status(404).json({error: error.message})       
+    }
+}
+
+//DISCONNECT SEAT FROM BALLOT
+export const disconnectSeatFromBallot = async (req, res) => {
+    try {
+        //check if the passed ballot id exists in the database
+        const ballotExists = await prisma.ballot.findUnique({
+            where: {
+                id: req.body.ballot_id
+            }
+        })
+        
+        if (!ballotExists) throw new Error("Ballot not found");
+        
+        //check if the passed seat id exists in the database
+        const seatExists = await prisma.seat.findUnique({
+            where: {
+                id: req.body.seat_id
+            }
+        })
+        
+        if (!seatExists) throw new Error("Seat not found");
+
+        const disconnectSeatFromBallot = await prisma.ballot.update({
+            where: {
+                id: req.body.ballot_id
+            },
+            data: {
+                seats: {
+                    disconnect: {
+                        id: req.body.seat_id
+                    }
+                }
+            }
+        })
+
+        res.json({ message: "Seat Disconnected from Ballot" });
+    } catch (error) {
+        console.error(error.message);
+        res.status(404).json({ error: error.message });       
     }
 }
