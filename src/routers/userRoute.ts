@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { adminLogin, adminRegister, castVote, changeFullname, changePassword, changePicture, changePin, changeStudentID, checkMobileNumber, checkVotersVote, confirmMobileNumber, deleteVoter, forgotPassword, forgotPasswordSendOTP, login, register, updateAdminPassword, updateAdminUsername } from '../handlers/userHandler';
+import { adminLogin, adminRegister, castVote, changeFullname, changePassword, changePicture, changePin, changeStudentID, checkMobileNumber, checkVotersVote, confirmMobileNumber, deleteVoter, forgotPassword, forgotPasswordSendOTP, forgotPin, login, register, updateAdminPassword, updateAdminUsername } from '../handlers/userHandler';
 import { validateRequestSchema } from '../modules/validate-request-schema';
 import { loginSchema } from '../validators/loginSchema';
 import { registerSchema } from '../validators/registerSchema';
@@ -35,6 +35,8 @@ router.get('/forgot-password-send', otpsendSchema, validateRequestSchema, forgot
 //forgot the actual password
 router.patch('/forgot-password', forgotPasswordSchema, validateRequestSchema, forgotPassword)
 
+//forgot the actual pin code
+router.patch('/forgot-pin', forgotPin)
 
 //LOGGED IN
 //Delete user route
@@ -67,7 +69,7 @@ router.post('/confirm-mobile-number', protect, confirmStudentMobileSchema, valid
 //change student pin number
 router.patch('/change-student-pin-number', protect, changStudentPinSchema, validateRequestSchema, changePin)
 
-//chang student password
+//change student password
 router.patch('/change-student-password', protect, changeStudentPasswordSchema, validateRequestSchema, changePassword)
 
 

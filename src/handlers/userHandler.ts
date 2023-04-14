@@ -357,15 +357,19 @@ export const forgotPasswordSendOTP = async (req, res) => {
 export const forgotPassword = async (req, res) => {
   try {
     
+    // Check the database if the user number exists
+    const findNumber = await prisma.user.findUnique({
+      where: { mobile_number: req.body.mobile_number },
+    });
+
+    if(!findNumber) throw new Error("Student Voter Not Found");
+    
     const password = await prisma.user.update({
       where: { mobile_number: req.body.mobile_number},
       data:{
         password: await hashPassword(req.body.new_password)
       }
     })
-
-    //invoke password update
-    password
 
     res.json({message: "Password Updated!"})
   } catch (error) {
@@ -374,6 +378,31 @@ export const forgotPassword = async (req, res) => {
   }
 }
 
+//FORGOT THE ACTUAL PIN
+export const forgotPin = async (req, res) => {
+  try {
+
+    // Check the database if the user number exists
+    const findNumber = await prisma.user.findUnique({
+      where: { mobile_number: req.body.mobile_number },
+    });
+
+    if(!findNumber) throw new Error("Student Voter Not Found");
+    
+
+    const newpin = await prisma.user.update({
+      where: { mobile_number: req.body.mobile_number},
+      data:{
+        pin_number: req.body.new_pin_number
+      }
+    })
+
+    res.json({message: "PIN Code Updated!"})
+  } catch (error) {
+    console.error(error)
+    res.status(400).json({error: error.message})   
+  }
+}
 
 //DELETE VOTER
 export const deleteVoter = async (req, res) => {
