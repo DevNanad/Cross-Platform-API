@@ -7,6 +7,7 @@ import organizationRouter from './routers/organizationRoute'
 import seatRouter from './routers/seatRoute'
 import candidateRouter from './routers/candidateRoute'
 import mobileverifyRoute from './routers/mobileverifyRoute'
+import idRouter from './routers/idRoute'
 const app = express()
 
 //middlewares
@@ -34,6 +35,9 @@ app.use('/candidate', protect, candidateRouter)
 
 //user schema route
 app.use('/', userRouter)
+
+//id schema route
+app.use('/id', idRouter)
 
 //mobile verification schema route
 app.use('/otp', mobileverifyRoute)
