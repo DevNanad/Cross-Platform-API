@@ -7,19 +7,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//IDs
+model Id {
+  id         String   @id @default(uuid())
+  student_id String   @unique
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
 //Voters
 model User {
-  id              String            @id @default(uuid())
-  student_id      String            @unique
+  id              String   @id @default(uuid())
+  student_id      String   @unique
   password        String
   fullname        String?
   profile_picture String?
-  mobile_number   String            @unique
+  mobile_number   String   @unique
   pin_number      String
   votes           Vote[]
-  elections       Electionhistory[]
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 //Admin who control everything
@@ -33,16 +40,14 @@ model Admin {
 
 //Election have many Organizations
 model Election {
-  id                String           @id @default(uuid())
-  title             String
-  startDate         DateTime
-  endDate           DateTime
-  status            Status           @default(upcoming)
-  organizations     Organization[]
-  electionhistory   Electionhistory? @relation(fields: [electionhistoryId], references: [id])
-  electionhistoryId String?
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
+  id            String         @id @default(uuid())
+  title         String
+  startDate     DateTime
+  endDate       DateTime
+  status        Status         @default(upcoming)
+  organizations Organization[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 }
 
 //Status for Election
@@ -116,13 +121,4 @@ model Vote {
   updatedAt      DateTime      @updatedAt
 
   @@unique([organizationId, voterId, candidateId])
-}
-
-model Electionhistory {
-  id        String     @id @default(uuid())
-  elections Election[]
-  voter     User?      @relation(fields: [voterId], references: [id])
-  voterId   String?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
 }
