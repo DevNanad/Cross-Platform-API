@@ -427,16 +427,7 @@ export const deleteVoter = async (req, res) => {
         })
 
         //delete the election history related to student voter
-        const deleteElectionHistory = await prisma.electionhistory.deleteMany({
-            where: {
-                voterId: req.params.id
-            }
-        })
-
-        //invoke delete user
-        deleteVoter
-        //invoke delete elechistory
-        deleteElectionHistory
+        
         //return response
         res.json({message: "Student Voter deleted Successfully"})
     } catch (error) {
