@@ -5,6 +5,22 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
 
 
+//CHECK ID BEFORE REGISTER THE STUDENT VOTER
+export const registerCheckId = async (req, res) => {
+  try {
+    const id = await prisma.id.findUnique({
+      where: { student_id: req.body.student_id }
+    })
+
+    if(id) throw new Error("ID Already Taken");
+    
+    res.json({message: "Happy Registration :)"})
+  } catch (error) {
+      console.error(error)
+      res.status(400).json({error: error.message})
+  }
+}
+
 //REGISTER Handler
 export const register = async (req, res) => {
     try {
@@ -21,37 +37,38 @@ export const register = async (req, res) => {
         res.json({token})
     } catch (error) {
         console.error(error)
-        res.status(400).json({error: error})
+        res.status(400).json({error: error.message})
     }
 }
-
 
 
 //LOGIN Handler
 export const login = async (req, res) => {
+  try {
     const user = await prisma.user.findUnique({
-        where: {
-            student_id: req.body.student_id,
-        }
-    })
+      where: {
+        student_id: req.body.student_id,
+      }
+    });
 
-    if(!user){
-        res.status(401)
-        res.json({ message: "Incorrect password or Id"})
-        return
+    if (!user) {
+      return res.status(401).json({ message: "Incorrect password or Id" });
     }
 
-    const isValid = await comparePasswords(req.body.password, user.password)
+    const isValid = await comparePasswords(req.body.password, user.password);
 
-    if(!isValid) {
-        res.status(401)
-        res.json({ message: "Incorrect password or Id"})
-        return
+    if (!isValid) {
+      return res.status(401).json({ message: "Incorrect password or Id" });
     }
 
-    const token = createJWT(user)
-    res.json(token)
-}
+    const token = createJWT(user);
+    res.json(token);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 
 //UPDATE PROFILE (STUDENT ID)
 export const changeStudentID = async (req, res) => {

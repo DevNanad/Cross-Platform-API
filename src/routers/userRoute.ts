@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { adminLogin, adminRegister, castVote, changeFullname, changePassword, changePicture, changePin, changeStudentID, checkMobileNumber, checkVotersVote, confirmMobileNumber, deleteVoter, forgotPassword, forgotPasswordSendOTP, forgotPin, login, register, updateAdminPassword, updateAdminUsername } from '../handlers/userHandler';
+import { adminLogin, adminRegister, castVote, changeFullname, changePassword, changePicture, changePin, changeStudentID, checkMobileNumber, checkVotersVote, confirmMobileNumber, deleteVoter, forgotPassword, forgotPasswordSendOTP, forgotPin, login, register, registerCheckId, updateAdminPassword, updateAdminUsername } from '../handlers/userHandler';
 import { validateRequestSchema } from '../modules/validate-request-schema';
 import { loginSchema } from '../validators/loginSchema';
 import { registerSchema } from '../validators/registerSchema';
@@ -20,6 +20,7 @@ import { adminUpdatePasswordSchema } from '../validators/adminUpdatePasswordSche
 import { otpsendSchema } from '../validators/otpsendSchema';
 import { forgotPasswordSchema } from '../validators/forgotPasswordSchema';
 import { forgotPinSchema } from '../validators/forgotPinSchema';
+import { idSchema } from '../validators/idSchema';
 
 const router = Router()
 
@@ -38,6 +39,9 @@ router.patch('/forgot-password', forgotPasswordSchema, validateRequestSchema, fo
 
 //forgot the actual pin code
 router.patch('/forgot-pin', forgotPinSchema, validateRequestSchema, forgotPin)
+
+//check id before registration
+router.get('/id', idSchema, validateRequestSchema,registerCheckId)
 
 //LOGGED IN
 //Delete user route
