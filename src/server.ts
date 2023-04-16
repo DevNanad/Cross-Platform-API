@@ -1,5 +1,6 @@
 import express from 'express'
 import morgan from 'morgan'
+import cors from 'cors'
 import { protect } from './modules/auth'
 import userRouter from './routers/userRoute'
 import electionRouter from './routers/electionRoute'
@@ -12,6 +13,9 @@ const app = express()
 
 //middlewares
 app.use(morgan('dev'))
+app.use(cors({
+    origin: ['http://localhost:3001']
+}))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
