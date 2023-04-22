@@ -586,6 +586,40 @@ export const checkVotersVote = async (req, res) => {
   }
 }
 
+//get the daily user registration
+export const userAnalyticsPastWeek = async (req, res) => {
+  const today = new Date();
+  const oneWeekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const registrations = await prisma.user.findMany({
+    where: {
+      createdAt: {
+        gte: oneWeekAgo,
+      },
+    },
+  });
+  const groupedRegistrations = groupByDay(registrations);
+  res.json(groupedRegistrations);
+};
+
+function groupByDay(registrations) {
+  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const groups = [];
+  const now = new Date();
+  for (let i = 6; i >= 0; i--) {
+    const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+    const dayOfWeek = daysOfWeek[date.getDay()];
+    const formattedDate = date.toDateString();
+    const registrationsOnDay = registrations.filter(
+      (registration) => registration.createdAt.toDateString() === formattedDate
+    ).length;
+    groups.push([dayOfWeek, registrationsOnDay]);
+  }
+  return groups;
+}
+
+
+
+
 //ADMIN
 
 //LOGIN
