@@ -15,6 +15,7 @@ import {
   forgotPassword,
   forgotPasswordSendOTP,
   forgotPin,
+  getAllVoters,
   login,
   register,
   registerCheckId,
@@ -165,8 +166,12 @@ router.patch(
   changePassword
 );
 
-//user Analytics
-router.get("/user-analytics", userAnalyticsPastWeek);
+//user Analytics ⭐
+router.get("/user-analytics", isAdmin, userAnalyticsPastWeek);
+
+//get all voters route ⭐
+router.get('/get-all-voters', isAdmin, getAllVoters)
+
 
 //ADMIN
 //NOT LOGGED IN

@@ -69,6 +69,18 @@ export const login = async (req, res) => {
   }
 };
 
+//GET ALL VOTERS
+export const getAllVoters = async (req, res) => {
+  try {
+    const allVoters = await prisma.user.findMany();
+
+    res.json(allVoters);
+  } catch (error) {
+    console.error(error);
+    res.status(404).json({ error: error.message });
+  }
+}
+
 
 //UPDATE PROFILE (STUDENT ID)
 export const changeStudentID = async (req, res) => {
