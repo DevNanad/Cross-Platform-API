@@ -24,7 +24,8 @@ export const getAnElection = async (req, res) => {
         const findElection = await prisma.election.findUnique({
             where: {
                 id: req.params.id
-            }
+            },
+            include: { organizations: true}
         })
 
         //check if the election exist

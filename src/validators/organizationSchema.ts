@@ -7,7 +7,7 @@ const schema = [
     .isString(),
 
     check('logo_url')
-    .exists({checkFalsy: true}).withMessage('Platform is required')
+    .exists({checkFalsy: true}).withMessage('Logo Url is required')
     .isString(),
 
     check('startDate')
