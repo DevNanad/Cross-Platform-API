@@ -521,6 +521,14 @@ export const castVoteConnections = async (req, res) => {
             )
         )
 
+        //add voted activity to the user
+        const votedActivity = await prisma.activity.create({
+          data: {
+            type: "voted",
+            user: { connect: { student_id: req.body.student_id } },
+          },
+        });
+
     
         //invoke vote connections
         castVoteConnectCreate
@@ -726,6 +734,38 @@ export const updateAdminPassword = async (req, res) => {
 
     res.json({message: "Admin Password Updated"})
 
+  } catch (error) {
+    console.error(error)
+    res.status(400).json({error: error.message})
+  }
+}
+
+
+//ACITVITY
+
+//type VOTED  
+export const getAllActivitytypeVoted = async (req, res) => {
+  try {
+
+    const [count, activities] = await Promise.all([
+      prisma.activity.count({ where: { type: 'voted' } }),
+      prisma.activity.findMany({
+        take: 10,
+        orderBy: { createdAt: 'desc' },
+        where: { type: 'voted' },
+        include: {
+          user: {
+            select: {
+              profile_picture: true,
+              fullname: true,
+            },
+          },
+        },
+      }),
+    ]);
+    
+    
+    res.json({count,activities})
   } catch (error) {
     console.error(error)
     res.status(400).json({error: error.message})

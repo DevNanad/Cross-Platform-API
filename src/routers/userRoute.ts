@@ -15,6 +15,7 @@ import {
   forgotPassword,
   forgotPasswordSendOTP,
   forgotPin,
+  getAllActivitytypeVoted,
   getAllVoters,
   login,
   register,
@@ -172,6 +173,8 @@ router.get("/user-analytics", isAdmin, userAnalyticsPastWeek);
 //get all voters route ⭐
 router.get('/get-all-voters', isAdmin, getAllVoters)
 
+//get voted activities route
+router.get('/get-voted-activities', isAdmin, getAllActivitytypeVoted)
 
 //ADMIN
 //NOT LOGGED IN
