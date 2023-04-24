@@ -62,12 +62,13 @@ export const getUpcomingElection = async (req, res) => {
             }
         })
 
-        if(upcoming.length === 0) res.json({error: "No Upcoming Election"})
+        if(upcoming.length === 0) throw new Error("No Upcoming Election")
 
         res.json(upcoming)
+
     } catch (error) {
         console.error(error)
-        res.status(404).json({error: "No Upcoming Election"})
+        res.status(404).json({error: error.message})
     }
 }
 
@@ -80,12 +81,12 @@ export const getOngoingElection = async (req, res) => {
             }
         })
 
-        if(ongoing.length === 0) res.json({error: "No Ongoing Election"})
+        if(ongoing.length === 0) throw new Error("No Ongoing Election")
 
         res.json(ongoing)
     } catch (error) {
         console.error(error)
-        res.status(404).json({error: "No Ongoing Election"})
+        res.status(404).json({error: error.message})
     }
 }
 
@@ -98,12 +99,12 @@ export const getEndedElection = async (req, res) => {
             }
         })
 
-        if(ended.length === 0) res.json({error: "No Ended Election"})
+        if(ended.length === 0) throw new Error("No Ended Election")
 
         res.json(ended)
     } catch (error) {
         console.error(error)
-        res.status(404).json({error: "No Ended Election"})
+        res.status(404).json({error: error.message})
     }
 }
 
