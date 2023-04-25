@@ -67,7 +67,7 @@ export const getUpcomingElection = async (req, res) => {
         res.json(upcoming)
 
     } catch (error) {
-        console.error(error)
+        //console.error(error)
         res.status(404).json({error: error.message})
     }
 }

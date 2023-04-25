@@ -763,11 +763,16 @@ export const getAllActivitytypeVoted = async (req, res) => {
         },
       }),
     ]);
-    
+
+    console.log(activities.length);
+
+    if(activities.length === 0) {
+      throw new Error("No Activity");
+    }
     
     res.json({count,activities})
   } catch (error) {
     console.error(error)
-    res.status(400).json({error: error.message})
+    res.status(404).json({error: error.message})
   }
 }
