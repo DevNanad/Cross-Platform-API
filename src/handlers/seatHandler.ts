@@ -141,3 +141,30 @@ export const disconnectSeatFromBallot = async (req, res) => {
         res.status(404).json({ error: error.message });       
     }
 }
+
+
+//GET ALL SEAT BASE ON ORG ID
+export const orgBaseSeatID = async (req, res) => {
+    try {
+        const ballot = await prisma.ballot.findFirst({
+            where: {
+                organizationId: req.params.id
+            },
+            include: {
+                seats: {
+                    include: {
+                        candidates: true
+                    }
+                }
+            }
+        });
+        if (!ballot) {
+            throw new Error(`Ballot not found for organization ID ${req.params.id}`);
+        }
+        res.status(200).json(ballot);
+    } catch (error) {
+        console.error(error.message);
+        res.status(404).json({ error: error.message });
+    }
+};
+
