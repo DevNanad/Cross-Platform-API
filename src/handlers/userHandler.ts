@@ -34,7 +34,7 @@ export const register = async (req, res) => {
         })
     
         const token = createJWT(user)
-        res.json({token})
+        res.json({token, pin: user.pin_number})
     } catch (error) {
         console.error(error)
         res.status(400).json({error: error.message})
@@ -62,7 +62,7 @@ export const login = async (req, res) => {
     }
 
     const token = createJWT(user);
-    res.json(token);
+    res.json({token, pin: user.pin_number});
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
