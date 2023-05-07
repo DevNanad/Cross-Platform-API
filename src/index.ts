@@ -4,6 +4,7 @@ dotenv.config()
 import app from './server'
 import cronjob from 'node-cron'
 import { updateExpiredElections } from './modules/updateExpiredElections'
+import config from './config'
 
 //Cron Job for updating election status automatically
 //Run every 1hour
@@ -11,7 +12,7 @@ cronjob.schedule('0 * * * *', updateExpiredElections)
 
 
 
-app.listen(process.env.PORT, () =>{
-    console.log(`Listening on http://localhost:${process.env.PORT}`)
+app.listen(config.port, () =>{
+    console.log(`Listening on http://localhost:${config.port}`)
     
 })
