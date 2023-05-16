@@ -20,15 +20,6 @@ export const createJWT = (user) => {
   return token
 };
 
-//Create JWT token of the admin
-export const createJWTAdmin = (admin) => {
-  const token = jwt.sign({ adminId: admin.id, isAdmin: true }, process.env.JWT_SECRET, {
-    expiresIn: '5h',
-  });
-
-  return token
-}
-
 
 // Middleware function to check if the user is an administrator
 export const isAdmin = (req, res, next) => {
@@ -36,7 +27,7 @@ export const isAdmin = (req, res, next) => {
   
     // Verify the JWT token
     jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
-      if (err || !decodedToken.isAdmin) {
+      if (err || decodedToken.role !== "admin") {
         return res.status(401).json({ error: 'Unauthorized' });
       }
       req.user = decodedToken;

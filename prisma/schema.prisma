@@ -24,10 +24,17 @@ model User {
   profile_picture String?
   mobile_number   String     @unique
   pin_number      String
+  role            Role       @default(user)
   votes           Vote[]
   activities      Activity[]
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
+}
+
+//Status for Election
+enum Role {
+  admin
+  user
 }
 
 //Activity
@@ -37,15 +44,6 @@ model Activity {
   user      User?    @relation(fields: [userId], references: [student_id])
   userId    String?
   createdAt DateTime @default(now())
-}
-
-//Admin who control everything
-model Admin {
-  id        String   @id @default(uuid())
-  username  String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 //Election have many Organizations

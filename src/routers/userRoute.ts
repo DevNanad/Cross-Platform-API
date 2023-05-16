@@ -1,12 +1,11 @@
 import { Router } from "express";
 import {
-  adminLogin,
-  adminRegister,
   castVote,
   changeFullname,
   changePassword,
   changePicture,
   changePin,
+  changeRole,
   changeStudentID,
   checkMobileNumber,
   checkVotersVote,
@@ -20,8 +19,6 @@ import {
   login,
   register,
   registerCheckId,
-  updateAdminPassword,
-  updateAdminUsername,
   userAnalyticsPastWeek,
 } from "../handlers/userHandler";
 import { validateRequestSchema } from "../modules/validate-request-schema";
@@ -38,13 +35,11 @@ import { changeStudentMobileSchema } from "../validators/checkStudentMobileSchem
 import { confirmStudentMobileSchema } from "../validators/confirmStudentMobileSchema";
 import { changStudentPinSchema } from "../validators/changeStudentPinSchema";
 import { changeStudentPasswordSchema } from "../validators/changeStudentPasswordSchema";
-import { adminLoginRegisterSchema } from "../validators/adminLoginRegisterSchema";
-import { adminUpdateUsernameSchema } from "../validators/adminUpdateUsernameSchema";
-import { adminUpdatePasswordSchema } from "../validators/adminUpdatePasswordSchema";
 import { otpsendSchema } from "../validators/otpsendSchema";
 import { forgotPasswordSchema } from "../validators/forgotPasswordSchema";
 import { forgotPinSchema } from "../validators/forgotPinSchema";
 import { idSchema } from "../validators/idSchema";
+import { changeRoleSchema } from "../validators/changeRoleSchema";
 
 const router = Router();
 
@@ -122,13 +117,22 @@ router.patch(
   changeFullname
 );
 
-//change student fullname
+//change student profile picture
 router.patch(
   "/change-student-picture",
   protect,
   changeStudentPictureSchema,
   validateRequestSchema,
   changePicture
+);
+
+//change student role
+router.patch(
+  "/change-role",
+  isAdmin,
+  changeRoleSchema,
+  validateRequestSchema,
+  changeRole
 );
 
 //change student mobile (check mobile number and send otp if false)
@@ -176,40 +180,5 @@ router.get('/get-all-voters', isAdmin, getAllVoters)
 //get voted activities route
 router.get('/get-voted-activities', isAdmin, getAllActivitytypeVoted)
 
-//ADMIN
-//NOT LOGGED IN
-router.post(
-  "/admin/login",
-  adminLoginRegisterSchema,
-  validateRequestSchema,
-  adminLogin
-);
-
-//register
-router.post(
-  "/admin/register",
-  adminLoginRegisterSchema,
-  validateRequestSchema,
-  adminRegister
-);
-
-//LOGGED IN
-//update username ⭐
-router.patch(
-  "/admin/username",
-  isAdmin,
-  adminUpdateUsernameSchema,
-  validateRequestSchema,
-  updateAdminUsername
-);
-
-//update password ⭐
-router.patch(
-  "/admin/password",
-  isAdmin,
-  adminUpdatePasswordSchema,
-  validateRequestSchema,
-  updateAdminPassword
-);
 
 export default router;

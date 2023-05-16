@@ -1,5 +1,5 @@
 import prisma from '../db'
-import { comparePasswords, createJWT, createJWTAdmin, hashPassword } from '../modules/auth'
+import { comparePasswords, createJWT, hashPassword } from '../modules/auth'
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
@@ -62,7 +62,7 @@ export const login = async (req, res) => {
     }
 
     const token = createJWT(user);
-    res.json({token, pin: user.pin_number});
+    res.json({token, role: user.role, pin: user.pin_number});
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
@@ -173,6 +173,32 @@ export const changePicture = async (req, res) => {
     picture
 
     res.json({message: "Profile Picture Updated!"})
+  } catch (error) {
+    console.error(error)
+    res.status(400).json({error: error.message})   
+  }
+}
+
+//UPDATE ROLE (ROLE)
+export const changeRole = async (req, res) => {
+  try {
+    //check if the passed user id exists in the database
+    const userExists = await prisma.user.findUnique({
+      where: {
+          student_id: req.body.student_id
+      }
+    })
+    
+    if(!userExists) throw new Error("Voter not found");
+
+    const role = await prisma.user.update({
+      where: { student_id: req.body.student_id},
+      data:{
+        role: req.body.new_role
+      }
+    })
+
+    res.json({message: "Role Updated!"})
   } catch (error) {
     console.error(error)
     res.status(400).json({error: error.message})   
@@ -637,108 +663,6 @@ function groupByDay(registrations) {
   return groups;
 }
 
-
-
-
-//ADMIN
-
-//LOGIN
-export const adminLogin = async (req, res) => {
-  try {
-    // Check if the username and password are correct
-    const admin = await prisma.admin.findUnique({
-      where: { username: req.body.username },
-    });
-    if (!admin || !(await comparePasswords(req.body.password, admin.password))) {
-      return res.status(401).json({ error: 'Incorrect username or password' });
-    }
-
-    // Generate a JWT token with isAdmin set to true
-    const token = createJWTAdmin(admin)
-
-    res.json({ token });
-
-  } catch (error) {
-    console.error(error);
-    res.status(400).json({ error: error.message });
-  }
-}
-
-//REGISTER
-export const adminRegister = async (req, res) => {
-  try {
-      const admin = await prisma.admin.create({
-          data: {
-              username: req.body.username,
-              password: await hashPassword(req.body.password)
-          }
-      })
-  
-      const token = createJWTAdmin(admin)
-
-      res.json({token})
-
-  } catch (error) {
-      console.error(error)
-      res.status(400).json({error: error.message})
-  }
-}
-
-//UPDATE USERNAME
-export const updateAdminUsername = async (req, res) => {
-  try {
-
-    //check if the passed id exists in the database
-    const adminExists = await prisma.admin.findUnique({
-      where: {
-          id: req.body.id
-      }
-    })
-    
-    if(!adminExists) throw new Error("Admin not found");
-
-
-    //update admin username
-    const adminUsername = await prisma.admin.update({
-      where:{ id: req.body.id },
-      data: { username: req.body.username }
-    })
-
-    res.json({message: "Admin Username Updated"})
-
-  } catch (error) {
-    console.error(error)
-    res.status(400).json({error: error.message})
-  }
-}
-
-//UPDATE PASSWORD
-export const updateAdminPassword = async (req, res) => {
-  try {
-
-    //check if the passe id exists in the database
-    const adminExists = await prisma.admin.findUnique({
-      where: {
-          id: req.body.id
-      }
-    })
-    
-    if(!adminExists) throw new Error("Admin not found");
-
-
-    //update admin password
-    const adminPassword = await prisma.admin.update({
-      where:{ id: req.body.id },
-      data: { password: await hashPassword(req.body.password)  }
-    })
-
-    res.json({message: "Admin Password Updated"})
-
-  } catch (error) {
-    console.error(error)
-    res.status(400).json({error: error.message})
-  }
-}
 
 
 //ACITVITY
