@@ -25,6 +25,7 @@ model User {
   mobile_number   String     @unique
   pin_number      String
   role            Role       @default(user)
+  refreshToken    String?
   votes           Vote[]
   activities      Activity[]
   createdAt       DateTime   @default(now())
