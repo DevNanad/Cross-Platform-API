@@ -1,8 +1,9 @@
 import prisma from '../db'
-import { comparePasswords, createJWT, hashPassword } from '../modules/auth'
+import { comparePasswords, hashPassword } from '../modules/auth'
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
+import jwt from "jsonwebtoken";
 
 
 //CHECK ID BEFORE REGISTER THE STUDENT VOTER
@@ -32,9 +33,7 @@ export const register = async (req, res) => {
                 mobile_number: req.body.mobile_number
             }
         })
-    
-        const token = createJWT(user)
-        res.json({token, pin: user.pin_number})
+        res.json({pin: user.pin_number})
     } catch (error) {
         console.error(error)
         res.status(400).json({error: error.message})
@@ -43,26 +42,49 @@ export const register = async (req, res) => {
 
 
 //LOGIN Handler
+// Assuming you have imported necessary dependencies and initialized Prisma
+
 export const login = async (req, res) => {
   try {
     const user = await prisma.user.findUnique({
       where: {
         student_id: req.body.student_id,
-      }
+      },
     });
 
     if (!user) {
-      return res.status(401).json({ message: "Incorrect password or Id" });
+      return res.status(401).json({ message: "Incorrect password or ID" });
     }
 
     const isValid = await comparePasswords(req.body.password, user.password);
 
     if (!isValid) {
-      return res.status(401).json({ message: "Incorrect password or Id" });
+      return res.status(401).json({ message: "Incorrect password or ID" });
     }
 
-    const token = createJWT(user);
-    res.json({token, role: user.role, pin: user.pin_number});
+    const accessToken = jwt.sign(
+      { id: user.id, role: user.role },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: '30s' }
+    );
+  
+    const refreshToken = jwt.sign(
+      { id: user.student_id, role: user.role },
+      process.env.REFRESH_TOKEN_SECRET,
+      { expiresIn: '1d' }
+    );
+
+    await prisma.user.update({
+      where: { student_id: user.student_id },
+      data: { refreshToken }
+    });
+
+    res.cookie('refreshtokeen', refreshToken, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000
+    });
+
+    res.json({ accessToken, role: user.role, pin: user.pin_number });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });

@@ -10,15 +10,6 @@ export const hashPassword = (password) => {
     return bcrypt.hash(password, 5)
 }
 
-//Create JWT token of the user
-export const createJWT = (user) => {
-  const token = jwt.sign(
-    { id: user.id, role: user.role },
-    process.env.JWT_SECRET
-  )
-
-  return token
-};
 
 
 // Middleware function to check if the user is an administrator
@@ -26,7 +17,7 @@ export const isAdmin = (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1];
   
     // Verify the JWT token
-    jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decodedToken) => {
       if (err || decodedToken.role !== "admin") {
         return res.status(401).json({ error: 'Unauthorized' });
       }
@@ -58,13 +49,13 @@ export const protect = (req, res, next) => {
     }
 
     try {
-        const user = jwt.verify(token, process.env.JWT_SECRET)
+        const user = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
         //augment the request object
         req.user = user
         next()
     } catch (error) {
-        console.error(error)
-        res.status(401)
+        //console.error(error)
+        res.status(403)
         res.json({message: "Invalid token"})
         return
     }

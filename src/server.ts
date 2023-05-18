@@ -1,6 +1,7 @@
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
+import cookieParser from 'cookie-parser'
 import { protect } from './modules/auth'
 import userRouter from './routers/userRoute'
 import electionRouter from './routers/electionRoute'
@@ -9,6 +10,8 @@ import seatRouter from './routers/seatRoute'
 import candidateRouter from './routers/candidateRoute'
 import mobileverifyRoute from './routers/mobileverifyRoute'
 import idRouter from './routers/idRoute'
+import refreshRouter from './routers/refreshTokenRoute'
+import logoutRouter from './routers/logoutRoute'
 const app = express()
 
 //middlewares
@@ -18,12 +21,17 @@ app.use(cors({
 }))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
+app.use(cookieParser())
 
 //Home page
 app.get('/', (req, res) => {
     res.status(200)
     res.json({message: "Welcome Home"})
 })
+
+//refreshtoken route
+app.use('/refresh', refreshRouter)
+app.use('/logout', logoutRouter)
 
 //election schema route
 app.use('/election', protect, electionRouter)
