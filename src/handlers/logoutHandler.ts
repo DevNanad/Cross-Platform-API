@@ -12,7 +12,7 @@ export const handleLogout = async (req, res) => {
         });
 
         if (!foundUser) {
-            res.clearCookie('refreshtokeen', { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 });
+            res.clearCookie('refreshtokeen', { httpOnly: true, maxAge: 24 * 60 * 60 * 1000, sameSite: 'None', secure: true });
         } 
         
         // delete the refresh token from db
@@ -21,7 +21,7 @@ export const handleLogout = async (req, res) => {
             data: { refreshToken: null }
         });
 
-        res.clearCookie('refreshtokeen', { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }); // secure: true - do this on production
+        res.clearCookie('refreshtokeen', { httpOnly: true, maxAge: 24 * 60 * 60 * 1000, sameSite: 'None', secure: true }); // secure: true - do this on production
         res.sendStatus(204).end();
 
     } catch (error) {
