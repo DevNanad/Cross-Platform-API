@@ -12,13 +12,14 @@ import mobileverifyRoute from './routers/mobileverifyRoute'
 import idRouter from './routers/idRoute'
 import refreshRouter from './routers/refreshTokenRoute'
 import logoutRouter from './routers/logoutRoute'
+import { corsOptions } from './config/corsOptions'
+import { credentials } from './modules/credentials'
 const app = express()
 
 //middlewares
 app.use(morgan('dev'))
-app.use(cors({
-    origin: ['http://localhost:3001']
-}))
+app.use(credentials)
+app.use(cors(corsOptions))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(cookieParser())
