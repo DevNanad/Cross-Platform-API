@@ -8,7 +8,7 @@ export const handleRefreshToken = async (req, res) => {
 
         const refToken = cookies.refreshtokeen
 
-        console.log(refToken);
+        //console.log(refToken);
         
 
         const foundUser = await prisma.user.findFirst({
@@ -25,9 +25,9 @@ export const handleRefreshToken = async (req, res) => {
                 const accessToken = jwt.sign(
                     { "id": decoded.id, "role": decoded.role },
                     process.env.ACCESS_TOKEN_SECRET,
-                    { expiresIn: '1m' }
+                    { expiresIn: '30m' }
                 )
-                res.json({accessToken})
+                res.json({role: foundUser.role,accessToken})
                 
             }
         )
