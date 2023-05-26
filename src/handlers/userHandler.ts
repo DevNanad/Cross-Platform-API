@@ -9,11 +9,21 @@ import jwt from "jsonwebtoken";
 //CHECK ID BEFORE REGISTER THE STUDENT VOTER
 export const registerCheckId = async (req, res) => {
   try {
+    const { student_id } = req.query;
+
     const id = await prisma.id.findUnique({
-      where: { student_id: req.body.student_id }
+      where: {
+        student_id: String(student_id),
+      },
+    });
+
+    if(!id) throw new Error("You are not eligible to Register");
+
+    const taken = await prisma.user.findUnique({
+      where: {student_id: String(student_id)},
     })
 
-    if(id) throw new Error("ID Already Taken");
+    if(taken) throw new Error("Student ID Already taken")
     
     res.json({message: "Happy Registration :)"})
   } catch (error) {
@@ -25,6 +35,27 @@ export const registerCheckId = async (req, res) => {
 //REGISTER Handler
 export const register = async (req, res) => {
     try {
+        const id = await prisma.id.findUnique({
+          where: {
+            student_id: req.body.student_id,
+          },
+        });
+
+        if(!id) throw new Error("You are not eligible to Register");
+
+        const taken = await prisma.user.findUnique({
+          where: {student_id: req.body.student_id},
+        })
+    
+        if(taken) throw new Error("Student ID Already taken")
+    
+
+        // Check if mobile number is already taken
+        const existingNumber = await prisma.user.findUnique({
+          where: { mobile_number: req.body.mobile_number },
+        });
+        if(existingNumber) throw new Error("Mobile Number Already taken")
+
         const user = await prisma.user.create({
             data: {
                 student_id: req.body.student_id,
@@ -33,7 +64,7 @@ export const register = async (req, res) => {
                 mobile_number: req.body.mobile_number
             }
         })
-        res.json({pin: user.pin_number})
+        res.json({message: "success"})
     } catch (error) {
         console.error(error)
         res.status(400).json({error: error.message})
@@ -42,8 +73,6 @@ export const register = async (req, res) => {
 
 
 //LOGIN Handler
-// Assuming you have imported necessary dependencies and initialized Prisma
-
 export const login = async (req, res) => {
   try {
     const user = await prisma.user.findUnique({
