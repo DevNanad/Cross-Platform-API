@@ -27,7 +27,7 @@ export const handleRefreshToken = async (req, res) => {
                     process.env.ACCESS_TOKEN_SECRET,
                     { expiresIn: '30m' }
                 )
-                res.json({role: foundUser.role,accessToken})
+                res.json({role: foundUser.role,accessToken, student_id: foundUser.student_id})
                 
             }
         )
