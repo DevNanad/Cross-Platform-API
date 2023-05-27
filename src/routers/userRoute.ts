@@ -17,6 +17,7 @@ import {
   getAllActivitytypeVoted,
   getAllVoters,
   login,
+  primaryLogin,
   register,
   registerCheckId,
   userAnalyticsPastWeek,
@@ -46,6 +47,9 @@ const router = Router();
 //NOT LOGGED IN
 //Register user route
 router.post("/register", registerSchema, validateRequestSchema, register);
+
+//Login user route
+router.post("/login-primary", loginSchema, validateRequestSchema, primaryLogin);
 
 //Login user route
 router.post("/login", loginSchema, validateRequestSchema, login);

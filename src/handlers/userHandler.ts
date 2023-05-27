@@ -73,6 +73,33 @@ export const register = async (req, res) => {
 
 
 //LOGIN Handler
+//PRIMARY LOGIN
+export const primaryLogin = async (req, res) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        student_id: req.body.student_id,
+      },
+    });
+
+    if (!user) {
+      return res.status(401).json({ message: "Incorrect password or ID" });
+    }
+
+    const isValid = await comparePasswords(req.body.password, user.password);
+
+    if (!isValid) {
+      return res.status(401).json({ message: "Incorrect password or ID" });
+    }
+
+    res.json({ message: "success", pin: user.pin_number });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+//FINAL LOGIN
 export const login = async (req, res) => {
   try {
     const user = await prisma.user.findUnique({
@@ -115,7 +142,7 @@ export const login = async (req, res) => {
       secure: true
     });
 
-    res.json({ accessToken, role: user.role, pin: user.pin_number });
+    res.json({ accessToken, role: user.role, pin: user.pin_number, student_id: user.student_id});
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
