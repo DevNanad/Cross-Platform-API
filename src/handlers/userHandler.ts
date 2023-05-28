@@ -452,18 +452,22 @@ export const changePassword = async (req, res) => {
 //FORGOT PASSWORD
 export const forgotPasswordSendOTP = async (req, res) => {
   try {
+      const { mobile_number } = req.query
 
       // Check if mobile number is valid (should be Philippine number)
       const lookup = await client.lookups
-      .v2.phoneNumbers(req.body.mobile_number)
+      .v2.phoneNumbers(String(mobile_number))
       .fetch();
       const countryCode = lookup.countryCode;
       if (countryCode !== "PH") {
       throw new Error("Invalid phone number. Please provide a valid Philippine phone number.");
       }
+
+      const phoneNumber = String(mobile_number).slice(3)
+
       // Check the database if the user number is taken
       const findNumber = await prisma.user.findUnique({
-          where: { mobile_number: req.body.mobile_number },
+          where: { mobile_number: `0${phoneNumber}` },
       });
     
       // Check if mobile number is already taken
@@ -475,14 +479,14 @@ export const forgotPasswordSendOTP = async (req, res) => {
           // Send OTP
           const verification = await client.verify
           .v2.services(process.env.TWILIO_OTP_SERVICE)
-          .verifications.create({ to: req.body.mobile_number, channel: "sms" });
-          console.log(verification.status);
+          .verifications.create({ to: String(mobile_number), channel: "sms" });
+          //console.log(verification.status);
       
           // Send success message
-          res.json({ message: "OTP sent to mobile number." });
+          res.json({ message: "success" });
       }
   } catch (error) {
-  console.error(error);
+  //console.error(error);
   res.status(400).json({ error: error.message });
   }
 
