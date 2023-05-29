@@ -41,8 +41,17 @@ import { forgotPasswordSchema } from "../validators/forgotPasswordSchema";
 import { forgotPinSchema } from "../validators/forgotPinSchema";
 import { idSchema } from "../validators/idSchema";
 import { changeRoleSchema } from "../validators/changeRoleSchema";
-
+import rateLimit from 'express-rate-limit'
 const router = Router();
+
+const forgotPasswordSendLimiter = rateLimit({
+	windowMs: 5 * 60 * 1000,
+	max: 5,
+	standardHeaders: false, 
+	legacyHeaders: false, 
+  message: 'Limit: 5 attempts per 5 minutes.'
+})
+
 
 //NOT LOGGED IN
 //Register user route
@@ -57,6 +66,7 @@ router.post("/login", loginSchema, validateRequestSchema, login);
 //forgot password
 router.get(
   "/forgot-password-send",
+  forgotPasswordSendLimiter,
   otpsendSchema,
   validateRequestSchema,
   forgotPasswordSendOTP
