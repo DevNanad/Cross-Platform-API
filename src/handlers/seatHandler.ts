@@ -29,6 +29,22 @@ export const getAllSeat = async (req, res) => {
     }
 }
 
+//GET ALL DISCONNECTED SEAT
+export const getAllNullSeat = async (req, res) => {
+    try {
+        const nullSeat = await prisma.seat.findMany({
+            where: {
+                ballotId: null
+            }
+        })
+
+        res.json(nullSeat)
+    } catch (error) {
+        console.error(error.message)
+        res.status(404).json({error: error.message})
+    }
+}
+
 
 //DELETE SINGLE
 export const deleteASeat = async (req, res) => {

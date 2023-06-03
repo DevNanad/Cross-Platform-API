@@ -1,7 +1,7 @@
 import {Router} from 'express'
 import { validateRequestSchema } from '../modules/validate-request-schema'
 import { connectseatSchema } from '../validators/connectseatSchema'
-import { createSeat, deleteASeat, disconnectSeatFromBallot, getAllSeat, orgBaseSeatID, seatToballot } from '../handlers/seatHandler'
+import { createSeat, deleteASeat, disconnectSeatFromBallot, getAllNullSeat, getAllSeat, orgBaseSeatID, seatToballot } from '../handlers/seatHandler'
 import { seatSchema } from '../validators/seatSchema'
 import { isAdmin } from '../modules/auth'
 
@@ -12,6 +12,9 @@ router.post('/', isAdmin, seatSchema, validateRequestSchema, createSeat)
 
 //get all seats ⭐
 router.get('/', isAdmin, getAllSeat)
+
+//get all disconnected seats ⭐
+router.get('/null', isAdmin, getAllNullSeat)
 
 //delete a seat ⭐
 router.delete('/:id', isAdmin, deleteASeat)
