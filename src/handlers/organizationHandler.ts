@@ -128,3 +128,25 @@ export const updateAnOrg = async (req, res) => {
     res.status(404).json({ error: error.message });
   }
 };
+
+
+//GET ALL BALLOT BASE ON ORG ID
+export const orgBallot = async (req, res) => {
+  try {
+      const ballot = await prisma.ballot.findFirst({
+          where: {
+              organizationId: req.params.id
+          },
+          include: {
+              seats: true
+          }
+      });
+      if (!ballot) {
+          throw new Error(`Ballot not found for organization ID ${req.params.id}`);
+      }
+      res.status(200).json(ballot);
+  } catch (error) {
+      console.error(error.message);
+      res.status(404).json({ error: error.message });
+  }
+};

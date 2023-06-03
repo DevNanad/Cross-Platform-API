@@ -5,6 +5,7 @@ import {
   deleteAnOrg,
   getAllOrg,
   getAnOrg,
+  orgBallot,
   updateAnOrg,
 } from "../handlers/organizationHandler";
 import { organizationSchema } from "../validators/organizationSchema";
@@ -21,6 +22,10 @@ router.get("/", isAdmin, getAllOrg);
 
 //get single organization ⭐
 router.get("/:id", isAdmin, getAnOrg);
+
+//get ballot base on org id
+router.get('/org-ballot/:id', isAdmin, orgBallot)
+
 
 //delete all organizations ⭐
 router.delete("/", isAdmin, deleteAllOrg);
