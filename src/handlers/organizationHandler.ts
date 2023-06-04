@@ -33,6 +33,22 @@ export const getAllOrg = async (req, res) => {
   }
 };
 
+//GET ALL DISCONNECTED BALLOT
+export const getAllNullOrg = async (req, res) => {
+  try {
+      const nullOrg = await prisma.organization.findMany({
+          where: {
+              electionId: null
+          }
+      })
+
+      res.json(nullOrg)
+  } catch (error) {
+      console.error(error.message)
+      res.status(404).json({error: error.message})
+  }
+}
+
 //GET SINGLE
 export const getAnOrg = async (req, res) => {
   try {

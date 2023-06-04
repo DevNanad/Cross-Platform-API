@@ -3,6 +3,7 @@ import {
   createOrg,
   deleteAllOrg,
   deleteAnOrg,
+  getAllNullOrg,
   getAllOrg,
   getAnOrg,
   orgBallot,
@@ -19,6 +20,9 @@ router.post("/", isAdmin, organizationSchema, validateRequestSchema, createOrg);
 
 //get all organizations ⭐
 router.get("/", isAdmin, getAllOrg);
+
+//get all disconnected ballots ⭐
+router.get('/null', isAdmin, getAllNullOrg)
 
 //get single organization ⭐
 router.get("/:id", isAdmin, getAnOrg);
