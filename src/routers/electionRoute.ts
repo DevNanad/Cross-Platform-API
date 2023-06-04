@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { createElection, connectOrg, getAllElection, deleteAnElection, deleteAllElection, getAnElection, getUpcomingElection, getOngoingElection, getEndedElection, toUpcoming, toOngoing, toEnded, disconnectOrg } from '../handlers/electionHandler'
+import { createElection, connectOrg, getAllElection, deleteAnElection, deleteAllElection, getAnElection, getUpcomingElection, getOngoingElection, getEndedElection, toUpcoming, toOngoing, toEnded, disconnectOrg, electionOrg, updateAnElec } from '../handlers/electionHandler'
 import { validateRequestSchema } from '../modules/validate-request-schema'
 import { connectorgSchema } from '../validators/connectorgSchema'
 import { electionSchema } from '../validators/electionSchema'
@@ -21,6 +21,12 @@ router.get('/:id', isAdmin, getAnElection)
 
 //get all elections ⭐
 router.get('/', isAdmin, getAllElection)
+
+//get organization base on election id
+router.get('/elec-organizations/:id', isAdmin, electionOrg)
+
+//updata single election
+router.patch('/single/:id', isAdmin, updateAnElec)
 
 //delete single election ⭐
 router.delete('/:id', isAdmin, deleteAnElection)

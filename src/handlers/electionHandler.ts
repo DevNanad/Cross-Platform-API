@@ -53,6 +53,24 @@ export const getAllElection = async (req, res) => {
     }
 }
 
+//GET ALL ORGANIZATION BASE ON ELECTION ID
+export const electionOrg = async (req, res) => {
+    try {
+        const orgs = await prisma.organization.findMany({
+            where: {
+                electionId: req.params.id
+            }
+        });
+        if (!orgs) {
+            throw new Error(`Organizations not found for Election ID ${req.params.id}`);
+        }
+        res.status(200).json(orgs);
+    } catch (error) {
+        console.error(error.message);
+        res.status(404).json({ error: error.message });
+    }
+  };
+
 //GET ALL UPCOMING ELECTION
 export const getUpcomingElection = async (req, res) => {
     try {
@@ -107,6 +125,36 @@ export const getEndedElection = async (req, res) => {
         res.status(404).json({error: error.message})
     }
 }
+
+//UPDATE SINGLE
+export const updateAnElec = async (req, res) => {
+    try {
+      const findElections = await prisma.election.findUnique({
+        where: {
+          id: req.params.id,
+        },
+      });
+      //check if the organization exist
+      if (!findElections) throw new Error("Election not Found");
+  
+      const updatedElection = await prisma.election.update({
+        where: {
+          id: req.params.id,
+        },
+        data: {
+          title: req.body.org_name,
+          startDate: new Date(req.body.start_date),
+          endDate: new Date(req.body.end_date),
+        },
+      })
+  
+      //return json message
+      res.json({ message: "Election Updated" });
+    } catch (error) {
+      console.error(error);
+      res.status(404).json({ error: error.message });
+    }
+  };
 
 //UPDATE TO UPCOMING
 export const toUpcoming = async (req, res) => {
