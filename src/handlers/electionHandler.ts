@@ -142,7 +142,7 @@ export const updateAnElec = async (req, res) => {
           id: req.params.id,
         },
         data: {
-          title: req.body.org_name,
+          title: req.body.title,
           startDate: new Date(req.body.start_date),
           endDate: new Date(req.body.end_date),
         },
