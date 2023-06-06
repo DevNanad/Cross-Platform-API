@@ -1,7 +1,7 @@
 import {Router} from 'express'
 import { validateRequestSchema } from '../modules/validate-request-schema'
 import { connectseatSchema } from '../validators/connectseatSchema'
-import { createSeat, deleteASeat, disconnectSeatFromBallot, getAllNullSeat, getAllSeat, orgBaseSeatID, seatToballot } from '../handlers/seatHandler'
+import { createSeat, deleteASeat, disconnectSeatFromBallot, getAllNullSeat, getAllSeat, orgBaseSeatID, seatToballot, updateAPosition } from '../handlers/seatHandler'
 import { seatSchema } from '../validators/seatSchema'
 import { isAdmin } from '../modules/auth'
 
@@ -18,6 +18,9 @@ router.get('/null', isAdmin, getAllNullSeat)
 
 //delete a seat ⭐
 router.delete('/:id', isAdmin, deleteASeat)
+
+//update single Position ⭐
+router.patch("/update/:id", isAdmin, updateAPosition);
 
 //connect seat to ballot ⭐
 router.patch('/connect-seat-ballot', isAdmin, connectseatSchema, validateRequestSchema, seatToballot)

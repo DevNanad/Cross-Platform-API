@@ -70,7 +70,38 @@ export const deleteASeat = async (req, res) => {
         console.error(error)
         res.status(404).json({error:error.message})
     }
-}  
+}
+
+//UPDATE SINGLE
+export const updateAPosition = async (req, res) => {
+    try {
+      const findPosition = await prisma.seat.findUnique({
+        where: {
+          id: req.params.id,
+        },
+      });
+      //check if the Position exist
+      if (!findPosition) throw new Error("Position not Found");
+  
+      const updatedPosition = await prisma.seat.update({
+        where: {
+          id: req.params.id,
+        },
+        data: {
+          position: req.body.position,
+        },
+      });
+  
+      //invoke update Position
+      updatedPosition
+  
+      //return json message
+      res.json({ message: "Position Updated" });
+    } catch (error) {
+      console.error(error);
+      res.status(404).json({ error: error.message });
+    }
+  };
 
 
 
