@@ -49,7 +49,42 @@ export const getAllCandidate = async (req, res) => {
       console.error(error);
       res.status(404).json({ error: error.message });
     }
-  };
+};
+
+//GET ALL DISCONNECTED CANDIDATE
+export const getAllNullCandidate = async (req, res) => {
+  try {
+      const nullCandi = await prisma.candidate.findMany({
+          where: {
+              seatId: null
+          }
+      })
+
+      res.json(nullCandi)
+  } catch (error) {
+      console.error(error.message)
+      res.status(404).json({error: error.message})
+  }
+}
+
+//GET ALL CANDIDATES BASE ON POSITION ID
+export const posCandidate = async (req, res) => {
+  try {
+      const positions = await prisma.candidate.findMany({
+          where: {
+              seatId: req.params.id
+          }
+      });
+      if (!positions) {
+          throw new Error(`Candidates not found for pasition ID ${req.params.id}`);
+      }
+      res.status(200).json(positions);
+  } catch (error) {
+      console.error(error.message);
+      res.status(404).json({ error: error.message });
+  }
+};
+
 
 //DELETE SINGLE
 export const deleteACandidate = async (req, res) => {
