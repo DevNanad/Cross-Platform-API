@@ -18,6 +18,7 @@ import {
   getAllVoters,
   login,
   primaryLogin,
+  recoverAccount,
   register,
   registerCheckId,
   userAnalyticsPastWeek,
@@ -41,17 +42,17 @@ import { forgotPasswordSchema } from "../validators/forgotPasswordSchema";
 import { forgotPinSchema } from "../validators/forgotPinSchema";
 import { idSchema } from "../validators/idSchema";
 import { changeRoleSchema } from "../validators/changeRoleSchema";
-import rateLimit from 'express-rate-limit'
+import rateLimit from "express-rate-limit";
+import { recoverAccountSchema } from "../validators/recoverAccountSchema";
 const router = Router();
 
 const forgotPasswordSendLimiter = rateLimit({
-	windowMs: 5 * 60 * 1000,
-	max: 5,
-	standardHeaders: false, 
-	legacyHeaders: false, 
-  message: 'Limit: 5 attempts per 5 minutes.'
-})
-
+  windowMs: 5 * 60 * 1000,
+  max: 5,
+  standardHeaders: false,
+  legacyHeaders: false,
+  message: "Limit: 5 attempts per 5 minutes.",
+});
 
 //NOT LOGGED IN
 //Register user route
@@ -185,14 +186,22 @@ router.patch(
   changePassword
 );
 
+//recover account
+router.patch(
+  "/recover-account",
+  isAdmin,
+  recoverAccountSchema,
+  validateRequestSchema,
+  recoverAccount
+);
+
 //user Analytics ⭐
 router.get("/user-analytics", isAdmin, userAnalyticsPastWeek);
 
 //get all voters route ⭐
-router.get('/get-all-voters', isAdmin, getAllVoters)
+router.get("/get-all-voters", isAdmin, getAllVoters);
 
 //get voted activities route
-router.get('/get-voted-activities', isAdmin, getAllActivitytypeVoted)
-
+router.get("/get-voted-activities", isAdmin, getAllActivitytypeVoted);
 
 export default router;

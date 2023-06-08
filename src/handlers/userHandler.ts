@@ -784,3 +784,37 @@ export const getAllActivitytypeVoted = async (req, res) => {
     res.status(404).json({error: error.message})
   }
 }
+
+//RECOVER VOTERS ACCOUNT
+export const recoverAccount = async (req, res) => {
+  try {
+    //check if the passed user id exists in the database
+    const userExists = await prisma.user.findUnique({
+      where: {
+          student_id: String(req.body.student_id)
+      }
+    })
+
+    if(!userExists) throw new Error("Voter not found");
+
+    // Check if mobile number is already taken
+    const existingNumber = await prisma.user.findUnique({
+      where: { mobile_number: String(req.body.mobile_number) },
+    });
+    if(existingNumber) throw new Error("Mobile Number Already taken")
+
+    const password = await prisma.user.update({
+      where: { student_id: String(req.body.student_id)},
+      data:{
+        password: await hashPassword(String(req.body.new_password)),
+        mobile_number: String(req.body.mobile_number),
+        pin_number: String(req.body.pin_code)
+      }
+    })
+    
+    res.json({message: 'success'})
+  } catch (error) {
+    console.error(error)
+    res.status(404).json({error: error.message})
+  }
+}
