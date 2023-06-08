@@ -91,6 +91,9 @@ router.get("/id", idSchema, validateRequestSchema, registerCheckId);
 //Delete user route
 router.delete("/delete-account/:id", protect, deleteVoter);
 
+//Delete user route ⭐
+router.delete("/admin/delete-account/:id", isAdmin, deleteVoter);
+
 //cast vote connections
 router.post(
   "/cast-connection",
