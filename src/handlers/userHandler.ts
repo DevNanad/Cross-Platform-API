@@ -550,7 +550,7 @@ export const deleteVoter = async (req, res) => {
         //search the database if voter exist
         const findVoter = await prisma.user.findUnique({
             where: {
-                id: req.params.id
+                student_id: req.params.id
             }
         })
 
@@ -561,7 +561,7 @@ export const deleteVoter = async (req, res) => {
         //delete actual student voter
         const deleteVoter = await prisma.user.delete({
             where: {
-                id: req.params.id
+                student_id: req.params.id
             }
         })
 
