@@ -16,6 +16,6 @@ router.post('/', isAdmin,idSchema, validateRequestSchema, singleId)
 router.post('/multiple',isAdmin, idMultipleSchema, validateRequestSchema, multipleId)
 
 //upload xlsx file ids
-router.post('/xlsx', isAdmin, idXlsxSchema, validateRequestSchema, upload.single('file'), xlsxUploadIds)
+router.post('/xlsx', isAdmin, upload.single('file'), idXlsxSchema, validateRequestSchema, xlsxUploadIds)
 
 export default router

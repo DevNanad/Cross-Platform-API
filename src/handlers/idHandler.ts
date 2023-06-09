@@ -51,34 +51,38 @@ export const multipleId = async (req, res) => {
 //UPLOAD XLSX FILE
 export const xlsxUploadIds = async (req, res) => {
 
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
-    }
-
-    const file = req.file;
-    const column = req.body.column || 'A'; // default to column A if not specified
-    const sheet = req.body.sheet || 0; // default to first sheet if not specified
-
-    const workbook = xlsx.read(file.buffer, { type: 'buffer' });
-    const worksheet = workbook.Sheets[workbook.SheetNames[sheet]];
-    const ids = [];
-
-    for (let i = 2; ; i++) { // start from row 2 (assuming row 1 is the header)
-        const cell = worksheet[column + i];
-        if (!cell) break; // stop when we reach an empty cell
-        const id = cell.v.toString().trim().replace('-', '');
-        if (!id.match(/^\d{7}$/)) continue; // ignore non-7-digit IDs
-        const existingId = await prisma.id.findUnique({ where: { student_id: id } });
-        if (existingId) continue; // ignore existing IDs
-        ids.push({ student_id: id });
-    }
-
-    if (ids.length === 0) {
-        return res.status(400).json({ message: 'No valid IDs found in the file' });
-    }
-
-    try {
+  
+  try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() });
+        }
+        // Check if file exists in the request
+        if (!req.file) {
+          return res.status(400).json({ message: 'File is required' });
+        }
+      
+        const file = req.file;
+        const column = req.body.column || 'A'; // default to column A if not specified
+        const sheet = req.body.sheet || 0; // default to first sheet if not specified
+      
+        const workbook = xlsx.read(file.buffer, { type: 'buffer' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[sheet]];
+        const ids = [];
+      
+        for (let i = 2; ; i++) { // start from row 2 (assuming row 1 is the header)
+            const cell = worksheet[column + i];
+            if (!cell) break; // stop when we reach an empty cell
+            const id = cell.v.toString().trim().replace('-', '');
+            if (!id.match(/^\d{7}$/)) continue; // ignore non-7-digit IDs
+            const existingId = await prisma.id.findUnique({ where: { student_id: id } });
+            if (existingId) continue; // ignore existing IDs
+            ids.push({ student_id: id });
+        }
+      
+        if (ids.length === 0) {
+            return res.status(400).json({ message: 'No valid IDs found in the file' });
+        }
         await prisma.id.createMany({ data: ids });
         res.json({ message: `${ids.length} IDs uploaded` });
     } catch (error) {
