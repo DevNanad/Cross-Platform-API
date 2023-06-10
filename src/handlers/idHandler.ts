@@ -5,6 +5,12 @@ import xlsx from "xlsx"
 //UPLOAD SINGLE ID 
 export const singleId = async (req, res) => {
     try {
+        const idExist = await prisma.id.findUnique({
+          where: {student_id: req.body.student_id}
+        })
+
+        if(idExist) throw new Error("Student ID Already exists")
+        
         const single = await prisma.id.create({
             data: { student_id: req.body.student_id}
         })
