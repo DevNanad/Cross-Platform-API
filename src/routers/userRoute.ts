@@ -21,6 +21,7 @@ import {
   recoverAccount,
   register,
   registerCheckId,
+  updateAdminProfile,
   userAnalyticsPastWeek,
 } from "../handlers/userHandler";
 import { validateRequestSchema } from "../modules/validate-request-schema";
@@ -44,6 +45,7 @@ import { idSchema } from "../validators/idSchema";
 import { changeRoleSchema } from "../validators/changeRoleSchema";
 import rateLimit from "express-rate-limit";
 import { recoverAccountSchema } from "../validators/recoverAccountSchema";
+import { updateAdminProfileSchema } from "../validators/updateAdminProfileSchema";
 const router = Router();
 
 const forgotPasswordSendLimiter = rateLimit({
@@ -196,6 +198,24 @@ router.patch(
   recoverAccountSchema,
   validateRequestSchema,
   recoverAccount
+);
+
+//update admin profile
+router.patch(
+  "/admin-profile",
+  isAdmin,
+  updateAdminProfileSchema,
+  validateRequestSchema,
+  updateAdminProfile
+);
+
+//updata admin profile picture
+router.patch(
+  "/change-admin-picture",
+  isAdmin,
+  changeStudentPictureSchema,
+  validateRequestSchema,
+  changePicture
 );
 
 //user Analytics ⭐
