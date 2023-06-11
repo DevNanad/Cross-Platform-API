@@ -161,6 +161,55 @@ export const getAllVoters = async (req, res) => {
   }
 }
 
+//UPDATE ADMIN PROFILE
+export const updateAdminProfile = async (req, res) => {
+  try {
+    //check if the passed user id exists in the database
+    const userExists = await prisma.user.findUnique({
+      where: {
+          student_id: req.body.student_id
+      }
+    })
+    
+    if(!userExists) throw new Error("Student Voter not found");
+
+    //check if the new student id is eligible to use
+    const isIdEligible = await prisma.id.findUnique({
+      where: {student_id: req.body.new_student_id}
+    })
+
+    if(!isIdEligible) throw new Error("ID not Eligible");
+
+    if(req.body.student_id === req.body.new_student_id){
+      const updateProfile = await prisma.user.update({
+        where: { student_id: req.body.student_id},
+        data:{
+          fullname: req.body.fullname
+        }
+      })
+      res.json({message: "success"})
+    }else{
+      const findNewTaken = await prisma.user.findUnique({
+        where: {student_id: req.body.new_student_id}
+      })
+  
+      if(findNewTaken) throw new Error("Student ID Already Taken")
+
+      const updateProfile = await prisma.user.update({
+        where: { student_id: req.body.student_id},
+        data:{
+          fullname: req.body.fullname,
+          student_id: req.body.new_student_id
+        }
+      })
+      res.json({message: "success"})
+    }
+
+  } catch (error) {
+    console.error(error)
+    res.status(400).json({error: error.message})   
+  }
+}
 
 //UPDATE PROFILE (STUDENT ID)
 export const changeStudentID = async (req, res) => {
