@@ -337,10 +337,11 @@ export const changeRole = async (req, res) => {
 // UPDATE PROFILE (CHECK MOBILE NUMBER)
 export const checkMobileNumber = async (req, res) => {
   try {
+    const params = req.query
     // Check if the passed user id exists in the database
     const user = await prisma.user.findUnique({
       where: {
-        student_id: req.body.student_id,
+        student_id: params.student_id,
       },
     });
 
@@ -350,16 +351,18 @@ export const checkMobileNumber = async (req, res) => {
 
     // Check if mobile number is valid (should be Philippine number)
     const lookup = await client.lookups
-    .v2.phoneNumbers(req.body.new_mobile_number)
+    .v2.phoneNumbers(params.new_mobile_number)
     .fetch();
     const countryCode = lookup.countryCode;
     if (countryCode !== "PH") {
     throw new Error("Invalid phone number. Please provide a valid Philippine phone number.");
     }
 
+    const phoneNumber = String(params.new_mobile_number).slice(3)
+
     // Check if mobile number is already taken
     const existingUser = await prisma.user.findUnique({
-      where: { mobile_number: req.body.new_mobile_number },
+      where: { mobile_number: `0${phoneNumber}` },
     });
 
     if (existingUser) {
@@ -368,7 +371,7 @@ export const checkMobileNumber = async (req, res) => {
       // Send OTP
       const verification = await client.verify.services(
         process.env.TWILIO_OTP_SERVICE
-      ).verifications.create({ to: req.body.new_mobile_number, channel: "sms" });
+      ).verifications.create({ to: params.new_mobile_number, channel: "sms" });
 
       console.log(verification.status);
 
@@ -403,29 +406,32 @@ export const confirmMobileNumber = async (req, res) => {
     throw new Error("Invalid phone number. Please provide a valid Philippine phone number.");
     }
 
+    
     // Verify OTP
     try {
       const otp = await client.verify
-        .v2.services(process.env.TWILIO_OTP_SERVICE)
-        .verificationChecks.create({
-          to: req.body.new_mobile_number,
-          code: req.body.new_otp_code
-        });
-
+      .v2.services(process.env.TWILIO_OTP_SERVICE)
+      .verificationChecks.create({
+        to: req.body.new_mobile_number,
+        code: req.body.new_otp_code
+      });
+      
       if (otp.status !== 'approved') {
         throw new Error("Invalid OTP code");
       }
-
+      
     } catch (error) {
       throw new Error("Failed to verify OTP code. Please try again.");
     }
-
+    
+    const phoneNumber = String(req.body.new_mobile_number).slice(3)
+    
     const updateMobileNumber = await prisma.user.update({
       where: {
         student_id: req.body.student_id
       },
       data: {
-        mobile_number: req.body.new_mobile_number
+        mobile_number: `0${phoneNumber}`
       }
     });
 
