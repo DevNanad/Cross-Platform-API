@@ -173,6 +173,24 @@ router.post(
   confirmMobileNumber
 );
 
+//change ADMIN mobile (check mobile number and send otp if false)
+router.get(
+  "/admin/check-mobile-number",
+  isAdmin,
+  changeStudentMobileSchema,
+  validateRequestSchema,
+  checkMobileNumber
+);
+
+//change ADMIN mobile (confirm mobile number otp)
+router.post(
+  "/admin/confirm-mobile-number",
+  isAdmin,
+  confirmStudentMobileSchema,
+  validateRequestSchema,
+  confirmMobileNumber
+);
+
 //change student pin number
 router.patch(
   "/change-student-pin-number",
