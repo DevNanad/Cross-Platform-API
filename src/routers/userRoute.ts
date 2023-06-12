@@ -191,10 +191,10 @@ router.post(
   confirmMobileNumber
 );
 
-//change student pin number
+//change ADMIN pin number
 router.patch(
-  "/change-student-pin-number",
-  protect,
+  "/admin/change-student-pin-number",
+  isAdmin,
   changStudentPinSchema,
   validateRequestSchema,
   changePin
