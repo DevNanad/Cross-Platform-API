@@ -82,6 +82,14 @@ router.patch(
   validateRequestSchema,
   forgotPassword
 );
+//forgot the ADMIN actual password 
+router.patch(
+  "/admin/forgot-password",
+  isAdmin,
+  forgotPasswordSchema,
+  validateRequestSchema,
+  forgotPassword
+);
 
 //forgot the actual pin code
 router.patch("/forgot-pin", forgotPinSchema, validateRequestSchema, forgotPin);
@@ -146,7 +154,7 @@ router.patch(
   changePicture
 );
 
-//change student role
+//change student role ⭐
 router.patch(
   "/change-role",
   isAdmin,
@@ -182,7 +190,7 @@ router.patch(
   changePassword
 );
 
-//change ADMIN mobile (check mobile number and send otp if false)
+//change ADMIN mobile (check mobile number and send otp if false) ⭐
 router.get(
   "/admin/check-mobile-number",
   isAdmin,
@@ -191,7 +199,7 @@ router.get(
   checkMobileNumber
 );
 
-//change ADMIN mobile (confirm mobile number otp)
+//change ADMIN mobile (confirm mobile number otp) ⭐
 router.post(
   "/admin/confirm-mobile-number",
   isAdmin,
@@ -200,7 +208,7 @@ router.post(
   confirmMobileNumber
 );
 
-//change ADMIN pin number
+//change ADMIN pin number ⭐
 router.patch(
   "/admin/change-student-pin-number",
   isAdmin,
@@ -209,7 +217,7 @@ router.patch(
   changePin
 );
 
-//change ADMIN password
+//change ADMIN password ⭐
 router.patch(
   "/change-admin-password",
   isAdmin,
@@ -219,7 +227,7 @@ router.patch(
 );
 
 
-//recover account
+//recover account ⭐
 router.patch(
   "/recover-account",
   isAdmin,
@@ -228,7 +236,7 @@ router.patch(
   recoverAccount
 );
 
-//update admin profile
+//update admin profile ⭐
 router.patch(
   "/admin-profile",
   isAdmin,
@@ -237,7 +245,7 @@ router.patch(
   updateAdminProfile
 );
 
-//updata admin profile picture
+//updata admin profile picture ⭐
 router.patch(
   "/change-admin-picture",
   isAdmin,
