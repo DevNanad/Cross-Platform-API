@@ -173,6 +173,15 @@ router.post(
   confirmMobileNumber
 );
 
+//change student password
+router.patch(
+  "/change-student-password",
+  protect,
+  changeStudentPasswordSchema,
+  validateRequestSchema,
+  changePassword
+);
+
 //change ADMIN mobile (check mobile number and send otp if false)
 router.get(
   "/admin/check-mobile-number",
@@ -200,14 +209,15 @@ router.patch(
   changePin
 );
 
-//change student password
+//change ADMIN password
 router.patch(
-  "/change-student-password",
-  protect,
+  "/change-admin-password",
+  isAdmin,
   changeStudentPasswordSchema,
   validateRequestSchema,
   changePassword
 );
+
 
 //recover account
 router.patch(

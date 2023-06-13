@@ -478,13 +478,21 @@ export const changePin = async (req, res) => {
 export const changePassword = async (req, res) => {
   try {
     //check if the passed user id exists in the database
-    const userExists = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
-          student_id: req.body.student_id
-      }
-    })
-    
-    if(!userExists) throw new Error("Voter not found");
+        student_id: req.body.student_id,
+      },
+    });
+
+    if (!user) {
+      return res.status(401).json({ message: "Incorrect password or ID" });
+    }
+
+    const isValid = await comparePasswords(req.body.current_password, user.password);
+
+    if (!isValid) {
+      return res.status(401).json({ message: "Incorrect current password" });
+    }
 
     const password = await prisma.user.update({
       where: { student_id: req.body.student_id},
