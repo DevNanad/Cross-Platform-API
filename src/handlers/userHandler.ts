@@ -161,6 +161,29 @@ export const getAllVoters = async (req, res) => {
   }
 }
 
+//GET SINGLE VOTER
+export const getVoter = async (req, res) => {
+  try {
+      //check if the passed user id exists in the database
+      const userExists = await prisma.user.findUnique({
+        where: {
+            student_id: String(req.params.id)
+        }
+      })
+      
+      if(!userExists) throw new Error("Student Voter not found");
+
+      const voter = await prisma.user.findUnique({
+        where:{student_id: String(req.params.id)}
+      })
+
+      res.json({voter});
+  } catch (error) {
+    console.error(error);
+    res.status(404).json({ error: error.message });
+  }
+}
+
 //UPDATE ADMIN PROFILE
 export const updateAdminProfile = async (req, res) => {
   try {
