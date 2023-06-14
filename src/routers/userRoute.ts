@@ -16,6 +16,7 @@ import {
   forgotPin,
   getAllActivitytypeVoted,
   getAllVoters,
+  getVoter,
   login,
   primaryLogin,
   recoverAccount,
@@ -98,6 +99,10 @@ router.patch("/forgot-pin", forgotPinSchema, validateRequestSchema, forgotPin);
 router.get("/id", idSchema, validateRequestSchema, registerCheckId);
 
 //LOGGED IN
+
+//get voter route 
+router.get("/get-voter/:id", protect, getVoter);
+
 //Delete user route
 router.delete("/delete-account/:id", protect, deleteVoter);
 
