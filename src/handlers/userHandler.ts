@@ -234,6 +234,33 @@ export const updateAdminProfile = async (req, res) => {
   }
 }
 
+//NEW VOTER UPLOAD INFORMATION
+export const uploadVoterInfo = async (req, res) => {
+  try {
+    //check if the passed user id exists in the database
+    const userExists = await prisma.user.findUnique({
+      where: {
+          student_id: String(req.body.student_id)
+      }
+    })
+    
+    if(!userExists) throw new Error("Voter not found");
+
+    const voterInfo = await prisma.user.update({
+      where: { student_id: String(req.body.student_id)},
+      data:{
+        fullname: String(req.body.fullname)
+      }
+    })
+
+    res.json({message: "success"})
+  } catch (error) {
+    console.error(error)
+    res.status(400).json({error: error.message})   
+  }
+}
+
+
 //UPDATE PROFILE (STUDENT ID)
 export const changeStudentID = async (req, res) => {
   try {
