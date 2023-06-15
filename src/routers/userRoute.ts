@@ -23,6 +23,7 @@ import {
   register,
   registerCheckId,
   updateAdminProfile,
+  uploadVoterInfo,
   userAnalyticsPastWeek,
 } from "../handlers/userHandler";
 import { validateRequestSchema } from "../modules/validate-request-schema";
@@ -131,6 +132,9 @@ router.get(
   validateRequestSchema,
   checkVotersVote
 );
+
+//upload new voter information 
+router.patch('/new-voter', protect, uploadVoterInfo)
 
 //change student id
 router.patch(
