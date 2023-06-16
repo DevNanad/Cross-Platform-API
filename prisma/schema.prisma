@@ -20,7 +20,10 @@ model User {
   id              String     @id @default(uuid())
   student_id      String     @unique
   password        String
-  fullname        String?
+  firstname       String?
+  surname         String?
+  age             String?
+  year_level      String?
   profile_picture String?
   mobile_number   String     @unique
   pin_number      String
