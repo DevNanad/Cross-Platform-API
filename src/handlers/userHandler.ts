@@ -207,7 +207,10 @@ export const updateAdminProfile = async (req, res) => {
       const updateProfile = await prisma.user.update({
         where: { student_id: req.body.student_id},
         data:{
-          fullname: req.body.fullname
+          firstname: req.body.firstname,
+          surname: req.body.surname,
+          age: req.body.age,
+          year_level: req.body.year_level,
         }
       })
       res.json({message: "success"})
@@ -221,8 +224,11 @@ export const updateAdminProfile = async (req, res) => {
       const updateProfile = await prisma.user.update({
         where: { student_id: req.body.student_id},
         data:{
-          fullname: req.body.fullname,
-          student_id: req.body.new_student_id
+          student_id: req.body.new_student_id,
+          firstname: req.body.firstname,
+          surname: req.body.surname,
+          age: req.body.age,
+          year_level: req.body.year_level,
         }
       })
       res.json({message: "success"})
@@ -249,7 +255,10 @@ export const uploadVoterInfo = async (req, res) => {
     const voterInfo = await prisma.user.update({
       where: { student_id: String(req.body.student_id)},
       data:{
-        fullname: String(req.body.fullname)
+        firstname: String(req.body.firstname),
+        surname: String(req.body.surname),
+        age: String(req.body.age),
+        year_level: String(req.body.year_level)
       }
     })
 
@@ -314,12 +323,10 @@ export const changeFullname = async (req, res) => {
     const fullname = await prisma.user.update({
       where: { student_id: req.body.student_id},
       data:{
-        fullname: req.body.new_fullname
+        firstname: req.body.firstname,
+        surname: req.body.surname,
       }
     })
-
-    //invoke fullname update
-    fullname
 
     res.json({message: "Fullname Updated!"})
   } catch (error) {
@@ -878,7 +885,8 @@ export const getAllActivitytypeVoted = async (req, res) => {
           user: {
             select: {
               profile_picture: true,
-              fullname: true,
+              firstname: true,
+              surname: true
             },
           },
         },
