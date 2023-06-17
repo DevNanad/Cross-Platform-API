@@ -214,4 +214,24 @@ export const orgBaseSeatID = async (req, res) => {
         res.status(404).json({ error: error.message });
     }
 };
+//GET ALL SEAT BASE ON BALLOT ID
+export const ballotBaseSeatID = async (req, res) => {
+    try {
+        const positions = await prisma.seat.findMany({
+            where: {
+                ballotId: req.params.id
+            },
+            include: {
+                candidates: true
+            }
+        });
+        if (!positions) {
+            throw new Error(`Positions not found for ballot ID ${req.params.id}`);
+        }
+        res.status(200).json(positions);
+    } catch (error) {
+        console.error(error.message);
+        res.status(404).json({ error: error.message });
+    }
+};
 
