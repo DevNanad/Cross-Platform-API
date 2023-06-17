@@ -96,6 +96,13 @@ export const getOngoingElection = async (req, res) => {
         const ongoing = await prisma.election.findMany({
             where: {
                 status: 'ongoing'
+            },
+            include: { 
+                organizations: {
+                    include: {
+                        ballots: true
+                    }
+                }
             }
         })
 
