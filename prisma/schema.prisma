@@ -101,13 +101,14 @@ model Candidate {
 
 //Seat will have many Candidates
 model Seat {
-  id         String      @id @default(uuid())
-  position   String
-  candidates Candidate[]
-  ballot     Ballot?     @relation(fields: [ballotId], references: [id])
-  ballotId   String?
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  id             String      @id @default(uuid())
+  position       String
+  requiredWinner String?
+  candidates     Candidate[]
+  ballot         Ballot?     @relation(fields: [ballotId], references: [id])
+  ballotId       String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
 }
 
 //Ballot will have many Seats
