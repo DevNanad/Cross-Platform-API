@@ -7,9 +7,11 @@ const client = require('twilio')(accountSid, authToken);
 //SENT OTP 
 export const sendOtp = async (req, res) => {
     try {
+
+        const phoneNumber = String(req.body.mobile_number).slice(3)
         // Check the database if the user number is taken
         const findNumber = await prisma.user.findUnique({
-            where: { mobile_number: req.body.mobile_number },
+            where: { mobile_number: `0${phoneNumber}` },
         });
       
         // Check if mobile number is already taken

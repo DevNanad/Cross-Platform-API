@@ -759,11 +759,23 @@ export const castVoteConnections = async (req, res) => {
           },
         });
 
-    
-        //invoke vote connections
-        castVoteConnectCreate
         //invoke increment votes of every candidates
-        
+        const { candidate_ids } = req.body
+  
+        const updateCandidatesCount = await Promise.all(
+          candidate_ids.map((candidateId) =>
+            prisma.candidate.update({
+              where: {
+                id: candidateId,
+              },
+              data: {
+                count: {
+                  increment: 1,
+                },
+              },
+            })
+          )
+        )
         
         res.json({message: "Vote Connected Successfully"})
     } catch (error) {
