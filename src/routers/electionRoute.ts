@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { createElection, connectOrg, getAllElection, deleteAnElection, deleteAllElection, getAnElection, getUpcomingElection, getOngoingElection, getEndedElection, toUpcoming, toOngoing, toEnded, disconnectOrg, electionOrg, updateAnElec } from '../handlers/electionHandler'
+import { createElection, connectOrg, getAllElection, deleteAnElection, deleteAllElection, getAnElection, getUpcomingElection, getOngoingElection, getEndedElection, toUpcoming, toOngoing, toEnded, disconnectOrg, electionOrg, updateAnElec, checkIfVotedToOrg } from '../handlers/electionHandler'
 import { validateRequestSchema } from '../modules/validate-request-schema'
 import { connectorgSchema } from '../validators/connectorgSchema'
 import { electionSchema } from '../validators/electionSchema'
@@ -51,5 +51,9 @@ router.patch('/status/to-ongoing/:id', isAdmin, toOngoing)
 
 //update to ended ⭐
 router.patch('/status/to-ended/:id', isAdmin, toEnded)
+
+
+//get all unique votes base on org id and student id
+router.get('/check/check-if-voted-organization', protect, checkIfVotedToOrg)
 
 export default router
