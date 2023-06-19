@@ -100,7 +100,8 @@ export const getOngoingElection = async (req, res) => {
             include: { 
                 organizations: {
                     include: {
-                        ballots: true
+                        ballots: true,
+                        votes: true
                     }
                 }
             }
@@ -132,6 +133,24 @@ export const getEndedElection = async (req, res) => {
         res.status(404).json({error: error.message})
     }
 }
+
+//CHECK IF USER VOTED TO A ORGANIZATION
+export const checkIfVotedToOrg= async (req, res) => {
+    try {
+        const params = req.query
+        const uniqueRecords = await prisma.vote.findMany({
+            where: {
+              organizationId: String(params.organizationId),
+              voterId: String(params.student_id)
+            },
+          });
+        res.json(uniqueRecords)
+    } catch (error) {
+        console.error(error)
+        res.status(404).json({error: error.message})
+    }
+}
+
 
 //UPDATE SINGLE
 export const updateAnElec = async (req, res) => {
