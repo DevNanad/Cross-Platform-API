@@ -225,6 +225,14 @@ router.patch(
   validateRequestSchema,
   changePin
 );
+//change student pin number 
+router.patch(
+  "/change-student-pin-number",
+  protect,
+  changStudentPinSchema,
+  validateRequestSchema,
+  changePin
+);
 
 //change ADMIN password ⭐
 router.patch(
@@ -249,6 +257,15 @@ router.patch(
 router.patch(
   "/admin-profile",
   isAdmin,
+  updateAdminProfileSchema,
+  validateRequestSchema,
+  updateAdminProfile
+);
+
+//update student profile 
+router.patch(
+  "/student-profile",
+  protect,
   updateAdminProfileSchema,
   validateRequestSchema,
   updateAdminProfile
