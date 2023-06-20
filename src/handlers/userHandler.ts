@@ -685,6 +685,18 @@ export const deleteVoter = async (req, res) => {
             }
         })
 
+        const deleteUserActivities = await prisma.activity.deleteMany({
+          where: {
+            userId: req.params.id
+          }
+        })
+
+        const deleteId = await prisma.id.deleteMany({
+          where: {
+            student_id: req.params.id
+          }
+        })
+
         //delete the election history related to student voter
         
         //return response
