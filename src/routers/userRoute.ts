@@ -102,7 +102,7 @@ router.get("/id", idSchema, validateRequestSchema, registerCheckId);
 //LOGGED IN
 
 //get voter route 
-router.get("/get-voter/:id", protect, getVoter);
+router.get("/get-voter/:id", protect || isAdmin, getVoter);
 
 //Delete user route
 router.delete("/delete-account/:id", protect, deleteVoter);
