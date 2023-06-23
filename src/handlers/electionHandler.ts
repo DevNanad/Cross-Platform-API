@@ -107,9 +107,6 @@ export const getOngoingElection = async (req, res) => {
                 }
             }
         })
-
-        if(ongoing.length === 0) throw new Error("No Ongoing Election")
-
         res.json(ongoing)
     } catch (error) {
         console.error(error)
