@@ -7,6 +7,7 @@ export const createElection = async (req, res) => {
         const election = await prisma.election.create({
             data: {
                 title: req.body.title,
+                banner: req.body.banner,
                 startDate: new Date(req.body.startDate),
                 endDate: new Date(req.body.endDate),
             }
@@ -169,6 +170,7 @@ export const updateAnElec = async (req, res) => {
         },
         data: {
           title: req.body.title,
+          banner: req.body.banner,
           startDate: new Date(req.body.start_date),
           endDate: new Date(req.body.end_date),
         },
