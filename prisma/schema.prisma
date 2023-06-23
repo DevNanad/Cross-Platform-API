@@ -30,6 +30,7 @@ model User {
   role            Role       @default(user)
   refreshToken    String?
   votes           Vote[]
+  elections       Election[]
   activities      Activity[]
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
@@ -53,6 +54,7 @@ model Activity {
 //Election have many Organizations
 model Election {
   id            String         @id @default(uuid())
+  banner        String
   title         String
   startDate     DateTime
   endDate       DateTime
@@ -60,6 +62,8 @@ model Election {
   organizations Organization[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
+  User          User?          @relation(fields: [userId], references: [student_id])
+  userId        String?
 }
 
 //Status for Election
@@ -78,6 +82,7 @@ model Organization {
   endDate    DateTime
   election   Election? @relation(fields: [electionId], references: [id])
   electionId String?
+  org_status Status    @default(upcoming)
   ballots    Ballot[]
   votes      Vote[]
   createdAt  DateTime  @default(now())
@@ -86,29 +91,33 @@ model Organization {
 
 //Candidate have many Votes
 model Candidate {
-  id        String   @id @default(uuid())
-  fullname  String
-  platform  String
-  party     String
-  imageUrl  String?
-  seat      Seat?    @relation(fields: [seatId], references: [id])
-  seatId    String?
-  votes     Vote[]
-  count     Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id               String   @id @default(uuid())
+  fullname         String
+  platform         String
+  party            String
+  imageUrl         String?
+  seat             Seat?    @relation(fields: [seatId], references: [id])
+  seatId           String?
+  votes            Vote[]
+  candidate_status Status   @default(upcoming)
+  count            Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
 
 //Seat will have many Candidates
 model Seat {
-  id             String      @id @default(uuid())
-  position       String
-  requiredWinner String?
-  candidates     Candidate[]
-  ballot         Ballot?     @relation(fields: [ballotId], references: [id])
-  ballotId       String?
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
+  id               String      @id @default(uuid())
+  position_order   String?
+  position         String
+  requiredWinner   String?
+  candidates       Candidate[]
+  voted_candidates String[]
+  position_status  Status      @default(upcoming)
+  ballot           Ballot?     @relation(fields: [ballotId], references: [id])
+  ballotId         String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
 }
 
 //Ballot will have many Seats
