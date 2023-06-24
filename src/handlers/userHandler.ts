@@ -772,7 +772,37 @@ export const castVoteConnections = async (req, res) => {
         });
 
         //invoke increment votes of every candidates
-        const { candidate_ids } = req.body
+        const { candidate_ids} = req.body
+
+        const votes = req.body.vote;
+
+        for (const vote of votes) {
+          const positionId = vote.position;
+          const votedIds = vote.voted_ids;
+
+          // Get the current voted_candidates for the seat with the given position ID
+          const currentVotedCandidates = await prisma.seat.findUnique({
+            where: {
+              id: positionId,
+            },
+            select: {
+              voted_candidates: true,
+            },
+          });
+
+          // Merge the current voted_candidates with the new voted_ids
+          const mergedVotedCandidates = [...currentVotedCandidates.voted_candidates, ...votedIds];
+
+          // Update the voted_candidates for the seat with the given position ID
+          await prisma.seat.update({
+            where: {
+              id: positionId,
+            },
+            data: {
+              voted_candidates: mergedVotedCandidates,
+            },
+          });
+        }
   
         const updateCandidatesCount = await Promise.all(
           candidate_ids.map((candidateId) =>
