@@ -727,26 +727,26 @@ export const castVoteConnections = async (req, res) => {
             }
           })
         
-        if(!userExists) throw new Error("Student Voter not found");
+        if(!userExists) throw new Error("Student Voter not found")
 
+        const { vote } = req.body.vote;
+        for(const positionVote of vote) {
+          const { position, voted_ids } = positionVote;
 
-        const candidateIds = req.body.candidate_ids;
+          //check if candidates exist
+          // const candidates = await prisma.candidate.findMany({
+          // where: {
+          //     id: { in: voted_ids }
+          // }
+          // });
 
-        //check if candidates exist
-        const candidates = await prisma.candidate.findMany({
-        where: {
-            id: { in: candidateIds }
-        }
-        });
+          // if (candidates.length !== voted_ids.length) {
+          // // Some candidate IDs do not exist
+          // throw new Error("One or more candidate do not exist in the database");
+          // }
 
-        if (candidates.length !== candidateIds.length) {
-        // Some candidate IDs do not exist
-        throw new Error("One or more candidate do not exist in the database");
-        }
-        
-        
-        const castVoteConnectCreate = await Promise.all(
-            candidateIds.map((candidateId) =>
+          const castVoteConnectCreate = await Promise.all(
+            voted_ids.map((candidateId) =>
               prisma.vote.create({
                 data: {
                     organization: {
@@ -761,7 +761,40 @@ export const castVoteConnections = async (req, res) => {
                 }
               })
             )
-        )
+          )
+
+
+          const updateCandidatesCount = await Promise.all(
+            voted_ids.map((candidateId) =>
+              prisma.candidate.update({
+                where: {
+                  id: candidateId,
+                },
+                data: {
+                  count: {
+                    increment: 1,
+                  },
+                },
+              })
+            )
+          )
+          
+          // Fetch the existing voted_candidates array from the database
+          const seat = await prisma.seat.findUnique({
+            where: { id: position },
+            select: { voted_candidates: true },
+          });
+          
+
+          const mergedCandidates = seat?.voted_candidates ?? [];
+          mergedCandidates.push(...voted_ids);
+
+          // Update the voted_candidates field by merging the arrays
+          await prisma.seat.update({
+            where: { id: position },
+            data: { voted_candidates: mergedCandidates },
+          });
+        }
 
         //add voted activity to the user
         const votedActivity = await prisma.activity.create({
@@ -770,54 +803,6 @@ export const castVoteConnections = async (req, res) => {
             user: { connect: { student_id: req.body.student_id } },
           },
         });
-
-        //invoke increment votes of every candidates
-        const { candidate_ids} = req.body
-
-        const votes = req.body.vote;
-
-        for (const vote of votes) {
-          const positionId = vote.position;
-          const votedIds = vote.voted_ids;
-
-          // Get the current voted_candidates for the seat with the given position ID
-          const currentVotedCandidates = await prisma.seat.findUnique({
-            where: {
-              id: positionId,
-            },
-            select: {
-              voted_candidates: true,
-            },
-          });
-
-          // Merge the current voted_candidates with the new voted_ids
-          const mergedVotedCandidates = [...currentVotedCandidates.voted_candidates, ...votedIds];
-
-          // Update the voted_candidates for the seat with the given position ID
-          await prisma.seat.update({
-            where: {
-              id: positionId,
-            },
-            data: {
-              voted_candidates: mergedVotedCandidates,
-            },
-          });
-        }
-  
-        const updateCandidatesCount = await Promise.all(
-          candidate_ids.map((candidateId) =>
-            prisma.candidate.update({
-              where: {
-                id: candidateId,
-              },
-              data: {
-                count: {
-                  increment: 1,
-                },
-              },
-            })
-          )
-        )
         
         res.json({message: "Vote Connected Successfully"})
     } catch (error) {

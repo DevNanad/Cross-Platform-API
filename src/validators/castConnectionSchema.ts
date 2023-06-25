@@ -9,9 +9,9 @@ const schema = [
     check('organization_id')
     .exists({checkFalsy: true}).withMessage('Organization ID is required'),
     
-    check('candidate_ids')
-    .exists({checkFalsy: true}).withMessage('Candidates IDs is required')
-    .isArray().withMessage("Must be an Array of IDs"),
+    check('vote')
+    .exists({checkFalsy: true}).withMessage('Vote object is required')
+    .isObject().withMessage("Must be an Object of Vote"),
 
 ]
 
