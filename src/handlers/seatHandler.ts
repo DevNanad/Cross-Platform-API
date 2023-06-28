@@ -8,7 +8,8 @@ export const createSeat = async (req, res) => {
         const seat = await prisma.seat.create({
             data: {
                 position: String(req.body.position),
-                requiredWinner: String(req.body.requiredWinner)
+                requiredWinner: String(req.body.requiredWinner),
+                position_order: String(req.body.position_order)
             }
         })
         res.json(seat)
@@ -90,7 +91,8 @@ export const updateAPosition = async (req, res) => {
         },
         data: {
             position: String(req.body.position),
-            requiredWinner: String(req.body.requiredWinner)
+            requiredWinner: String(req.body.requiredWinner),
+            position_order: String(req.body.position_order)
         },
       });
   
