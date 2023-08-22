@@ -402,3 +402,58 @@ export const disconnectOrg = async (req, res) => {
         res.status(404).json({error: error.message})
     }
 }
+
+//CONNECT PARTICIPATED ELECTION TO USER FOR HISTORY
+export const electionToUser = async (req, res) => {
+    try {
+
+        //check if the passed election id exists in the database
+        const electionExists = await prisma.election.findUnique({
+            where: {
+                id: req.body.election_id
+            }
+          })
+        
+        if(!electionExists) throw new Error("Election not found");
+        
+        //check if the passed user id exists in the database
+        const userExists = await prisma.user.findUnique({
+            where: {
+                student_id: req.body.student_id
+            }
+          })
+        
+        if(!userExists) throw new Error("Voter not found");
+
+        const usersConnectedToElection = await prisma.user.findMany({
+            where: {
+              elections: {
+                some: {
+                  id: req.body.election_id,
+                },
+              },
+            },
+          });
+          
+          if (usersConnectedToElection.length === 0) {
+            // Users are not connected to the election
+            const connectElectionToVoter = await prisma.user.update({
+                where:{
+                    student_id: req.body.student_id
+                },
+                data: {
+                    elections: {
+                        connect: {
+                            id: req.body.election_id
+                        }
+                    }
+                }
+            })
+        }
+        res.json({ message: "Election Connected to Voter"} )
+        
+    } catch (error) {
+        console.error(error.message)
+        res.status(404).json({error: error.message})       
+    }
+}
