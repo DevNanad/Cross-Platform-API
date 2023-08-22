@@ -457,3 +457,30 @@ export const electionToUser = async (req, res) => {
         res.status(404).json({error: error.message})       
     }
 }
+
+//GET ALL ELECTION BASED ON USERID
+export const getElectionByUserId = async (req, res) => {
+    try {
+        //check if the passed user id exists in the database
+        const userExists = await prisma.user.findUnique({
+            where: {
+                student_id: req.params.id
+            }
+            })
+        
+        if(!userExists) throw new Error("Voter not found");
+
+        const electionByUserId = await prisma.election.findMany({
+            where: {
+                userId: req.params.id
+            }
+        })
+
+        if (electionByUserId.length === 0) throw new Error("No election history.")
+
+        res.json(electionByUserId)
+    } catch (error) {
+        console.error(error)
+        res.status(404).json({error: error.message})
+    }
+}
