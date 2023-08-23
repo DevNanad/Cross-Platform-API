@@ -30,8 +30,8 @@ model User {
   role            Role       @default(user)
   refreshToken    String?
   votes           Vote[]
-  elections       Election[]
   activities      Activity[]
+  elections       Election[]
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
 }
@@ -60,10 +60,9 @@ model Election {
   endDate       DateTime
   status        Status         @default(upcoming)
   organizations Organization[]
+  users         User[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
-  User          User?          @relation(fields: [userId], references: [student_id])
-  userId        String?
 }
 
 //Status for Election
