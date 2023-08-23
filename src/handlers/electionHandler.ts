@@ -421,35 +421,24 @@ export const electionToUser = async (req, res) => {
             where: {
                 student_id: req.body.student_id
             }
-          })
+        })
         
         if(!userExists) throw new Error("Voter not found");
 
-        const usersConnectedToElection = await prisma.user.findMany({
-            where: {
-              elections: {
-                some: {
-                  id: req.body.election_id,
-                },
-              },
+        
+        const connectElectionToVoter = await prisma.user.update({
+            where:{
+                student_id: req.body.student_id
             },
-          });
-          
-          if (usersConnectedToElection.length === 0) {
-            // Users are not connected to the election
-            const connectElectionToVoter = await prisma.user.update({
-                where:{
-                    student_id: req.body.student_id
-                },
-                data: {
-                    elections: {
-                        connect: {
-                            id: req.body.election_id
-                        }
+            data: {
+                elections: {
+                    connect: {
+                        id: req.body.election_id
                     }
                 }
-            })
-        }
+            }
+        })
+
         res.json({ message: "Election Connected to Voter"} )
         
     } catch (error) {
@@ -464,21 +453,25 @@ export const getElectionByUserId = async (req, res) => {
         //check if the passed user id exists in the database
         const userExists = await prisma.user.findUnique({
             where: {
-                student_id: req.params.id
+                student_id: String(req.params.id)
             }
-            })
+        })
         
         if(!userExists) throw new Error("Voter not found");
 
-        const electionByUserId = await prisma.election.findMany({
+        const electionByUserId = await prisma.user.findUnique({
             where: {
-                userId: req.params.id
+                student_id: String(req.params.id)
+            },
+            include: {
+                elections: true
             }
         })
 
-        if (electionByUserId.length === 0) throw new Error("No election history.")
+        if (electionByUserId.elections.length === 0) throw new Error("No election history.")
+        
+        res.json(electionByUserId.elections)
 
-        res.json(electionByUserId)
     } catch (error) {
         console.error(error)
         res.status(404).json({error: error.message})
