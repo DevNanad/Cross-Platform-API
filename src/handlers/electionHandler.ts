@@ -467,9 +467,6 @@ export const getElectionByUserId = async (req, res) => {
                 elections: true
             }
         })
-
-        if (electionByUserId.elections.length === 0) throw new Error("No election history.")
-        
         res.json(electionByUserId.elections)
 
     } catch (error) {
