@@ -23,7 +23,7 @@ router.get('/:id', isAdmin, getAnElection)
 router.get('/', isAdmin, getAllElection)
 
 //get organization base on election id
-router.get('/elec-organizations/:id', isAdmin, electionOrg)
+router.get('/elec-organizations/:id', protect || isAdmin, electionOrg)
 
 //updata single election
 router.patch('/single/:id', isAdmin, updateAnElec)
