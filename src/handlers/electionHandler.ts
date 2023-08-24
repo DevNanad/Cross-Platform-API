@@ -59,11 +59,15 @@ export const electionOrg = async (req, res) => {
     try {
         const orgs = await prisma.organization.findMany({
             where: {
-                electionId: req.params.id
+                electionId: String(req.params.id)
+            },
+            include: {
+                ballots: true,
+                votes: true
             }
         });
         if (!orgs) {
-            throw new Error(`Organizations not found for Election ID ${req.params.id}`);
+            throw new Error(`Organizations not found for Election ID ${String(req.params.id)}`);
         }
         res.status(200).json(orgs);
     } catch (error) {
