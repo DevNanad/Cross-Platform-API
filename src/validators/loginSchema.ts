@@ -8,7 +8,7 @@ const schema = [
 
     check('password')
     .exists({checkFalsy: true}).withMessage('Password is required')
-    .isLength({ min: 5 }).withMessage('Minimum of 5 characters')
+    .isLength({ min: 4 }).withMessage('Minimum of 4 characters')
 ]
 
 export {schema as loginSchema}
