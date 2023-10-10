@@ -35,38 +35,41 @@ export const registerCheckId = async (req, res) => {
 //REGISTER Handler
 export const register = async (req, res) => {
     try {
-        const id = await prisma.id.findUnique({
-          where: {
-            student_id: req.body.student_id,
-          },
-        });
+      const isElectionOngoing = process.env.ELECTION_STATUS
 
-        if(!id) throw new Error("You are not eligible to Register");
+      if(isElectionOngoing === "ONGOING") throw new Error("Election is Ongoing, Registration is not Available")
 
-        const taken = await prisma.user.findUnique({
-          where: {student_id: req.body.student_id},
-        })
-    
-        if(taken) throw new Error("Student ID Already taken")
-    
+      const id = await prisma.id.findUnique({
+        where: {
+          student_id: req.body.student_id,
+        },
+      });
 
-        // Check if mobile number is already taken
-        const existingNumber = await prisma.user.findUnique({
-          where: { mobile_number: req.body.mobile_number },
-        });
-        if(existingNumber) throw new Error("Mobile Number Already taken")
+      if(!id) throw new Error("You are not eligible to Register");
 
-        const user = await prisma.user.create({
-            data: {
-                student_id: req.body.student_id,
-                password: await hashPassword(req.body.password),
-                pin_number: req.body.pin_number,
-                mobile_number: req.body.mobile_number
-            }
-        })
-        res.json({message: "success"})
+      const taken = await prisma.user.findUnique({
+        where: {student_id: req.body.student_id},
+      })
+  
+      if(taken) throw new Error("Student ID Already taken")
+  
+
+      // Check if mobile number is already taken
+      const existingNumber = await prisma.user.findUnique({
+        where: { mobile_number: req.body.mobile_number },
+      });
+      if(existingNumber) throw new Error("Mobile Number Already taken")
+
+      const user = await prisma.user.create({
+          data: {
+              student_id: req.body.student_id,
+              password: await hashPassword(req.body.password),
+              pin_number: req.body.pin_number,
+              mobile_number: req.body.mobile_number
+          }
+      })
+      res.json({message: "success"})
     } catch (error) {
-        console.error(error)
         res.status(400).json({error: error.message})
     }
 }
@@ -94,7 +97,6 @@ export const primaryLogin = async (req, res) => {
 
     res.json({ message: "success", pin: user.pin_number });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -144,7 +146,6 @@ export const login = async (req, res) => {
 
     res.json({ accessToken, role: user.role, pin: user.pin_number, student_id: user.student_id});
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
@@ -156,7 +157,6 @@ export const getAllVoters = async (req, res) => {
 
     res.json(allVoters);
   } catch (error) {
-    console.error(error);
     res.status(404).json({ error: error.message });
   }
 }
@@ -179,7 +179,6 @@ export const getVoter = async (req, res) => {
 
       res.json({voter});
   } catch (error) {
-    console.error(error);
     res.status(404).json({ error: error.message });
   }
 }
@@ -435,7 +434,6 @@ export const checkMobileNumber = async (req, res) => {
       res.json({ message: "Mobile number is Available" });
     }
   } catch (error) {
-    console.error(error);
     res.status(400).json({ error: error.message });
   }
 };
@@ -495,7 +493,6 @@ export const confirmMobileNumber = async (req, res) => {
     res.json({ message: "Mobile number Updated" });
       
   } catch (error) {
-    console.error(error);
     res.status(400).json({ error: error.message });   
   }
 };
@@ -606,7 +603,6 @@ export const forgotPasswordSendOTP = async (req, res) => {
           res.json({ message: "success" });
       }
   } catch (error) {
-  //console.error(error);
   res.status(400).json({ error: error.message });
   }
 
