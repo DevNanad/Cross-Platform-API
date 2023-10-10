@@ -5,7 +5,7 @@ const schema = [
     check('student_id')
     .exists({checkFalsy: true}).withMessage('Student ID is required')
     .isString()
-    .isLength({min: 7, max: 7}).withMessage('Should be 7 characters')
+    .isLength({min: 6, max: 7}).withMessage('Should be 7 characters')
 ]
 
 export {schema as checkVoterIdSchema}

@@ -80,7 +80,7 @@ export const xlsxUploadIds = async (req, res) => {
             const cell = worksheet[column + i];
             if (!cell) break; // stop when we reach an empty cell
             const id = cell.v.toString().trim().replace('-', '');
-            if (!id.match(/^\d{7}$/)) continue; // ignore non-7-digit IDs
+            if (!id.match(/^\d{6,7}$/)) continue; // ignore non-7-digit IDs
             const existingId = await prisma.id.findUnique({ where: { student_id: id } });
             if (existingId) continue; // ignore existing IDs
             ids.push({ student_id: id });

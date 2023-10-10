@@ -9,6 +9,10 @@ import jwt from "jsonwebtoken";
 //CHECK ID BEFORE REGISTER THE STUDENT VOTER
 export const registerCheckId = async (req, res) => {
   try {
+    const isElectionOngoing = process.env.ELECTION_STATUS
+
+    if(isElectionOngoing === "ONGOING") throw new Error("Election is Ongoing, Registration is not Available")
+
     const { student_id } = req.query;
 
     const id = await prisma.id.findUnique({
@@ -35,10 +39,6 @@ export const registerCheckId = async (req, res) => {
 //REGISTER Handler
 export const register = async (req, res) => {
     try {
-      const isElectionOngoing = process.env.ELECTION_STATUS
-
-      if(isElectionOngoing === "ONGOING") throw new Error("Election is Ongoing, Registration is not Available")
-
       const id = await prisma.id.findUnique({
         where: {
           student_id: req.body.student_id,
