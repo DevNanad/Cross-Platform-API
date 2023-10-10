@@ -14,7 +14,6 @@ export const createSeat = async (req, res) => {
         })
         res.json(seat)
     } catch (error) {
-        console.error(error.message)
         res.status(400).json({error: error.message})
     }
 }
@@ -26,7 +25,6 @@ export const getAllSeat = async (req, res) => {
 
         res.json(allSeat)
     } catch (error) {
-        console.error(error.message)
         res.status(404).json({error: error.message})
     }
 }
@@ -42,7 +40,6 @@ export const getAllNullSeat = async (req, res) => {
 
         res.json(nullSeat)
     } catch (error) {
-        console.error(error.message)
         res.status(404).json({error: error.message})
     }
 }
@@ -69,7 +66,6 @@ export const deleteASeat = async (req, res) => {
         //return json message
         res.json({message: "Seat Deleted"})
     } catch (error) {
-        console.error(error)
         res.status(404).json({error:error.message})
     }
 }
@@ -102,7 +98,6 @@ export const updateAPosition = async (req, res) => {
       //return json message
       res.json({ message: "Position Updated" });
     } catch (error) {
-      console.error(error);
       res.status(404).json({ error: error.message });
     }
   };
@@ -147,7 +142,6 @@ export const seatToballot = async (req, res) => {
         })
         res.json({ message: "Seat Connected to Ballot" })
     } catch (error) {
-        console.error(error.message)
         res.status(404).json({error: error.message})       
     }
 }
@@ -188,7 +182,6 @@ export const disconnectSeatFromBallot = async (req, res) => {
 
         res.json({ message: "Seat Disconnected from Ballot" });
     } catch (error) {
-        console.error(error.message);
         res.status(404).json({ error: error.message });       
     }
 }
@@ -214,7 +207,6 @@ export const orgBaseSeatID = async (req, res) => {
         }
         res.status(200).json(ballot);
     } catch (error) {
-        console.error(error.message);
         res.status(404).json({ error: error.message });
     }
 };
@@ -234,7 +226,6 @@ export const ballotBaseSeatID = async (req, res) => {
         }
         res.status(200).json(positions);
     } catch (error) {
-        console.error(error.message);
         res.status(404).json({ error: error.message });
     }
 };

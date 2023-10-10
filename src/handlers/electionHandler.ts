@@ -14,7 +14,6 @@ export const createElection = async (req, res) => {
         })
         res.json(election)
     } catch (error) {
-        console.error(error)
         res.status(400).json({error})
     }
 }
@@ -35,7 +34,6 @@ export const getAnElection = async (req, res) => {
         //return json message
         res.json(findElection)
     } catch (error) {
-        console.error(error)
         res.status(404).json({error: error.message})
     }
 }
@@ -49,7 +47,6 @@ export const getAllElection = async (req, res) => {
 
         res.json(allElections)
     } catch (error) {
-        console.error(error)
         res.status(404).json({error:error.message})
     }
 }
@@ -71,7 +68,6 @@ export const electionOrg = async (req, res) => {
         }
         res.status(200).json(orgs);
     } catch (error) {
-        console.error(error.message);
         res.status(404).json({ error: error.message });
     }
   };
@@ -90,7 +86,6 @@ export const getUpcomingElection = async (req, res) => {
         res.json(upcoming)
 
     } catch (error) {
-        //console.error(error)
         res.status(404).json({error: error.message})
     }
 }
@@ -113,7 +108,6 @@ export const getOngoingElection = async (req, res) => {
         })
         res.json(ongoing)
     } catch (error) {
-        console.error(error)
         res.status(404).json({error: error.message})
     }
 }
@@ -131,7 +125,6 @@ export const getEndedElection = async (req, res) => {
 
         res.json(ended)
     } catch (error) {
-        console.error(error)
         res.status(404).json({error: error.message})
     }
 }
@@ -148,7 +141,6 @@ export const checkIfVotedToOrg= async (req, res) => {
           });
         res.json(uniqueRecords)
     } catch (error) {
-        console.error(error)
         res.status(404).json({error: error.message})
     }
 }
@@ -180,7 +172,6 @@ export const updateAnElec = async (req, res) => {
       //return json message
       res.json({ message: "Election Updated" });
     } catch (error) {
-      console.error(error);
       res.status(404).json({ error: error.message });
     }
   };
@@ -211,7 +202,6 @@ export const toUpcoming = async (req, res) => {
 
         res.json({message: "Updated to Upcoming!"})
     } catch (error) {
-        console.error(error)
         res.status(404).json({error: "No Upcoming Election"})
     }
 }
@@ -243,7 +233,6 @@ export const toOngoing = async (req, res) => {
 
         res.json({message: "Updated to Ongoing!"})
     } catch (error) {
-        console.error(error)
         res.status(404).json({error: "No Ongoing Election"})
     }
 }
@@ -275,7 +264,6 @@ export const toEnded = async (req, res) => {
 
         res.json({message: "Updated to Ended!"})
     } catch (error) {
-        console.error(error)
         res.status(404).json({error: "No Ended Election"})
     }
 }
@@ -301,7 +289,6 @@ export const deleteAnElection = async (req, res) => {
         //return json message
         res.json({message: "Election Deleted"})
     } catch (error) {
-        console.error(error)
         res.status(404).json({error:error.message})
     }
 }
@@ -317,7 +304,6 @@ export const deleteAllElection = async (req, res) => {
         //return json message
         res.json({message: "All Election Deleted"})
     } catch (error) {
-        console.error(error)
         res.status(404).json({error:error.message})
     }
 }
@@ -361,7 +347,6 @@ export const connectOrg = async (req, res) => {
         })
         res.json({ message: "Organization Connected to Election"})
     } catch (error) {
-        console.error(error.message)
         res.status(404).json({error: error.message})       
     }
 }
@@ -402,7 +387,6 @@ export const disconnectOrg = async (req, res) => {
 
         res.json({ message: "Organization Disconnected from Election"})
     } catch (error) {
-        console.error(error.message)
         res.status(404).json({error: error.message})
     }
 }
@@ -446,7 +430,6 @@ export const electionToUser = async (req, res) => {
         res.json({ message: "Election Connected to Voter"} )
         
     } catch (error) {
-        console.error(error.message)
         res.status(404).json({error: error.message})       
     }
 }
@@ -474,7 +457,6 @@ export const getElectionByUserId = async (req, res) => {
         res.json(electionByUserId.elections)
 
     } catch (error) {
-        console.error(error)
         res.status(404).json({error: error.message})
     }
 }

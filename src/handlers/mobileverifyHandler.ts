@@ -38,7 +38,6 @@ export const sendOtp = async (req, res) => {
             res.json({ message: "OTP sent to mobile number." });
         }
     } catch (error) {
-    console.error(error);
     res.status(400).json({ error: error.message });
     }
 
@@ -66,7 +65,6 @@ export const verifyOtp = async (req, res) => {
       console.log(verification_check.status);
       res.json({ check_status: verification_check });
     } catch (error) {
-      console.error(error);
       res.status(401).json({ error: error.message });
     }
 }

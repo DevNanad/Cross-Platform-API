@@ -25,7 +25,6 @@ export const handleLogout = async (req, res) => {
         res.sendStatus(204).end();
 
     } catch (error) {
-        console.log(error);
         res.sendStatus(500).json({ error: "Internal server error" });
     }
 }

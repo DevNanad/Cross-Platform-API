@@ -17,7 +17,6 @@ export const singleId = async (req, res) => {
 
         res.json({ message: "ID Uploaded"})
     } catch (error) {
-        console.error(error);
         res.status(400).json({ error: error.message });
     }
 }
@@ -49,7 +48,6 @@ export const multipleId = async (req, res) => {
   
       res.json({ message: `${result.count} IDs uploaded` });
     } catch (error) {
-      console.error(error);
       res.status(400).json({ error: error.message });
     }
   }
@@ -92,7 +90,6 @@ export const xlsxUploadIds = async (req, res) => {
         await prisma.id.createMany({ data: ids });
         res.json({ message: `${ids.length} IDs uploaded` });
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: 'Failed to upload IDs' });
     }
 };

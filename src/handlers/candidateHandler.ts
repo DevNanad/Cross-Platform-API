@@ -14,7 +14,6 @@ export const createCandidate = async (req, res) => {
         })
         res.json(candidate)
     } catch (error) {
-        console.error(error)
         res.status(400).json({error})
     }
 }
@@ -34,7 +33,6 @@ export const getACandidate = async (req, res) => {
         //return json message
         res.json(findCandidate)
     } catch (error) {
-        console.error(error)
         res.status(404).json({error: error.message})
     }
 }
@@ -45,8 +43,7 @@ export const getAllCandidate = async (req, res) => {
       const allCandidates = await prisma.candidate.findMany();
   
       res.json(allCandidates);
-    } catch (error) {
-      console.error(error);
+    } catch (error){
       res.status(404).json({ error: error.message });
     }
 };
@@ -62,7 +59,6 @@ export const getAllNullCandidate = async (req, res) => {
 
       res.json(nullCandi)
   } catch (error) {
-      console.error(error.message)
       res.status(404).json({error: error.message})
   }
 }
@@ -80,7 +76,6 @@ export const posCandidate = async (req, res) => {
       }
       res.status(200).json(positions);
   } catch (error) {
-      console.error(error.message);
       res.status(404).json({ error: error.message });
   }
 };
@@ -107,7 +102,6 @@ export const deleteACandidate = async (req, res) => {
         //return json message
         res.json({message: "Candidate Deleted"})
     } catch (error) {
-        console.error(error)
         res.status(404).json({error:error.message})
     }
 }  
@@ -140,8 +134,7 @@ export const updateACandidate = async (req, res) => {
   
       //return json message
       res.json({ message: "Candidate Updated" });
-    } catch (error) {
-      console.error(error);
+    } catch (error){
       res.status(404).json({ error: error.message });
     }
   };
@@ -187,7 +180,6 @@ export const candidateToSeat = async (req, res) => {
         })
         res.json({ message: "Candidate Connected to Seat"})
     } catch (error) {
-        console.error(error.message)
         res.status(404).json({error: error.message})       
     }
 }
@@ -229,7 +221,6 @@ export const disconnectCandidateFromSeat = async (req, res) => {
       
       res.json({ message: "Candidate Disconnected from Seat" });
     } catch (error) {
-      console.error(error.message);
       res.status(404).json({ error: error.message });
     }
   };

@@ -16,7 +16,6 @@ export const createOrg = async (req, res) => {
     });
     res.json(org);
   } catch (error) {
-    console.error(error);
     res.status(400).json({ error });
   }
 };
@@ -28,7 +27,6 @@ export const getAllOrg = async (req, res) => {
 
     res.json(allOrganizations);
   } catch (error) {
-    console.error(error);
     res.status(404).json({ error: error.message });
   }
 };
@@ -44,7 +42,6 @@ export const getAllNullOrg = async (req, res) => {
 
       res.json(nullOrg)
   } catch (error) {
-      console.error(error.message)
       res.status(404).json({error: error.message})
   }
 }
@@ -64,7 +61,6 @@ export const getAnOrg = async (req, res) => {
     //return json message
     res.json(findOrganization);
   } catch (error) {
-    console.error(error);
     res.status(404).json({ error: error.message });
   }
 };
@@ -80,7 +76,6 @@ export const deleteAllOrg = async (req, res) => {
     //return json message
     res.json({ message: "All Organizations Deleted" });
   } catch (error) {
-    console.error(error);
     res.status(404).json({ error: error.message });
   }
 };
@@ -106,7 +101,6 @@ export const deleteAnOrg = async (req, res) => {
     //return json message
     res.json({ message: "Organization Deleted" });
   } catch (error) {
-    console.error(error);
     res.status(404).json({ error: error.message });
   }
 };
@@ -140,7 +134,6 @@ export const updateAnOrg = async (req, res) => {
     //return json message
     res.json({ message: "Organization Updated" });
   } catch (error) {
-    console.error(error);
     res.status(404).json({ error: error.message });
   }
 };
@@ -162,7 +155,6 @@ export const orgBallot = async (req, res) => {
       }
       res.status(200).json(ballot);
   } catch (error) {
-      console.error(error.message);
       res.status(404).json({ error: error.message });
   }
 };

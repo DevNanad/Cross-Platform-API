@@ -31,7 +31,6 @@ export const registerCheckId = async (req, res) => {
     
     res.json({message: "Happy Registration :)"})
   } catch (error) {
-      console.error(error)
       res.status(400).json({error: error.message})
   }
 }
@@ -234,7 +233,6 @@ export const updateAdminProfile = async (req, res) => {
     }
 
   } catch (error) {
-    console.error(error)
     res.status(400).json({error: error.message})   
   }
 }
@@ -263,7 +261,6 @@ export const uploadVoterInfo = async (req, res) => {
 
     res.json({message: "success"})
   } catch (error) {
-    console.error(error)
     res.status(400).json({error: error.message})   
   }
 }
@@ -303,7 +300,6 @@ export const changeStudentID = async (req, res) => {
 
     res.json({message: "Student ID Updated!"})
   } catch (error) {
-    console.error(error)
     res.status(400).json({error: error.message})   
   }
 }
@@ -329,7 +325,6 @@ export const changeFullname = async (req, res) => {
 
     res.json({message: "Fullname Updated!"})
   } catch (error) {
-    console.error(error)
     res.status(400).json({error: error.message})   
   }
 }
@@ -359,7 +354,6 @@ export const changePicture = async (req, res) => {
 
     res.json({message: "Profile Picture Updated!"})
   } catch (error) {
-    console.error(error)
     res.status(400).json({error: error.message})   
   }
 }
@@ -385,7 +379,6 @@ export const changeRole = async (req, res) => {
 
     res.json({message: "Role Updated!"})
   } catch (error) {
-    console.error(error)
     res.status(400).json({error: error.message})   
   }
 }
@@ -523,7 +516,6 @@ export const changePin = async (req, res) => {
 
     res.json({message: "PIN Number Updated!"})
   } catch (error) {
-    console.error(error)
     res.status(400).json({error: error.message})   
   }
 }
@@ -560,7 +552,6 @@ export const changePassword = async (req, res) => {
 
     res.json({message: "Password Updated!"})
   } catch (error) {
-    console.error(error)
     res.status(400).json({error: error.message})   
   }
 }
@@ -628,7 +619,6 @@ export const forgotPassword = async (req, res) => {
 
     res.json({message: "Password Updated!"})
   } catch (error) {
-    console.error(error)
     res.status(400).json({error: error.message})   
   }
 }
@@ -654,7 +644,6 @@ export const forgotPin = async (req, res) => {
 
     res.json({message: "PIN Code Updated!"})
   } catch (error) {
-    console.error(error)
     res.status(400).json({error: error.message})   
   }
 }
@@ -698,7 +687,6 @@ export const deleteVoter = async (req, res) => {
         //return response
         res.json({message: "Student Voter deleted Successfully"})
     } catch (error) {
-        console.error(error)
         res.status(404).json({error: error.message})
     }
 }
@@ -802,8 +790,6 @@ export const castVoteConnections = async (req, res) => {
         
         res.json({message: "Vote Connected Successfully"})
     } catch (error) {
-        console.error(error.message)
-
         if (error.code === 'P2002') {
             // handle unique constraint error
             res.status(400).json({error: `Error: ${error.meta.target} must be unique`})
@@ -839,7 +825,6 @@ export const castVote = async (req, res) => {
 
       res.json({message: "Vote Submitted"})
     } catch (error) {
-      console.error(error.message)
       res.status(404).json({ error: error.message })
     }
   }
@@ -866,7 +851,6 @@ export const checkVotersVote = async (req, res) => {
     
     res.json(all)
   } catch (error) {
-    console.error(error.message)
     res.status(404).json({ error: error.message })
   }
 }
@@ -936,7 +920,6 @@ export const getAllActivitytypeVoted = async (req, res) => {
     
     res.json({count,activities})
   } catch (error) {
-    console.error(error)
     res.status(404).json({error: error.message})
   }
 }
@@ -970,7 +953,6 @@ export const recoverAccount = async (req, res) => {
     
     res.json({message: 'success'})
   } catch (error) {
-    console.error(error)
     res.status(404).json({error: error.message})
   }
 }
