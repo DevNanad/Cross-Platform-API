@@ -41,7 +41,16 @@ export const getAnElection = async (req, res) => {
 //GET ALL
 export const getAllElection = async (req, res) => {
     try {
-        const allElections = await prisma.election.findMany()
+        const allElections = await prisma.election.findMany({
+            include: { 
+                organizations: {
+                    include: {
+                        ballots: true,
+                        votes: true
+                    }
+                }
+            }
+        })
 
         allElections
 
