@@ -25,7 +25,6 @@ model User {
   age             String?
   year_level      String?
   profile_picture String?
-  mobile_number   String?    @unique
   email           String?    @unique
   pin_number      String
   role            Role       @default(user)
