@@ -96,6 +96,8 @@ export const primaryLogin = async (req, res) => {
 
     res.json({ message: "success", pin: user.pin_number });
   } catch (error) {
+    console.log(error.message);
+    
     res.status(500).json({ error: "Internal server error" });
   }
 };
