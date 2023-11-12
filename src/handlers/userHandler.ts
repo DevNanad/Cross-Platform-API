@@ -1,77 +1,6 @@
 import prisma from '../db'
 import { comparePasswords, hashPassword } from '../modules/auth'
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const client = require('twilio')(accountSid, authToken);
 import jwt from "jsonwebtoken";
-
-
-//CHECK ID BEFORE REGISTER THE STUDENT VOTER
-export const registerCheckId = async (req, res) => {
-  try {
-    const isElectionOngoing = process.env.ELECTION_STATUS
-
-    if(isElectionOngoing === "ONGOING") throw new Error("Election is Ongoing, Registration is not Available")
-
-    const { student_id } = req.query;
-
-    const id = await prisma.id.findUnique({
-      where: {
-        student_id: String(student_id),
-      },
-    });
-
-    if(!id) throw new Error("You are not eligible to Register");
-
-    const taken = await prisma.user.findUnique({
-      where: {student_id: String(student_id)},
-    })
-
-    if(taken) throw new Error("Student ID Already taken")
-    
-    res.json({message: "Happy Registration :)"})
-  } catch (error) {
-      res.status(400).json({error: error.message})
-  }
-}
-
-//REGISTER Handler
-export const register = async (req, res) => {
-    try {
-      const id = await prisma.id.findUnique({
-        where: {
-          student_id: req.body.student_id,
-        },
-      });
-
-      if(!id) throw new Error("You are not eligible to Register");
-
-      const taken = await prisma.user.findUnique({
-        where: {student_id: req.body.student_id},
-      })
-  
-      if(taken) throw new Error("Student ID Already taken")
-  
-
-      // Check if mobile number is already taken
-      const existingNumber = await prisma.user.findUnique({
-        where: { mobile_number: req.body.mobile_number },
-      });
-      if(existingNumber) throw new Error("Mobile Number Already taken")
-
-      const user = await prisma.user.create({
-          data: {
-              student_id: req.body.student_id,
-              password: await hashPassword(req.body.password),
-              pin_number: req.body.pin_number,
-              mobile_number: req.body.mobile_number
-          }
-      })
-      res.json({message: "success"})
-    } catch (error) {
-        res.status(400).json({error: error.message})
-    }
-}
 
 
 //LOGIN Handler
@@ -385,112 +314,7 @@ export const changeRole = async (req, res) => {
   }
 }
 
-// UPDATE PROFILE (CHECK MOBILE NUMBER)
-export const checkMobileNumber = async (req, res) => {
-  try {
-    const params = req.query
-    // Check if the passed user id exists in the database
-    const user = await prisma.user.findUnique({
-      where: {
-        student_id: params.student_id,
-      },
-    });
 
-    if (!user) {
-      throw new Error("User not found");
-    }
-
-    // Check if mobile number is valid (should be Philippine number)
-    const lookup = await client.lookups
-    .v2.phoneNumbers(params.new_mobile_number)
-    .fetch();
-    const countryCode = lookup.countryCode;
-    if (countryCode !== "PH") {
-    throw new Error("Invalid phone number. Please provide a valid Philippine phone number.");
-    }
-
-    const phoneNumber = String(params.new_mobile_number).slice(3)
-
-    // Check if mobile number is already taken
-    const existingUser = await prisma.user.findUnique({
-      where: { mobile_number: `0${phoneNumber}` },
-    });
-
-    if (existingUser) {
-      throw new Error("Mobile number is Taken");
-    } else {
-      // Send OTP
-      const verification = await client.verify.services(
-        process.env.TWILIO_OTP_SERVICE
-      ).verifications.create({ to: params.new_mobile_number, channel: "sms" });
-
-      console.log(verification.status);
-
-      res.json({ message: "Mobile number is Available" });
-    }
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
-
-//UPDATE PROFILE (CONFIRM MOBILE NUMBER)
-export const confirmMobileNumber = async (req, res) => {
-  try {
-    // Check if the passed user id exists in the database
-    const userExists = await prisma.user.findUnique({
-      where: {
-        student_id: req.body.student_id
-      }
-    });
-    
-    if (!userExists) {
-      throw new Error("Voter not Found");
-    }
-
-    // Check if mobile number is valid (should be Philippine number)
-    const lookup = await client.lookups
-    .v2.phoneNumbers(req.body.new_mobile_number)
-    .fetch();
-    const countryCode = lookup.countryCode;
-    if (countryCode !== "PH") {
-    throw new Error("Invalid phone number. Please provide a valid Philippine phone number.");
-    }
-
-    
-    // Verify OTP
-    try {
-      const otp = await client.verify
-      .v2.services(process.env.TWILIO_OTP_SERVICE)
-      .verificationChecks.create({
-        to: req.body.new_mobile_number,
-        code: req.body.new_otp_code
-      });
-      
-      if (otp.status !== 'approved') {
-        throw new Error("Invalid OTP code");
-      }
-      
-    } catch (error) {
-      throw new Error("Failed to verify OTP code. Please try again.");
-    }
-    
-    const phoneNumber = String(req.body.new_mobile_number).slice(3)
-    
-    const updateMobileNumber = await prisma.user.update({
-      where: {
-        student_id: req.body.student_id
-      },
-      data: {
-        mobile_number: `0${phoneNumber}`
-      }
-    });
-
-    res.json({ message: "Mobile number Updated" });
-      
-  } catch (error) {
-    res.status(400).json({ error: error.message });   
-  }
-};
 
 
 
@@ -562,35 +386,21 @@ export const changePassword = async (req, res) => {
 //FORGOT PASSWORD
 export const forgotPasswordSendOTP = async (req, res) => {
   try {
-      const { mobile_number } = req.query
+      const { email } = req.query
 
-      // Check if mobile number is valid (should be Philippine number)
-      const lookup = await client.lookups
-      .v2.phoneNumbers(String(mobile_number))
-      .fetch();
-      const countryCode = lookup.countryCode;
-      if (countryCode !== "PH") {
-      throw new Error("Invalid phone number. Please provide a valid Philippine phone number.");
-      }
 
-      const phoneNumber = String(mobile_number).slice(3)
-
-      // Check the database if the user number is taken
-      const findNumber = await prisma.user.findUnique({
-          where: { mobile_number: `0${phoneNumber}` },
+      // Check the database if the user email is taken
+      const findEmail = await prisma.user.findUnique({
+          where: { email },
       });
     
       // Check if mobile number is already taken
-      if (!findNumber) {
+      if (!findEmail) {
           // Send error message
-          throw new Error("No Student with that Number");
+          throw new Error("No Student with that Email");
       } else {
       
-          // Send OTP
-          const verification = await client.verify
-          .v2.services(process.env.TWILIO_OTP_SERVICE)
-          .verifications.create({ to: String(mobile_number), channel: "sms" });
-          //console.log(verification.status);
+          // Send OTP to email
       
           // Send success message
           res.json({ message: "success" });
@@ -605,15 +415,15 @@ export const forgotPasswordSendOTP = async (req, res) => {
 export const forgotPassword = async (req, res) => {
   try {
     
-    // Check the database if the user number exists
-    const findNumber = await prisma.user.findUnique({
-      where: { mobile_number: req.body.mobile_number },
+    // Check the database if the user email exists
+    const findEmail = await prisma.user.findUnique({
+      where: { email: req.body.email },
     });
 
-    if(!findNumber) throw new Error("Student Voter Not Found");
+    if(!findEmail) throw new Error("Student Voter Not Found");
     
     const password = await prisma.user.update({
-      where: { mobile_number: req.body.mobile_number},
+      where: { email: req.body.email},
       data:{
         password: await hashPassword(req.body.new_password)
       }
@@ -630,15 +440,15 @@ export const forgotPin = async (req, res) => {
   try {
 
     // Check the database if the user number exists
-    const findNumber = await prisma.user.findUnique({
-      where: { mobile_number: req.body.mobile_number },
+    const findEmail = await prisma.user.findUnique({
+      where: { email: req.body.email },
     });
 
-    if(!findNumber) throw new Error("Student Voter Not Found");
+    if(!findEmail) throw new Error("Student Voter Not Found");
     
 
     const newpin = await prisma.user.update({
-      where: { mobile_number: req.body.mobile_number},
+      where: { email: req.body.email},
       data:{
         pin_number: req.body.new_pin_number
       }
@@ -939,16 +749,16 @@ export const recoverAccount = async (req, res) => {
     if(!userExists) throw new Error("Voter not found");
 
     // Check if mobile number is already taken
-    const existingNumber = await prisma.user.findUnique({
-      where: { mobile_number: String(req.body.mobile_number) },
+    const existingEmail = await prisma.user.findUnique({
+      where: { email: String(req.body.email) },
     });
-    if(existingNumber) throw new Error("Mobile Number Already taken")
+    if(existingEmail) throw new Error("Email Number Already taken")
 
     const password = await prisma.user.update({
       where: { student_id: String(req.body.student_id)},
       data:{
         password: await hashPassword(String(req.body.new_password)),
-        mobile_number: String(req.body.mobile_number),
+        email: String(req.body.email),
         pin_number: String(req.body.pin_code)
       }
     })

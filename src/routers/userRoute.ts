@@ -7,9 +7,7 @@ import {
   changePin,
   changeRole,
   changeStudentID,
-  checkMobileNumber,
   checkVotersVote,
-  confirmMobileNumber,
   deleteVoter,
   forgotPassword,
   forgotPasswordSendOTP,
@@ -20,8 +18,6 @@ import {
   login,
   primaryLogin,
   recoverAccount,
-  register,
-  registerCheckId,
   updateAdminProfile,
   uploadVoterInfo,
   userAnalyticsPastWeek,
@@ -48,6 +44,8 @@ import { changeRoleSchema } from "../validators/changeRoleSchema";
 import rateLimit from "express-rate-limit";
 import { recoverAccountSchema } from "../validators/recoverAccountSchema";
 import { updateAdminProfileSchema } from "../validators/updateAdminProfileSchema";
+import { upload } from "../modules/upload";
+import { xlsxRegister } from "../handlers/registerHandler";
 const router = Router();
 
 const forgotPasswordSendLimiter = rateLimit({
@@ -59,8 +57,6 @@ const forgotPasswordSendLimiter = rateLimit({
 });
 
 //NOT LOGGED IN
-//Register user route
-router.post("/register", registerSchema, validateRequestSchema, register);
 
 //Login user route
 router.post("/login-primary", loginSchema, validateRequestSchema, primaryLogin);
@@ -95,9 +91,6 @@ router.patch(
 
 //forgot the actual pin code
 router.patch("/forgot-pin", forgotPinSchema, validateRequestSchema, forgotPin);
-
-//check id before registration
-router.get("/id", idSchema, validateRequestSchema, registerCheckId);
 
 //LOGGED IN
 
@@ -172,24 +165,6 @@ router.patch(
   changeRole
 );
 
-//change student mobile (check mobile number and send otp if false)
-router.get(
-  "/check-mobile-number",
-  protect,
-  changeStudentMobileSchema,
-  validateRequestSchema,
-  checkMobileNumber
-);
-
-//change student mobile (confirm mobile number otp)
-router.post(
-  "/confirm-mobile-number",
-  protect,
-  confirmStudentMobileSchema,
-  validateRequestSchema,
-  confirmMobileNumber
-);
-
 //change student password
 router.patch(
   "/change-student-password",
@@ -197,24 +172,6 @@ router.patch(
   changeStudentPasswordSchema,
   validateRequestSchema,
   changePassword
-);
-
-//change ADMIN mobile (check mobile number and send otp if false) ⭐
-router.get(
-  "/admin/check-mobile-number",
-  isAdmin,
-  changeStudentMobileSchema,
-  validateRequestSchema,
-  checkMobileNumber
-);
-
-//change ADMIN mobile (confirm mobile number otp) ⭐
-router.post(
-  "/admin/confirm-mobile-number",
-  isAdmin,
-  confirmStudentMobileSchema,
-  validateRequestSchema,
-  confirmMobileNumber
 );
 
 //change ADMIN pin number ⭐
@@ -288,5 +245,9 @@ router.get("/get-all-voters", isAdmin, getAllVoters);
 
 //get voted activities route
 router.get("/get-voted-activities", isAdmin, getAllActivitytypeVoted);
+
+//automatic registration
+//upload xlsx file ids
+router.post('/register-xlsx', upload.single('file'), xlsxRegister)
 
 export default router;
