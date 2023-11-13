@@ -2,9 +2,8 @@ import { check } from "express-validator";
 
 
 const schema = [
-    check('mobile_number')
-    .exists({checkFalsy: true}).withMessage('Mobile number is Required')
-    .isLength({min: 11, max: 13}).withMessage('Invalid Mobile Number'),
+    check('email')
+    .exists({checkFalsy: true}).withMessage('Email is Required'),
 
     check('new_password')
     .exists({checkFalsy: true}).withMessage('New Password is required')

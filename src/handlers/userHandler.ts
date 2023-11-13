@@ -1,7 +1,14 @@
 import prisma from '../db'
 import { comparePasswords, hashPassword } from '../modules/auth'
 import jwt from "jsonwebtoken";
+import { sendEmail } from '../modules/email';
+import { confirmationTemplate } from '../modules/accountTemplate';
 
+export const generateRandomSixDigitNumber = async () => {
+  const min = 100000;
+  const max = 999999;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 //LOGIN Handler
 //PRIMARY LOGIN
@@ -346,6 +353,67 @@ export const changePin = async (req, res) => {
   }
 }
 
+
+//UPDATE  EMAIL (SEND OTP)
+export const changeEmailSend = async (req, res) => {
+  try {
+    //check if the passed user id exists in the database
+    const userExists = await prisma.user.findUnique({
+      where: {
+          student_id: req.body.student_id
+      }
+    })
+    
+    if(!userExists) throw new Error("Voter not found");
+
+    //check if the passed email exists in the database
+    const emailExists = await prisma.user.findUnique({
+      where: {
+          email: req.body.new_email
+      }
+    })
+    if(emailExists) throw new Error("Email already taken.");
+
+    const existingCodeRequest = await prisma.code.findUnique({
+      where: {
+          email: req.body.new_email
+      }
+    })
+
+    if(existingCodeRequest){
+        await prisma.code.delete({
+            where: {
+                email: req.body.new_email
+            }
+        })
+    }
+
+    const code = await generateRandomSixDigitNumber()
+
+    const from = "CICT-VotingSystem <noreply@ourcict.vercel.app>"
+    const subject = "[CICT-VotingSystem] Verify your new Email"
+    const text = confirmationTemplate(String(code))
+
+    await sendEmail(
+            from,
+            req.body.new_email,
+            subject,
+            text
+    )
+
+    await prisma.code.create({
+      data: {
+          email: req.body.new_email,
+          verification_code: String(code)
+      }
+    })
+
+    res.json({message: "success"})
+  } catch (error) {
+    res.status(400).json({error: error.message})   
+  }
+}
+
 //UPDATE PROFILE (PASSWORD)
 export const changePassword = async (req, res) => {
   try {
@@ -386,8 +454,7 @@ export const changePassword = async (req, res) => {
 //FORGOT PASSWORD
 export const forgotPasswordSendOTP = async (req, res) => {
   try {
-      const { email } = req.query
-
+      const { email } = req.body
 
       // Check the database if the user email is taken
       const findEmail = await prisma.user.findUnique({
@@ -401,7 +468,39 @@ export const forgotPasswordSendOTP = async (req, res) => {
       } else {
       
           // Send OTP to email
+          const existingCodeRequest = await prisma.code.findUnique({
+            where: {
+                email: req.body.email
+            }
+          })
       
+          if(existingCodeRequest){
+              await prisma.code.delete({
+                  where: {
+                      email: req.body.email
+                  }
+              })
+          }
+      
+          const code = await generateRandomSixDigitNumber()
+      
+          const from = "CICT-VotingSystem <noreply@ourcict.vercel.app>"
+          const subject = "[CICT-VotingSystem] Reset Password OTP code"
+          const text = confirmationTemplate(String(code))
+      
+          await sendEmail(
+                  from,
+                  req.body.email,
+                  subject,
+                  text
+          )
+      
+          await prisma.code.create({
+            data: {
+                email: req.body.email,
+                verification_code: String(code)
+            }
+          })
           // Send success message
           res.json({ message: "success" });
       }
@@ -410,6 +509,97 @@ export const forgotPasswordSendOTP = async (req, res) => {
   }
 
 }
+
+//OTP VERIFY
+export const verifyOtp = async (req, res)=> {
+  try {
+      const {
+          email,
+          otp_code,
+      }= req.body
+
+      //check if email is unique
+      const uniqueEmail = await prisma.user.findUnique({
+          where:{
+              email
+          },
+      }) 
+      if(!uniqueEmail) throw new Error("Email not found")
+
+      //check if verification code is valid
+      const isValidCode = await prisma.code.findFirst({
+        where: {
+          AND: [
+            {
+              email
+            },
+            {
+              verification_code: String(otp_code)
+            }
+          ]
+        }
+      })
+
+      if (!isValidCode) throw new Error("Invalid verification code")
+
+      await prisma.code.delete({
+          where: {
+              verification_code: String(otp_code)
+          }
+      })
+      res.status(200).json({message: "success"})
+
+  } catch (error:any) {
+      res.status(400).json({error:error.message})
+  }
+}
+//CHANGE EMAIL (CONFIRM)
+export const confirmChangeEmail = async (req, res)=> {
+  try {
+      const {
+          email,
+          student_id,
+          otp_code,
+      }= req.body
+
+
+      //check if verification code is valid
+      const isValidCode = await prisma.code.findFirst({
+          where: {
+            AND: [
+              {
+                email
+              },
+              {
+                verification_code: String(otp_code)
+              }
+            ]
+          }
+      })
+
+      if (!isValidCode) throw new Error("Invalid verification code")
+
+      //change actual email
+      await prisma.user.update({
+        where: {
+          student_id
+        },
+        data: {
+          email
+        }
+      })
+      await prisma.code.delete({
+          where: {
+              verification_code: String(otp_code),
+          }
+      })
+      res.status(200).json({message: "success"})
+      
+  } catch (error:any) {
+      res.status(400).json({error:error.message})
+  }
+}
+
 
 //FORGOT THE ACTUAL PASSWORD
 export const forgotPassword = async (req, res) => {
@@ -429,7 +619,7 @@ export const forgotPassword = async (req, res) => {
       }
     })
 
-    res.json({message: "Password Updated!"})
+    res.json({message: "success"})
   } catch (error) {
     res.status(400).json({error: error.message})   
   }

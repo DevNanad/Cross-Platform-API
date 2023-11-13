@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   castVote,
+  changeEmailSend,
   changeFullname,
   changePassword,
   changePicture,
@@ -8,6 +9,7 @@ import {
   changeRole,
   changeStudentID,
   checkVotersVote,
+  confirmChangeEmail,
   deleteVoter,
   forgotPassword,
   forgotPasswordSendOTP,
@@ -21,10 +23,10 @@ import {
   updateAdminProfile,
   uploadVoterInfo,
   userAnalyticsPastWeek,
+  verifyOtp,
 } from "../handlers/userHandler";
 import { validateRequestSchema } from "../modules/validate-request-schema";
 import { loginSchema } from "../validators/loginSchema";
-import { registerSchema } from "../validators/registerSchema";
 import { isAdmin, protect } from "../modules/auth";
 import { castVoteConnections } from "../handlers/userHandler";
 import { castConnectionSchema } from "../validators/castConnectionSchema";
@@ -32,14 +34,10 @@ import { checkVoterIdSchema } from "../validators/checkVoterIdSchema";
 import { changeStudentIdSchema } from "../validators/changeStudentIdSchema";
 import { changeStudentFullnameSchema } from "../validators/changeStudentFullnameSchema";
 import { changeStudentPictureSchema } from "../validators/changeStudentPictureSchema";
-import { changeStudentMobileSchema } from "../validators/checkStudentMobileSchema";
-import { confirmStudentMobileSchema } from "../validators/confirmStudentMobileSchema";
 import { changStudentPinSchema } from "../validators/changeStudentPinSchema";
 import { changeStudentPasswordSchema } from "../validators/changeStudentPasswordSchema";
-import { otpsendSchema } from "../validators/otpsendSchema";
 import { forgotPasswordSchema } from "../validators/forgotPasswordSchema";
 import { forgotPinSchema } from "../validators/forgotPinSchema";
-import { idSchema } from "../validators/idSchema";
 import { changeRoleSchema } from "../validators/changeRoleSchema";
 import rateLimit from "express-rate-limit";
 import { recoverAccountSchema } from "../validators/recoverAccountSchema";
@@ -55,6 +53,13 @@ const forgotPasswordSendLimiter = rateLimit({
   legacyHeaders: false,
   message: "Limit: 5 attempts per 5 minutes.",
 });
+const forgotPassLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000,
+  max: 1,
+  standardHeaders: false,
+  legacyHeaders: false,
+  message: "Limit: 1 attempt per 5 minutes.",
+});
 
 //NOT LOGGED IN
 
@@ -65,17 +70,21 @@ router.post("/login-primary", loginSchema, validateRequestSchema, primaryLogin);
 router.post("/login", loginSchema, validateRequestSchema, login);
 
 //forgot password
-router.get(
+router.post(
   "/forgot-password-send",
   forgotPasswordSendLimiter,
-  otpsendSchema,
-  validateRequestSchema,
   forgotPasswordSendOTP
+);
+//otp verify
+router.post(
+  "/otp/verify",
+  forgotPasswordSendLimiter,
+  verifyOtp
 );
 
 //forgot the actual password
 router.patch(
-  "/forgot-password",
+  "/forgot-password",protect,forgotPassLimiter,
   forgotPasswordSchema,
   validateRequestSchema,
   forgotPassword
@@ -190,6 +199,12 @@ router.patch(
   validateRequestSchema,
   changePin
 );
+
+//change email (send otp)
+router.post('/change-email', protect ,changeEmailSend)
+
+//change email (confirm otp)
+router.patch('/change-email-confirm', protect ,confirmChangeEmail)
 
 //change ADMIN password ⭐
 router.patch(
