@@ -36,6 +36,13 @@ model User {
   updatedAt       DateTime   @updatedAt
 }
 
+model Code {
+  id                String   @id @default(uuid())
+  email             String   @unique
+  verification_code String   @unique
+  createdAt         DateTime @default(now())
+}
+
 //Status for Election
 enum Role {
   admin
