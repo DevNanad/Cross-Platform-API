@@ -84,7 +84,7 @@ router.post(
 
 //forgot the actual password
 router.patch(
-  "/forgot-password",protect,forgotPassLimiter,
+  "/forgot-password",protect || isAdmin,forgotPassLimiter,
   forgotPasswordSchema,
   validateRequestSchema,
   forgotPassword
@@ -201,10 +201,10 @@ router.patch(
 );
 
 //change email (send otp)
-router.post('/change-email', protect ,changeEmailSend)
+router.post('/change-email', protect || isAdmin ,changeEmailSend)
 
 //change email (confirm otp)
-router.patch('/change-email-confirm', protect ,confirmChangeEmail)
+router.patch('/change-email-confirm', protect || isAdmin ,confirmChangeEmail)
 
 //change ADMIN password ⭐
 router.patch(
