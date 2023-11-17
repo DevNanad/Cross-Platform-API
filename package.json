@@ -9,6 +9,9 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js"
   },
+  "resolutions": {
+    "engine.io": "6.5.1"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
