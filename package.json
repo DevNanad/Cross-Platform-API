@@ -33,7 +33,7 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "@types/node": "^18.15.7",
+    "@types/node": "^20.9.1",
     "nodemon": "^2.0.22",
     "prisma": "^4.11.0",
     "ts-node": "^10.9.1",
