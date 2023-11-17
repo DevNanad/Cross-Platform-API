@@ -43,7 +43,7 @@ import rateLimit from "express-rate-limit";
 import { recoverAccountSchema } from "../validators/recoverAccountSchema";
 import { updateAdminProfileSchema } from "../validators/updateAdminProfileSchema";
 import { upload } from "../modules/upload";
-import { xlsxRegister } from "../handlers/registerHandler";
+import { registerSingleStudent, xlsxRegister } from "../handlers/registerHandler";
 const router = Router();
 
 const forgotPasswordSendLimiter = rateLimit({
@@ -263,6 +263,9 @@ router.get("/get-voted-activities", isAdmin, getAllActivitytypeVoted);
 
 //automatic registration
 //upload xlsx file ids
-router.post('/register-xlsx', upload.single('file'), xlsxRegister)
+router.post('/register-xlsx', isAdmin, upload.single('file'), xlsxRegister)
+
+//register single student
+router.post('/register-student', isAdmin, registerSingleStudent)
 
 export default router;

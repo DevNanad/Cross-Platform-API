@@ -21,6 +21,54 @@ const generateRandomPIN = () => {
     return Math.floor(1000 + Math.random() * 9000).toString();
 };
 
+//REGISTER SINGLE STUDENT
+export const registerSingleStudent = async (req, res) => {
+  try {
+    const {student_id, student_email} = req.body
+    // Check if user with the same ID or email already exists
+    const checkSID = await prisma.user.findUnique({
+      where: {
+        student_id: String(student_id)
+      }
+    })
+
+    if(checkSID) throw new Error("Student ID number already taken.")
+    const checkEmail = await prisma.user.findUnique({
+      where: {
+        email: String(student_email)
+      }
+    })
+
+    if(checkEmail) throw new Error("Student Email already taken.")
+
+    const password = generateRandomPassword();
+    const pin = generateRandomPIN();
+
+    const user = await prisma.user.create({
+      data: {
+        student_id: String(student_id),
+        email: String(student_email),
+        password: await hashPassword(password),
+        pin_number: pin,
+      }
+    })
+
+    const from = "CICT-VotingSystem <noreply@ourcict.vercel.app>"
+    const subject = "[CICT-VotingSystem] Your CICT Voting System account"
+    const text = newAccountTemplate(String(user.student_id), String(password), String(user.pin_number))
+
+    await sendEmail(
+            from,
+            user.email,
+            subject,
+            text
+    )
+    res.status(200).json({message: "success"})
+  } catch (error) {
+    res.status(404).json({error: error.message})
+  }
+}
+
 // REGISTER USING XLSX FILE
 export const xlsxRegister = async (req, res) => {
     try {
