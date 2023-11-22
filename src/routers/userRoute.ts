@@ -22,6 +22,7 @@ import {
   login,
   primaryLogin,
   recoverAccount,
+  resetPin,
   updateAdminProfile,
   uploadVoterInfo,
   userAnalyticsPastWeek,
@@ -123,6 +124,9 @@ router.post(
 
 //forgot the actual pin code
 router.patch("/forgot-pin", forgotPinSchema, validateRequestSchema, forgotPin);
+
+//forgot the actual pin code using student id
+router.patch("/reset-pin",  resetPin);
 
 //LOGGED IN
 

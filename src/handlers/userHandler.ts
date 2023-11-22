@@ -751,6 +751,34 @@ export const forgotPin = async (req, res) => {
   }
 }
 
+//FORGOT THE ACTUAL PIN USING STUDENT ID
+export const resetPin = async (req, res) => {
+  try {
+    const {student_id, new_pin_code} = req.body
+
+    // Check the database if the user number exists
+    const user = await prisma.user.findUnique({
+      where: { student_id },
+    });
+
+    if(!user) throw new Error("Student Voter Not Found");
+    
+    
+    const newpin = await prisma.user.update({
+      where: {student_id},
+      data:{
+        pin_number: String(new_pin_code)
+      }
+    })
+    
+    if(!newpin) throw new Error("Error changing PIN");
+
+    res.json({message: "success"})
+  } catch (error) {
+    res.status(400).json({error: error.message})   
+  }
+}
+
 //DELETE VOTER
 export const deleteVoter = async (req, res) => {
     try {
