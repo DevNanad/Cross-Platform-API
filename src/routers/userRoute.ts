@@ -14,6 +14,8 @@ import {
   forgotPassword,
   forgotPasswordSendOTP,
   forgotPin,
+  forgotPinConfirmOTP,
+  forgotPinSendOTP,
   getAllActivitytypeVoted,
   getAllVoters,
   getVoter,
@@ -82,6 +84,13 @@ router.post(
   verifyOtp
 );
 
+//forgot pin otp verify
+router.post(
+  "/forgot-pin-confirm",
+  forgotPasswordSendLimiter,
+  forgotPinConfirmOTP
+);
+
 //forgot the actual password
 router.patch(
   "/forgot-password",protect || isAdmin,forgotPassLimiter,
@@ -105,6 +114,11 @@ router.patch(
   forgotPasswordSchema,
   validateRequestSchema,
   forgotPassword
+);
+//forgot pin send otp
+router.post(
+  "/forgot-pin-send",forgotPassLimiter,
+  forgotPinSendOTP
 );
 
 //forgot the actual pin code

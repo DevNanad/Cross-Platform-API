@@ -450,6 +450,63 @@ export const changePassword = async (req, res) => {
   }
 }
 
+//FORGOT PIN 
+export const forgotPinSendOTP = async (req, res) => {
+  try {
+      const { student_id } = req.body
+      const student = await prisma.user.findUnique({
+          where: { student_id },
+      });
+    
+      // Check if user exist
+      if (!student) {
+          // Send error message
+          throw new Error("Student not found");
+      } else {
+      
+          // Send OTP to email
+          const existingCodeRequest = await prisma.code.findUnique({
+            where: {
+                email: student.email
+            }
+          })
+      
+          if(existingCodeRequest){
+              await prisma.code.delete({
+                  where: {
+                      email: student.email
+                  }
+              })
+          }
+      
+          const code = await generateRandomSixDigitNumber()
+      
+          const from = "CICT-VotingSystem <noreply@ourcict.vercel.app>"
+          const subject = "[CICT-VotingSystem] Forgot Pin OTP code"
+          const text = confirmationTemplate(String(code))
+      
+          await sendEmail(
+                  from,
+                  student.email,
+                  subject,
+                  text
+          )
+      
+          await prisma.code.create({
+            data: {
+                email: student.email,
+                verification_code: String(code)
+            }
+          })
+          // Send success message
+          res.json({ message: "success" });
+      }
+  } catch (error) {
+  res.status(400).json({ error: error.message });
+  }
+
+}
+
 
 //FORGOT PASSWORD
 export const forgotPasswordSendOTP = async (req, res) => {
@@ -470,14 +527,14 @@ export const forgotPasswordSendOTP = async (req, res) => {
           // Send OTP to email
           const existingCodeRequest = await prisma.code.findUnique({
             where: {
-                email: email
+                email: req.body.email
             }
           })
       
           if(existingCodeRequest){
               await prisma.code.delete({
                   where: {
-                      email: email
+                      email: req.body.email
                   }
               })
           }
@@ -485,19 +542,19 @@ export const forgotPasswordSendOTP = async (req, res) => {
           const code = await generateRandomSixDigitNumber()
       
           const from = "CICT-VotingSystem <noreply@ourcict.vercel.app>"
-          const subject = "[CICT-VotingSystem] Forgot Password OTP code"
+          const subject = "[CICT-VotingSystem] Reset Password OTP code"
           const text = confirmationTemplate(String(code))
       
           await sendEmail(
                   from,
-                  email,
+                  req.body.email,
                   subject,
                   text
           )
       
           await prisma.code.create({
             data: {
-                email: email,
+                email: req.body.email,
                 verification_code: String(code)
             }
           })
@@ -532,6 +589,50 @@ export const verifyOtp = async (req, res)=> {
           AND: [
             {
               email
+            },
+            {
+              verification_code: String(otp_code)
+            }
+          ]
+        }
+      })
+
+      if (!isValidCode) throw new Error("Invalid verification code")
+
+      await prisma.code.delete({
+          where: {
+              verification_code: String(otp_code)
+          }
+      })
+      res.status(200).json({message: "success"})
+
+  } catch (error:any) {
+      res.status(400).json({error:error.message})
+  }
+}
+
+//FORGOT PIN OTP VERIFY
+export const forgotPinConfirmOTP = async (req, res)=> {
+  try {
+      const {
+          student_id,
+          otp_code,
+      }= req.body
+
+      //check if email is unique
+      const student = await prisma.user.findUnique({
+          where:{
+              student_id
+          },
+      }) 
+      if(!student) throw new Error("Student not found")
+
+      //check if verification code is valid
+      const isValidCode = await prisma.code.findFirst({
+        where: {
+          AND: [
+            {
+              email: student.email
             },
             {
               verification_code: String(otp_code)
