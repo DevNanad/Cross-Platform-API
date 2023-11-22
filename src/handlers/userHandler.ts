@@ -470,14 +470,14 @@ export const forgotPasswordSendOTP = async (req, res) => {
           // Send OTP to email
           const existingCodeRequest = await prisma.code.findUnique({
             where: {
-                email: req.body.email
+                email: email
             }
           })
       
           if(existingCodeRequest){
               await prisma.code.delete({
                   where: {
-                      email: req.body.email
+                      email: email
                   }
               })
           }
@@ -485,19 +485,19 @@ export const forgotPasswordSendOTP = async (req, res) => {
           const code = await generateRandomSixDigitNumber()
       
           const from = "CICT-VotingSystem <noreply@ourcict.vercel.app>"
-          const subject = "[CICT-VotingSystem] Reset Password OTP code"
+          const subject = "[CICT-VotingSystem] Forgot Password OTP code"
           const text = confirmationTemplate(String(code))
       
           await sendEmail(
                   from,
-                  req.body.email,
+                  email,
                   subject,
                   text
           )
       
           await prisma.code.create({
             data: {
-                email: req.body.email,
+                email: email,
                 verification_code: String(code)
             }
           })

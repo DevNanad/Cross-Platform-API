@@ -89,6 +89,15 @@ router.patch(
   validateRequestSchema,
   forgotPassword
 );
+
+//forgot the actual password
+router.patch(
+  "/forgot-password-outside", forgotPassLimiter,
+  forgotPasswordSchema,
+  validateRequestSchema,
+  forgotPassword
+);
+
 //forgot the ADMIN actual password 
 router.patch(
   "/admin/forgot-password",
