@@ -679,9 +679,9 @@ export const confirmChangeEmail = async (req, res)=> {
       })
 
       if (!isValidCode) throw new Error("Invalid verification code")
-
+      
       //change actual email
-      await prisma.user.update({
+      const updateEmail = await prisma.user.update({
         where: {
           student_id
         },
@@ -689,6 +689,8 @@ export const confirmChangeEmail = async (req, res)=> {
           email
         }
       })
+      if (!updateEmail) throw new Error("Error updating email.")
+
       await prisma.code.delete({
           where: {
               verification_code: String(otp_code),

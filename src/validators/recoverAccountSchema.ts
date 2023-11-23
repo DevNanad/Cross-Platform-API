@@ -14,10 +14,9 @@ const schema = [
     .exists({checkFalsy: true}).withMessage('PIN is required')
     .isLength({min: 4,max: 4}).withMessage('Should be 4 digit number'),
 
-    check('mobile_number')
-    .exists({checkFalsy: true}).withMessage('Mobile Number is required')
-    .isLength({min: 11,max: 11}).withMessage('Should be 11 digit number'),
-
+    check('email')
+    .exists({checkFalsy: true}).withMessage('Email Address is required')
+    .isEmail().withMessage('Email is not Valid'),
 ]
 
 export {schema as recoverAccountSchema}
