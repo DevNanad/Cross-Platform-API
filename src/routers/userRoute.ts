@@ -56,6 +56,7 @@ const forgotPasswordSendLimiter = rateLimit({
   legacyHeaders: false,
   message: "Limit: 5 attempts per 5 minutes.",
 });
+
 const forgotPassLimiter = rateLimit({
   windowMs: 5 * 60 * 1000,
   max: 1,
@@ -64,6 +65,13 @@ const forgotPassLimiter = rateLimit({
   message: "Limit: 1 attempt per 5 minutes.",
 });
 
+const forgotPinLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000,
+  max: 1,
+  standardHeaders: false,
+  legacyHeaders: false,
+  message: "Limit: 1 attempt per 5 minutes.",
+});
 //NOT LOGGED IN
 
 //Login user route
@@ -118,7 +126,7 @@ router.patch(
 );
 //forgot pin send otp
 router.post(
-  "/forgot-pin-send",forgotPassLimiter,
+  "/forgot-pin-send",forgotPinLimiter,
   forgotPinSendOTP
 );
 
