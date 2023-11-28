@@ -5,10 +5,6 @@ const schema = [
     .exists({checkFalsy: true}).withMessage('Student ID is required')
     .isLength({min: 6, max: 7}).withMessage('Invalid Student ID'),
 
-    check('new_student_id')
-    .exists({checkFalsy: true}).withMessage('New Student ID is required')
-    .isLength({min: 6, max: 7}).withMessage('Invalid New Student ID'),
-
     check('firstname')
     .exists({checkFalsy: true}).withMessage('Firstname is required')
     .isString().withMessage("Should be a String"),

@@ -131,45 +131,17 @@ export const updateAdminProfile = async (req, res) => {
     })
     
     if(!userExists) throw new Error("Student Voter not found");
-
-    //check if the new student id is eligible to use
-    const isIdEligible = await prisma.id.findUnique({
-      where: {student_id: req.body.new_student_id}
+    const info = await prisma.user.update({
+      where: { student_id: req.body.student_id},
+      data:{
+        firstname: req.body.firstname,
+        surname: req.body.surname,
+        age: req.body.age,
+        year_level: req.body.year_level,
+      }
     })
-
-    if(!isIdEligible) throw new Error("ID not Eligible");
-
-    if(req.body.student_id === req.body.new_student_id){
-      const updateProfile = await prisma.user.update({
-        where: { student_id: req.body.student_id},
-        data:{
-          firstname: req.body.firstname,
-          surname: req.body.surname,
-          age: req.body.age,
-          year_level: req.body.year_level,
-        }
-      })
-      res.json({message: "success"})
-    }else{
-      const findNewTaken = await prisma.user.findUnique({
-        where: {student_id: req.body.new_student_id}
-      })
-  
-      if(findNewTaken) throw new Error("Student ID Already Taken")
-
-      const updateProfile = await prisma.user.update({
-        where: { student_id: req.body.student_id},
-        data:{
-          student_id: req.body.new_student_id,
-          firstname: req.body.firstname,
-          surname: req.body.surname,
-          age: req.body.age,
-          year_level: req.body.year_level,
-        }
-      })
-      res.json({message: "success"})
-    }
-
+    if(!info) throw new Error("Error saving information.");
+    res.json({message: "success"})
   } catch (error) {
     res.status(400).json({error: error.message})   
   }
