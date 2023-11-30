@@ -7,7 +7,7 @@ export const newAccountTemplate = (student_id: string, password: string, pin_cod
           <p style="text-align: center;">Student ID: ${student_id}</p>
           <p style="text-align: center;">Password: ${password}</p>
           <p style="text-align: center;">PIN: ${pin_code}</p>
-          <p style="text-align: center;">Login at ${site}/login</p>
+          <a style="text-align: center;">Login at <a href='${site}/login'>${site}/login</a></a>
       </div>
     </div>`;
 }
