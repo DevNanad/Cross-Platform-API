@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt"
+import prisma from "../db";
 
 
 export const comparePasswords = (password, hash) => {
@@ -8,6 +9,33 @@ export const comparePasswords = (password, hash) => {
 
 export const hashPassword = (password) => {
     return bcrypt.hash(password, 5)
+}
+
+export const generateAdmin = async (req, res, next) => {
+    try {
+        //check if there is no admin
+        const admin = await prisma.user.findFirst({
+            where: {
+                role: 'admin'
+            }
+        })
+
+        if(!admin) {
+            await prisma.user.create({
+                data: {
+                    student_id: '0000000',
+                    password: await hashPassword('admin00'),
+                    pin_number: '1111'
+                }
+            })
+            return next()
+        }
+
+        return next()
+    } catch (error) {
+        console.log(error.message)
+        
+    }
 }
 
 

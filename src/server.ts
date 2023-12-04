@@ -2,7 +2,7 @@ import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-import { protect } from './modules/auth'
+import { generateAdmin, protect } from './modules/auth'
 import userRouter from './routers/userRoute'
 import electionRouter from './routers/electionRoute'
 import organizationRouter from './routers/organizationRoute'
@@ -24,6 +24,8 @@ app.use(cors(corsOptions))
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(cookieParser())
+
+app.use(generateAdmin)
 
 const server = http.createServer(app)
 
