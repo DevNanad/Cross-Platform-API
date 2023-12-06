@@ -99,6 +99,14 @@ io.on("connection", async (socket) => {
                             ballots: true,
                             votes: true
                         }
+                    },
+                    users: {
+                        select: {
+                            id: true,
+                            firstname: true,
+                            surname: true,
+                            year_level: true,
+                        }
                     }
                 }
             })
@@ -134,6 +142,31 @@ io.on("connection", async (socket) => {
         } catch (error) {
             console.log(error.message);
             
+        }
+
+        //ALL ELECTION
+        try {
+            const allElections = await prisma.election.findMany({
+                include: { 
+                    organizations: {
+                        include: {
+                            ballots: true,
+                            votes: true
+                        }
+                    },
+                    users: {
+                        select: {
+                            id: true,
+                            firstname: true,
+                            surname: true,
+                            year_level: true,
+                        }
+                    }
+                }
+            })
+            socket.broadcast.emit("all-elections", allElections)
+        } catch (error) {
+            console.log(error.message);
         }
 
         //VOTED ACTIVITIES
