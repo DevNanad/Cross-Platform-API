@@ -52,6 +52,34 @@ io.on("connection", async (socket) => {
     } catch (error) {
         console.log(error.message)
     }
+
+    socket.on("voted-reset", async (data) => {
+        //VOTED ACTIVITIES
+        try {
+            const [count, activities] = await Promise.all([
+                prisma.activity.groupBy({
+                    by: ['userId'],
+                    where: { type: 'voted' }}),
+                prisma.activity.findMany({
+                    take: 10,
+                    orderBy: { createdAt: 'desc' },
+                    where: { type: 'voted' },
+                    include: {
+                    user: {
+                        select: {
+                        profile_picture: true,
+                        firstname: true,
+                        surname: true
+                        },
+                    },
+                    },
+                }),
+            ])
+            socket.emit("activities", {count, activities})
+        } catch (error) {
+            console.log(error.message);
+        }
+    })
     
     socket.on("admin-emit",async (data) => {
         
@@ -83,9 +111,6 @@ io.on("connection", async (socket) => {
                     },
                 }),
             ])
-            if(activities.length === 0) {
-              throw new Error("No Activity");
-            }
             socket.emit("activities", {count, activities})
         } catch (error) {
             console.log(error.message);
@@ -190,9 +215,6 @@ io.on("connection", async (socket) => {
                     },
                 }),
             ])
-            if(activities.length === 0) {
-              throw new Error("No Activity");
-            }
             socket.broadcast.emit("activities", {count, activities})
         } catch (error) {
             console.log(error.message);
