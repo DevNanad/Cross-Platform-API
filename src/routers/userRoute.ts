@@ -10,6 +10,7 @@ import {
   changeStudentID,
   checkVotersVote,
   confirmChangeEmail,
+  deleteActivities,
   deleteVoter,
   forgotPassword,
   forgotPasswordSendOTP,
@@ -250,6 +251,8 @@ router.patch(
   changePassword
 );
 
+//delete activities
+router.delete("/delete-activities", isAdmin, deleteActivities)
 
 //recover account ⭐
 router.patch(

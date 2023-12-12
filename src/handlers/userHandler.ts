@@ -1061,3 +1061,19 @@ export const recoverAccount = async (req, res) => {
     res.status(404).json({error: error.message})
   }
 }
+
+
+//DELETING ACTIVITIES
+export const deleteActivities = async (req, res) => {
+  try {
+      const deleteAct = await prisma.activity.deleteMany({})
+
+      if(deleteAct){
+        res.json({message: "success"})
+      }else{
+        res.json({message: "Deleting activities warn"})
+      }
+  } catch (error) {
+      res.status(404).json({error: error.message})
+  }
+}
