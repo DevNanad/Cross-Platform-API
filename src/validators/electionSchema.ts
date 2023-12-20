@@ -8,12 +8,12 @@ const schema = [
     .isLength({min: 5,}).withMessage('Invalid Title'),
 
     check('startDate')
-    .exists({checkFalsy: true}).withMessage('Starting Date is required')
-    .isDate({ format: 'YYYY-MM-DD'}).withMessage('Invalid Starting Date (YYYY-MM-DD)*'),
+    .exists({ checkFalsy: true }).withMessage('Starting Date is required')
+    .isISO8601().withMessage('Invalid Starting Date (ISO8601 format)'),
 
     check('endDate')
-    .exists({checkFalsy: true}).withMessage('Ending Date is required')
-    .isDate({ format: 'YYYY-MM-DD'}).withMessage('Invalid Ending Date  (YYYY-MM-DD)*'),
+    .exists({ checkFalsy: true }).withMessage('Ending Date is required')
+    .isISO8601().withMessage('Invalid Ending Date (ISO8601 format)'),
 ]
 
 export {schema as electionSchema}

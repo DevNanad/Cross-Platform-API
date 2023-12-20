@@ -4,12 +4,22 @@ import prisma from '../db'
 //CREATE
 export const createElection = async (req, res) => {
     try {
+        const receivedStartDate = new Date(req.body.startDate)
+        const receivedEndDate = new Date(req.body.endDate)
+
+        const convertedStartDate = new Date(
+        receivedStartDate.getTime() - receivedStartDate.getTimezoneOffset() * 60000
+        )
+
+        const convertedEndDate = new Date(
+        receivedEndDate.getTime() - receivedEndDate.getTimezoneOffset() * 60000
+        )
         const election = await prisma.election.create({
             data: {
                 title: req.body.title,
                 banner: req.body.banner,
-                startDate: new Date(req.body.startDate),
-                endDate: new Date(req.body.endDate),
+                startDate: convertedStartDate.toISOString(),
+                endDate: convertedEndDate.toISOString(),
             }
         })
         res.json(election)
@@ -158,28 +168,41 @@ export const checkIfVotedToOrg= async (req, res) => {
 //UPDATE SINGLE
 export const updateAnElec = async (req, res) => {
     try {
-      const findElections = await prisma.election.findUnique({
-        where: {
-          id: req.params.id,
-        },
-      });
-      //check if the organization exist
-      if (!findElections) throw new Error("Election not Found");
+        const findElections = await prisma.election.findUnique({
+            where: {
+            id: req.params.id,
+            },
+        });
+        //check if the organization exist
+        if (!findElections) throw new Error("Election not Found");
+        
+
+        const receivedStartDate = new Date(req.body.start_date)
+        const receivedEndDate = new Date(req.body.end_date)
+
+        const convertedStartDate = new Date(
+        receivedStartDate.getTime() - receivedStartDate.getTimezoneOffset() * 60000
+        )
+
+        const convertedEndDate = new Date(
+        receivedEndDate.getTime() - receivedEndDate.getTimezoneOffset() * 60000
+        );
   
-      const updatedElection = await prisma.election.update({
-        where: {
-          id: req.params.id,
-        },
-        data: {
-          title: req.body.title,
-          banner: req.body.banner,
-          startDate: new Date(req.body.start_date),
-          endDate: new Date(req.body.end_date),
-        },
-      })
-  
-      //return json message
-      res.json({ message: "Election Updated" });
+        const updateElection = await prisma.election.update({
+            where: {
+            id: req.params.id,
+            },
+            data: {
+            title: req.body.title,
+            banner: req.body.banner,
+            startDate: convertedStartDate.toISOString(),
+            endDate: convertedEndDate.toISOString(),
+            },
+        })
+        if (!updateElection) throw new Error("Error creating election");
+
+        //return json message
+        res.json({ message: "success" });
     } catch (error) {
       res.status(404).json({ error: error.message });
     }
