@@ -84,8 +84,6 @@ model Organization {
   id         String    @id @default(uuid())
   org_name   String
   logo_url   String?
-  startDate  DateTime
-  endDate    DateTime
   election   Election? @relation(fields: [electionId], references: [id])
   electionId String?
   org_status Status    @default(upcoming)
