@@ -9,14 +9,6 @@ const schema = [
     check('logo_url')
     .exists({checkFalsy: true}).withMessage('Logo Url is required')
     .isString(),
-
-    check('startDate')
-    .exists({checkFalsy: true}).withMessage('Starting Date is required')
-    .isDate({ format: 'YYYY-MM-DD'}).withMessage('Invalid Starting Date (YYYY-MM-DD)*'),
-
-    check('endDate')
-    .exists({checkFalsy: true}).withMessage('Ending Date is required')
-    .isDate({ format: 'YYYY-MM-DD'}).withMessage('Invalid Ending Date  (YYYY-MM-DD)*'),
 ]
 
 export {schema as organizationSchema}

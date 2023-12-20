@@ -7,8 +7,6 @@ export const createOrg = async (req, res) => {
       data: {
         org_name: req.body.org_name,
         logo_url: req.body.logo_url,
-        startDate: new Date(req.body.startDate),
-        endDate: new Date(req.body.endDate),
         ballots: {
           create: [{}],
         },
@@ -122,17 +120,15 @@ export const updateAnOrg = async (req, res) => {
       },
       data: {
         org_name: req.body.org_name,
-        logo_url: req.body.logo_url,
-        startDate: new Date(req.body.startDate),
-        endDate: new Date(req.body.endDate),
+        logo_url: req.body.logo_url
       },
     });
 
     //invoke update organization
-    updatedOrganization
+    if(!updatedOrganization) throw new Error("Error updating organization")
 
     //return json message
-    res.json({ message: "Organization Updated" });
+    res.json({ message: "success" });
   } catch (error) {
     res.status(404).json({ error: error.message });
   }
