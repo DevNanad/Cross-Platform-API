@@ -67,7 +67,7 @@ io.on("connection", async (socket) => {
                     include: {
                     user: {
                         select: {
-                        profile_picture: true,
+                        profile_low: true,
                         firstname: true,
                         surname: true
                         },
@@ -103,7 +103,7 @@ io.on("connection", async (socket) => {
                     include: {
                     user: {
                         select: {
-                        profile_picture: true,
+                        profile_low: true,
                         firstname: true,
                         surname: true
                         },
@@ -207,7 +207,7 @@ io.on("connection", async (socket) => {
                     include: {
                     user: {
                         select: {
-                        profile_picture: true,
+                        profile_low: true,
                         firstname: true,
                         surname: true
                         },

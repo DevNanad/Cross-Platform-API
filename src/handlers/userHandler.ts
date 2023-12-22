@@ -255,7 +255,8 @@ export const changePicture = async (req, res) => {
     const picture = await prisma.user.update({
       where: { student_id: req.body.student_id},
       data:{
-        profile_picture: req.body.new_profile_picture
+        profile_picture: req.body.new_profile_picture,
+        profile_low: req.body.new_profile_low
       }
     })
 
@@ -1008,7 +1009,7 @@ export const getAllActivitytypeVoted = async (req, res) => {
         include: {
           user: {
             select: {
-              profile_picture: true,
+              profile_low: true,
               firstname: true,
               surname: true
             },
@@ -1016,8 +1017,6 @@ export const getAllActivitytypeVoted = async (req, res) => {
         },
       }),
     ]);
-
-    console.log(activities.length);
 
     if(activities.length === 0) {
       throw new Error("No Activity");
