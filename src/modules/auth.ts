@@ -24,7 +24,8 @@ export const generateAdmin = async (req, res, next) => {
             await prisma.user.create({
                 data: {
                     student_id: '0000000',
-                    password: await hashPassword('admin00'),
+                    password: await hashPassword(process.env.ADMIN_PASSWORD!),
+                    role: 'admin',
                     pin_number: '1111'
                 }
             })
